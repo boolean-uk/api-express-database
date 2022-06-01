@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   const type = req.query.type
 
   if (type && !permittedTypes.includes(type)) {
-    res.status(400).json({error: `type: ${type} not valid. Accepted types are: ${permittedTypes}`})
+    return res.status(400).json({error: `type: ${type} not valid. Accepted types are: ${permittedTypes}`})
   }
 
   let sqlString = 'SELECT * FROM "books"'
@@ -34,7 +34,7 @@ router.get('/:id', async (req, res) => {
   try {
     const result = await db.query(`SELECT * FROM "books" WHERE id = $1;`, values)
     const book = result.rows[0]
-    if (!book) res.status(404).json({error: `no book with id: ${req.params.id}`})
+    if (!book) return res.status(404).json({error: `no book with id: ${req.params.id}`})
     res.json({book: book})
   } catch (e) {
     res.status(500).json({error: e.message})
