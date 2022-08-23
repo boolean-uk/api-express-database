@@ -3,10 +3,7 @@ const db = require('../db');
 const port = process.env.PORT || 3030;
 
 app.listen(port, () => {
-  //Connect to the database
   db.connect(error => {
-    //If there is an error connecting to the database,
-    //log it out to the console
     if (error) {
       console.error('[ERROR] Connection error: ', error.stack);
     } else {

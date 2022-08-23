@@ -8,7 +8,6 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
 
-//TODO: Implement books and pets APIs using Express Modular Routers
 const booksRouter = require('./routes/books.js');
 const petsRouter = require('./routes/pets.js');
 const breedsRouter = require('./routes/breeds.js');

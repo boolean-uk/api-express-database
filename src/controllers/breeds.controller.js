@@ -11,7 +11,7 @@ const getAllBreeds = async (req, res) => {
   const [sqlQuery, sqlParams] = buildQuery(base, req.query);
 
   const dbRes = await db.query(sqlQuery, sqlParams);
-  console.log(dbRes);
+
   res.status(200).json(dbRes.rows[0]);
 };
 
