@@ -24,7 +24,9 @@ router.get('/:id', async (req, res) => {
     ? res.status(200).json({
         book: dbRes.rows[0],
       })
-    : res.sendStatus(404);
+    : res
+        .status(404)
+        .json({ error: 'A book with the provided ID does not exist' });
 });
 
 router.post('/', async (req, res) => {
@@ -38,6 +40,17 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
+  const { rows } = await db.query('SELECT * FROM books WHERE title = $1', [
+    req.body.title,
+  ]);
+
+  if (rows.length > 0) {
+    res
+      .status(409)
+      .json({ error: 'A book with the provided title already exists' });
+    return;
+  }
+
   const bookId = req.params.id;
 
   const sqlQuery =
@@ -45,9 +58,14 @@ router.put('/:id', async (req, res) => {
 
   const params = Object.values(req.body);
   const dbRes = await db.query(sqlQuery, [...params, bookId]);
-  res.status(201).json({
-    book: dbRes.rows[0],
-  });
+
+  dbRes.rows.length > 0
+    ? res.status(201).json({
+        book: dbRes.rows[0],
+      })
+    : res
+        .status(404)
+        .json({ error: 'A book with the provided ID was not found' });
 });
 
 router.delete('/:id', async (req, res) => {
@@ -56,9 +74,14 @@ router.delete('/:id', async (req, res) => {
   const sqlQuery = 'DELETE FROM books WHERE id = $1 RETURNING *;';
 
   const dbRes = await db.query(sqlQuery, [bookId]);
-  res.status(201).json({
-    book: dbRes.rows[0],
-  });
+
+  dbRes.rows.length > 0
+    ? res.status(201).json({
+        book: dbRes.rows[0],
+      })
+    : res
+        .status(404)
+        .json({ error: 'A book with the provided ID was not found' });
 });
 
 module.exports = router;
