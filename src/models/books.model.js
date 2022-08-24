@@ -1,5 +1,5 @@
 const db = require('../../db');
-const { buildQuery, isObjEmpty } = require('../utils');
+const { buildQuery } = require('../utils');
 const { existsInDb } = require('./utils');
 
 const getAllBooks = async req => {

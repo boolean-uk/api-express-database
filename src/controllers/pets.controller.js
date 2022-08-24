@@ -1,5 +1,4 @@
-const db = require('../../db');
-const { buildQuery, isObjEmpty } = require('../utils');
+const { isObjEmpty } = require('../utils');
 const model = require('../models/pets.model');
 
 const getAllPets = async (req, res) => {
@@ -21,13 +20,13 @@ const getPetById = async (req, res) => {
   try {
     const pet = await model.getPetById(petId);
 
-    isObjEmpty(pet)
-      ? res
-          .status(404)
-          .json({ error: 'A pet with the provided ID does not exist' })
-      : res.status(200).json({
-          pet,
-        });
+    if (isObjEmpty(pet)) {
+      return res
+        .status(404)
+        .json({ error: 'A pet with the provided ID does not exist' });
+    }
+
+    res.status(200).json({ pet });
   } catch (error) {
     console.error('[ERROR]', error);
     res.sendStatus(500);
@@ -61,13 +60,13 @@ const updatePet = async (req, res) => {
   try {
     const pet = await model.updatePet(params, petId);
 
-    isObjEmpty(pet)
-      ? res
-          .status(404)
-          .json({ error: 'A pet with the provided ID was not found' })
-      : res.status(201).json({
-          pet,
-        });
+    if (isObjEmpty(pet)) {
+      return res
+        .status(404)
+        .json({ error: 'A pet with the provided ID was not found' });
+    }
+
+    res.status(201).json({ pet });
   } catch (error) {
     console.error('[ERROR]', error);
     res.sendStatus(500);
@@ -80,13 +79,13 @@ const deletePet = async (req, res) => {
   try {
     const pet = await model.deletePet(petId);
 
-    isObjEmpty(pet)
-      ? res
-          .status(404)
-          .json({ error: 'A pet with the provided ID was not found' })
-      : res.status(201).json({
-          pet,
-        });
+    if (isObjEmpty(pet)) {
+      return res
+        .status(404)
+        .json({ error: 'A pet with the provided ID was not found' });
+    }
+
+    res.status(201).json({ pet });
   } catch (error) {
     console.error('[ERROR]', error);
     res.sendStatus(500);

@@ -11,8 +11,9 @@ const buildParams = query => {
   const sqlParams = [];
 
   for (const param in query) {
-    if (param === 'page' || param === 'per_page') {
-    } else sqlParams.push(query[param]);
+    if (param !== 'page' && param !== 'per_page') {
+      sqlParams.push(query[param]);
+    }
   }
 
   return sqlParams;

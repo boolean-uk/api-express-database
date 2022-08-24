@@ -19,13 +19,13 @@ const getBookById = async (req, res) => {
   try {
     const book = await model.getBookById(bookId);
 
-    isObjEmpty(book)
-      ? res
-          .status(404)
-          .json({ error: 'A book with the provided ID does not exist' })
-      : res.status(200).json({
-          book,
-        });
+    if (isObjEmpty(book)) {
+      return res
+        .status(404)
+        .json({ error: 'A book with the provided ID does not exist' });
+    }
+
+    res.status(200).json({ book });
   } catch (error) {
     console.error('[ERROR]', error);
     res.sendStatus(500);
@@ -68,13 +68,13 @@ const updateBook = async (req, res) => {
       return;
     }
 
-    isObjEmpty(book)
-      ? res
-          .status(404)
-          .json({ error: 'A book with the provided ID was not found' })
-      : res.status(201).json({
-          book,
-        });
+    if (isObjEmpty(book)) {
+      return res
+        .status(404)
+        .json({ error: 'A book with the provided ID was not found' });
+    }
+
+    res.status(201).json({ book });
   } catch (error) {
     console.error('[ERROR]', error);
     res.sendStatus(500);
@@ -87,13 +87,13 @@ const deleteBook = async (req, res) => {
   try {
     const book = await model.deleteBook(bookId);
 
-    isObjEmpty(book)
-      ? res
-          .status(404)
-          .json({ error: 'A book with the provided ID was not found' })
-      : res.status(201).json({
-          book,
-        });
+    if (isObjEmpty(book)) {
+      return res
+        .status(404)
+        .json({ error: 'A book with the provided ID was not found' });
+    }
+
+    res.status(201).json({ book });
   } catch (error) {
     console.error('[ERROR]', error);
     res.sendStatus(500);
