@@ -6,14 +6,9 @@ const getAllBreeds = async (req, res) => {
     return;
   }
 
-  try {
-    const breeds = await model.getAllBreeds(req);
+  const breeds = await model.getAllBreeds(req);
 
-    res.status(200).json(breeds);
-  } catch (error) {
-    console.error('[ERROR]', error);
-    res.sendStatus(500);
-  }
+  res.status(200).json(breeds);
 };
 
 module.exports = { getAllBreeds };

@@ -37,10 +37,10 @@ const postBook = async params => {
 
   try {
     const dbRes = await db.query(sqlQuery, params);
-
     return dbRes.rows[0];
   } catch (error) {
     console.error('[DATABASE ERROR]', error);
+    return false;
   }
 };
 
