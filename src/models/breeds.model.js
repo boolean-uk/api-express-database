@@ -1,7 +1,7 @@
 const db = require('../../db');
 const { buildQuery } = require('../utils');
 
-const getAllBreeds = async () => {
+const getAllBreeds = async req => {
   const base = 'SELECT ARRAY_AGG(DISTINCT breed) AS breeds FROM pets';
   const [sqlQuery, sqlParams] = buildQuery(base, req.query);
 

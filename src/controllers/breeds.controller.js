@@ -7,7 +7,7 @@ const getAllBreeds = async (req, res) => {
   }
 
   try {
-    const breeds = await model.getAllBreeds();
+    const breeds = await model.getAllBreeds(req);
 
     res.status(200).json(breeds);
   } catch (error) {
