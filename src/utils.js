@@ -46,4 +46,6 @@ const buildPagination = (query, sqlQuery) => {
   return (sqlQuery += ` OFFSET ${page * perPage} LIMIT ${perPage}`);
 };
 
-module.exports = { buildQuery };
+const isObjEmpty = obj => Object.keys(obj).length === 0;
+
+module.exports = { buildQuery, isObjEmpty };
