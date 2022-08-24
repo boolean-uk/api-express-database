@@ -1,5 +1,4 @@
-const db = require('../../db');
-const { buildQuery } = require('../utils');
+const model = require('../models/breeds.model');
 
 const getAllBreeds = async (req, res) => {
   if (!req.query.type) {
@@ -7,12 +6,14 @@ const getAllBreeds = async (req, res) => {
     return;
   }
 
-  const base = 'SELECT ARRAY_AGG(DISTINCT breed) AS breeds FROM pets';
-  const [sqlQuery, sqlParams] = buildQuery(base, req.query);
+  try {
+    const breeds = await model.getAllBreeds();
 
-  const dbRes = await db.query(sqlQuery, sqlParams);
-
-  res.status(200).json(dbRes.rows[0]);
+    res.status(200).json(breeds);
+  } catch (error) {
+    console.error('[ERROR]', error);
+    res.sendStatus(500);
+  }
 };
 
 module.exports = { getAllBreeds };
