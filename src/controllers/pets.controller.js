@@ -1,91 +1,96 @@
 const db = require('../../db');
-const { buildQuery } = require('../utils');
+const { buildQuery, isObjEmpty } = require('../utils');
+const model = require('../models/pets.model');
 
 const getAllPets = async (req, res) => {
-  const base = 'SELECT * FROM pets';
-  const [sqlQuery, sqlParams] = buildQuery(base, req.query);
+  try {
+    const pets = await model.getAllPets(req);
 
-  const dbRes = await db.query(sqlQuery, sqlParams);
-
-  res.status(200).json({
-    pets: dbRes.rows,
-  });
+    res.status(200).json({
+      pets,
+    });
+  } catch (error) {
+    console.error('[ERROR]', error);
+    res.sendStatus(500);
+  }
 };
 
 const getPetById = async (req, res) => {
   const petId = req.params.id;
-  const sqlQuery = 'SELECT * FROM pets WHERE id = $1';
 
-  const dbRes = await db.query(sqlQuery, [petId]);
+  try {
+    const pet = await model.getPetById(petId);
 
-  dbRes.rows.length > 0
-    ? res.status(200).json({
-        pet: dbRes.rows[0],
-      })
-    : res
-        .status(404)
-        .json({ error: 'A pet with the provided ID does not exist' });
+    isObjEmpty(pet)
+      ? res
+          .status(404)
+          .json({ error: 'A pet with the provided ID does not exist' })
+      : res.status(200).json({
+          pet,
+        });
+  } catch (error) {
+    console.error('[ERROR]', error);
+    res.sendStatus(500);
+  }
 };
 
 const postPet = async (req, res) => {
-  const sqlQuery = `
-  INSERT INTO
-      pets(name, age, type, breed, microchip)
-  VALUES
-      ($1, $2, $3, $4, $5)
-  RETURNING *;`;
-
   const params = Object.values(req.body);
+
   if (params.length < 5) {
     res.status(400).json({ error: 'Missing fields in the request body' });
     return;
   }
 
-  const dbRes = await db.query(sqlQuery, params);
+  try {
+    const pet = await model.postPet(params);
 
-  res.status(201).json({
-    pet: dbRes.rows[0],
-  });
+    res.status(201).json({
+      pet,
+    });
+  } catch (error) {
+    console.error('[ERROR]', error);
+    res.sendStatus(500);
+  }
 };
 
 const updatePet = async (req, res) => {
   const petId = req.params.id;
-
-  const sqlQuery = `
-    UPDATE
-        pets
-    SET
-        name = $1, age = $2, type = $3, breed = $4, microchip = $5
-    WHERE
-        id = $6
-    RETURNING *;`;
-
   const params = Object.values(req.body);
-  const dbRes = await db.query(sqlQuery, [...params, petId]);
 
-  dbRes.rows.length > 0
-    ? res.status(201).json({
-        pet: dbRes.rows[0],
-      })
-    : res
-        .status(404)
-        .json({ error: 'A pet with the provided ID was not found' });
+  try {
+    const pet = await model.updatePet(params, petId);
+
+    isObjEmpty(pet)
+      ? res
+          .status(404)
+          .json({ error: 'A pet with the provided ID was not found' })
+      : res.status(201).json({
+          pet,
+        });
+  } catch (error) {
+    console.error('[ERROR]', error);
+    res.sendStatus(500);
+  }
 };
 
 const deletePet = async (req, res) => {
   const petId = req.params.id;
 
-  const sqlQuery = 'DELETE FROM pets WHERE id = $1 RETURNING *;';
+  try {
+    const pet = await model.deletePet(petId);
 
-  const dbRes = await db.query(sqlQuery, [petId]);
-
-  dbRes.rows.length > 0
-    ? res.status(201).json({
-        pet: dbRes.rows[0],
-      })
-    : res
-        .status(404)
-        .json({ error: 'A pet with the provided ID was not found' });
+    isObjEmpty(pet)
+      ? res
+          .status(404)
+          .json({ error: 'A pet with the provided ID was not found' })
+      : res.status(201).json({
+          pet,
+        });
+  } catch (error) {
+    console.error('[ERROR]', error);
+    res.sendStatus(500);
+  }
 };
 
 module.exports = { getAllPets, getPetById, postPet, updatePet, deletePet };
