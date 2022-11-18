@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const db = require("../../db");
+const booksController = require('../controllers/books.js')
 
-router.get('/', async (req, res) => {
-
-})
+router.get('/', booksController.getBooks)
+router.get('/:id', booksController.getBook)
+router.post('/', booksController.createBook)
 
 module.exports = router
