@@ -3,8 +3,8 @@ const permittedTypes = ['Fiction', 'Non-Fiction']
 
 const getBooks = async (req, res) => {
   const author = req.query.author
-  const page = req.query.page || 1
-  const limit = req.query.perPage || 20
+  const page = Number(req.query.page) || 1
+  const limit = Number(req.query.perPage) || 20
   const offset = (page-1) * limit
 
   if (limit < 10 || limit > 50) {

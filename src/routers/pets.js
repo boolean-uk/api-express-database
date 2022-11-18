@@ -4,44 +4,26 @@ const db = require("../../db");
 const permittedMicrochipValues = ['true', 'false']
 
 router.get('/', async (req, res) => {
-  const type = req.query.type
-  const microchip = req.query.microchip
-
-  if (microchip && !permittedMicrochipValues.includes(microchip)) {
-    return res.status(400).json({error: `microchip: ${microchip} not valid. Accepted types are: ${permittedMicrochipValues}`})
-  }
-
   const page = Number(req.query.page) || 1
-  const per_page = Number(req.query.per_page) || 20
+  const limit = Number(req.query.perPage) || 20
+  const offset = (page-1) * limit
 
-  if (per_page < 10 || per_page > 50) {
-    return res.status(400).json({error: `per_page value: ${per_page} not valid. Accepted values are between 10 and 50`})
+  if (limit < 10 || limit > 50) {
+    return res.status(400).json({error: `parameter invalid perPage: ${limit} not valid. Accepted range is 10 - 50`})
   }
 
-  let sqlString = 'SELECT * FROM "pets"'
-  const offset = (page*per_page) - per_page
-  values = [per_page, offset]
+  let sqlString = 'SELECT * FROM "pets" OFFSET $1 LIMIT $2;'
+  const values = [offset, limit]
 
-  if (type && microchip) {
-    values = [...values, type, microchip]
-    sqlString += ` WHERE type = $3 AND microchip = $4`
-  } else if (type) {
-    values = [...values, type]
-    sqlString += ` WHERE type = $3`
-  } else if (microchip) {
-    values = [...values, microchip]
-    sqlString += ` WHERE microchip = $3`
-  }
-
-  sqlString += ` LIMIT $1 OFFSET $2;`
   try {
     const result = await db.query(sqlString, values)
     res.json({
       page: page,
-      per_page: per_page,
+      per_page: limit,
       pets: result.rows
     })
   } catch (e) {
+    console.log(e)
     res.status(500).json({error: e.message})
   }
 })
@@ -59,8 +41,19 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const sqlString = `INSERT INTO "pets" (name, age, type, breed, microchip) VALUES ($1, $2, $3, $4, $5) RETURNING *;`
+  const requiredFields = ['name', 'age', 'type', 'breed', 'microchip']
+  const missingFields = []
+  requiredFields.forEach(field => {
+    if (!req.body[field]) missingFields.push(field)
+  })
+
+  if (missingFields.length !== 0) {
+    return res.status(400).json({error: `missing fields: ${missingFields.join(', ')}`})
+  }
+
   const values = Object.values(req.body)
+  const sqlString = `INSERT INTO "pets" (name, age, type, breed, microchip) VALUES ($1, $2, $3, $4, $5) RETURNING *;`
+
   try {
     const result = await db.query(sqlString, values)
     res.status(201).json({pet: result.rows[0]})
