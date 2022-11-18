@@ -34,7 +34,6 @@ router.get('/', async (req, res) => {
   }
 
   sqlString += ` LIMIT $1 OFFSET $2;`
-  console.log(sqlString)
   try {
     const result = await db.query(sqlString, values)
     res.json({
@@ -52,7 +51,7 @@ router.get('/:id', async (req, res) => {
   try {
     const result = await db.query(`SELECT * FROM "pets" WHERE id = $1;`, values)
     const pet = result.rows[0]
-    if (!pet) res.status(404).json({error: `no pet with id: ${req.params.id}`})
+    if (!pet) return res.status(404).json({error: `no pet with id: ${req.params.id}`})
     res.json({pet: pet})
   } catch (e) {
     res.status(500).json({error: e.message})
@@ -64,7 +63,32 @@ router.post('/', async (req, res) => {
   const values = Object.values(req.body)
   try {
     const result = await db.query(sqlString, values)
-    res.json({pet: result.rows[0]})
+    res.status(201).json({pet: result.rows[0]})
+  } catch (e) {
+    res.status(500).json({error: e.message})
+  }
+})
+
+router.put('/:id', async (req, res) => {
+  const values = [req.params.id, Object.values(req.body)].flat()
+  try {
+    const result = await db.query(`UPDATE "pets" SET name = $2, age = $3, type = $4, breed = $5, microchip = $6 WHERE id = $1 RETURNING *;`, values)
+    const pet = result.rows[0]
+    if (!pet) return res.status(404).json({error: `no pet with id: ${req.params.id}`})
+    res.status(201).json({pet: pet})
+  } catch (e) {
+    res.status(500).json({error: e.message})
+  }
+})
+
+
+router.delete('/:id', async (req, res) => {
+  const values = [req.params.id]
+  try {
+    const result = await db.query(`DELETE FROM "pets" WHERE id = $1 RETURNING *;`, values)
+    const pet = result.rows[0]
+    if (!pet) return res.status(404).json({error: `no pet with id: ${req.params.id}`})
+    res.status(201).json({pet: pet})
   } catch (e) {
     res.status(500).json({error: e.message})
   }
