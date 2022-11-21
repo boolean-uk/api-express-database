@@ -14,7 +14,6 @@ const getAllBooks = async () => {
 
 const getBookById = async (bookId) => {
   const sqlQuery = `select * from books where id = $1`;
-  console.log(bookId);
   try {
     const result = await db.query(sqlQuery, [bookId]);
     return result.rows[0];
@@ -36,13 +35,13 @@ const addBook = async (book) => {
     book.pages,
   ];
 
-  return await db
-    .query(sqlQuery, params)
-    .then((result) => result.rows[0])
-    .catch((error) => {
-      console.error(error);
-      throw new Error("Database Error");
-    });
+  try {
+    const result = await db.query(sqlQuery, params);
+    return result.rows[0];
+  } catch (error) {
+    console.error(error);
+    throw new Error("Database error");
+  }
 };
 
 const updateBook = async (bookId, book) => {
@@ -58,21 +57,20 @@ const updateBook = async (bookId, book) => {
     bookId,
   ];
 
-  return await db
-    .query(sqlQuery, params)
-    .then((result) => result.rows[0])
-    .catch((error) => {
-      console.error(error);
-      throw new Error("Database Error");
-    });
+  try {
+    const result = await db.query(sqlQuery, params);
+    return result.rows[0];
+  } catch (error) {
+    console.error(error);
+    throw new Error("Database error");
+  }
 };
 
 const deleteBook = async (bookId) => {
-  const sqlQuery = `DELETE FROM books WHERE id = $1`;
-
+  const sqlQuery = `DELETE FROM books WHERE id = $1 RETURNING *`;
   try {
-    await db.query(sqlQuery, [bookId]);
-    return;
+    const result = await db.query(sqlQuery, [bookId]);
+    return result.rows[0];
   } catch (error) {
     console.error(error);
     throw new Error("Database Error");

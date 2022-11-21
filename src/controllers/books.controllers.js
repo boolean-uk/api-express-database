@@ -5,8 +5,7 @@ const getAllBooks = async (req, res) => {
     const books = await booksRepository.getAllBooks();
     return res.json({ books });
   } catch {
-    res.status(500);
-    res.json({ error: "an error occurred" });
+    res.status(500).json({ error: "an error occurred" });
   }
 };
 
@@ -15,8 +14,7 @@ const getBookById = async (req, res) => {
     const book = await booksRepository.getBookById(req.params.id);
     return res.json({ book });
   } catch {
-    res.status(500);
-    res.json({ error: "an error occurred" });
+    res.status(500).json({ error: "an error occurred" });
   }
 };
 
@@ -34,8 +32,7 @@ const addBook = async (req, res) => {
     const newBook = await booksRepository.addBook(book);
     return res.status(201).json({ book: newBook });
   } catch {
-    res.status(500);
-    res.json({ error: "an error occurred" });
+    res.status(500).json({ error: "an error occurred" });
   }
 };
 
@@ -53,18 +50,16 @@ const updateBook = async (req, res) => {
     const newBook = await booksRepository.updateBook(req.params.id, book);
     return res.status(201).json({ book: newBook });
   } catch {
-    res.status(500);
-    res.json({ error: "an error occurred" });
+    res.status(500).json({ error: "an error occurred" });
   }
 };
 
 const deleteBook = async (req, res) => {
   try {
-    await booksRepository.deleteBook(req.params.id);
-    res.status(201).json({ message: "Deleted" });
+    const book = await booksRepository.deleteBook(req.params.id);
+    return res.status(201).json({ book });
   } catch {
-    res.status(500);
-    res.json({ error: "an error occurred" });
+    res.status(500).json({ error: "an error occurred" });
   }
 };
 
@@ -73,5 +68,5 @@ module.exports = {
   addBook,
   getBookById,
   updateBook,
-  deleteBook
+  deleteBook,
 };
