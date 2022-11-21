@@ -5,6 +5,7 @@ const getAllPets = async () => {
 
   try {
     const result = await db.query(sqlQuery);
+    console.log(result)
     return result.rows;
   } catch (error) {
     console.error(error);

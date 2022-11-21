@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npx nodemon src/index.js",
     "test": "npx jest -i test/api/routes --forceExit",
-    "test-extensions": "npx jest -i test/api/extensions  --forceExit"
+    "test-extensions": "npx jest -i test/api/extensions --bail --forceExit"
   },
   "dependencies": {
     "body-parser": "1.19.0",

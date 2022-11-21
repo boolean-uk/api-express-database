@@ -12,7 +12,6 @@ describe("Books Endpoint", () => {
       expect(response.status).toEqual(201)
       expect(response.body.book).not.toEqual(undefined)
       expect(response.body.book.id).not.toEqual(undefined)
-
       for (prop in book1) {
         expect(response.body.book[prop]).toEqual(book1[prop])
       }
@@ -42,6 +41,7 @@ describe("Books Endpoint", () => {
 
       expect(response.status).toEqual(200)
       expect(response.body.book).not.toEqual(undefined)
+      console.log(response.body.book)
       expect(response.body.book.id).not.toEqual(undefined)
 
       for (prop in book1) {

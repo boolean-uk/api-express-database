@@ -17,7 +17,7 @@ const getBookById = async (bookId) => {
   console.log(bookId);
   try {
     const result = await db.query(sqlQuery, [bookId]);
-    return result.rows;
+    return result.rows[0];
   } catch (error) {
     console.error(error);
     throw new Error("Database Error");
@@ -38,7 +38,7 @@ const addBook = async (book) => {
 
   return await db
     .query(sqlQuery, params)
-    .then((result) => result.rows)
+    .then((result) => result.rows[0])
     .catch((error) => {
       console.error(error);
       throw new Error("Database Error");
@@ -60,7 +60,7 @@ const updateBook = async (bookId, book) => {
 
   return await db
     .query(sqlQuery, params)
-    .then((result) => result.rows)
+    .then((result) => result.rows[0])
     .catch((error) => {
       console.error(error);
       throw new Error("Database Error");
