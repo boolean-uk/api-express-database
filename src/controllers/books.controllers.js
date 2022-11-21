@@ -31,8 +31,8 @@ const addBook = async (req, res) => {
   };
 
   try {
-    const book_2 = await booksRepository.addBook(book);
-    return res.json({ book_2 });
+    const newBook = await booksRepository.addBook(book);
+    return res.json({ book: newBook });
   } catch {
     res.status(500);
     res.json({ error: "an error occurred" });
@@ -50,8 +50,8 @@ const updateBook = async (req, res) => {
   };
 
   try {
-    const book_2 = await booksRepository.updateBook(req.params.id, book);
-    return res.json({ book_2 });
+    const newBook = await booksRepository.updateBook(req.params.id, book);
+    return res.json({ newBook });
   } catch {
     res.status(500);
     res.json({ error: "an error occurred" });
