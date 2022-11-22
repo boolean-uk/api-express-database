@@ -1,6 +1,8 @@
 // Load our .env file
 require('dotenv').config()
 
+process.env.PGURL
+
 // Require Client obj from the postgres node module
 const { Client } = require("pg");
 
