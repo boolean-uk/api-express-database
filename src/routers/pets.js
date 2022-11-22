@@ -36,13 +36,6 @@ router.put("/:id", async (req, res) => {
     res.status(201).json({ pet: result.rows[0] })
 })
 
-// router.put("/:id", async (req, res) => {
-//     const { id } = req.params;
-//     const values = [req.body.name, req.body.age, req.body.type, req.body.breed, req.body.microchip, id];
-//     const sqlQuery = `UPDATE pets set  name = $1 ,  age = $2, type = $3, breed = $4, microchip = $5 where id = $6  RETURNING *`;
-//     const result = await db.query(sqlQuery, values);
-//     res.status(201).json({ pet: result.rows[0] })
-//   });
 
 router.delete("/:id", async (req, res) => {
     const id = req.params.id
