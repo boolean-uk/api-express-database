@@ -2,8 +2,9 @@ const booksRepository = require("../repositories/books.repository");
 
 const getAllBooks = async (req, res) => {
   try {
-    const books = await booksRepository.getAllBooks();
-    return res.json({ books });
+    const results = await booksRepository.getAllBooks(req.query);
+    console.log(req.query)
+    return res.json({ books: results.books, perPage: results.per_page, page: results.page });
   } catch {
     res.status(500).json({ error: "an error occurred" });
   }
@@ -13,8 +14,10 @@ const getBookById = async (req, res) => {
   try {
     const book = await booksRepository.getBookById(req.params.id);
     return res.json({ book });
-  } catch {
-    res.status(500).json({ error: "an error occurred" });
+  } catch (error) {
+    console.error(error)
+    console.log(error)
+    res.status(404).json({ error });
   }
 };
 

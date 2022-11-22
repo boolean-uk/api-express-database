@@ -12,3 +12,11 @@ global.beforeEach(async() => {
 
   await client.query(sqlStringForPets)
 })
+
+global.afterAll(async () => {
+  const sqlInsertBooks = await fs.readFile('./sql/insert-books.sql')
+  await client.query(sqlInsertBooks.toString())
+  console.log(sqlInsertBooks)
+  const sqlInsertPets = await fs.readFile('./sql/insert-pets.sql')
+  await client.query(sqlInsertPets.toString())
+})
