@@ -1,7 +1,7 @@
 const fs = require('fs/promises')
 const client = require("../../db");
 
-global.beforeEach(async() => {
+global.beforeEach(async () => {
   const sqlDataForBooks = await fs.readFile('./sql/create-books.sql')
   const sqlStringForBooks = sqlDataForBooks.toString()
 
@@ -12,3 +12,9 @@ global.beforeEach(async() => {
 
   await client.query(sqlStringForPets)
 })
+
+// global.afterAll(async () => {
+//   const sql = ``
+//   await client.query(sql)
+// }
+// )
