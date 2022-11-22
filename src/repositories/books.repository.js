@@ -11,10 +11,18 @@ const getAllBooks = async (queryParams) => {
   const filteredQueryParams = Object.values(queryParams).map((item) =>
     item.toLowerCase().replace("%", " ")
   );
-  const queryValues = [...filteredQueryParams, paginationObject.per_page, paginationObject.page];
+  const queryValues = [
+    ...filteredQueryParams,
+    paginationObject.per_page,
+    paginationObject.page,
+  ];
   try {
     const result = await db.query(sqlQuery, queryValues);
-    return {books: result.rows, per_page: paginationObject.per_page, page: paginationObject.page};
+    return {
+      books: result.rows,
+      per_page: paginationObject.per_page,
+      page: paginationObject.page,
+    };
   } catch (error) {
     console.error(error);
     throw new Error("Database Error");
@@ -25,16 +33,14 @@ const getBookById = async (bookId) => {
   const sqlQuery = `select * from books where id = $1`;
   try {
     const result = await db.query(sqlQuery, [bookId]);
-    console.log(result.rows.length);
     if (result.rows.length === 0) {
-      throw new Error("ID_NOT_FOUND")
+      throw new Error("ID_NOT_FOUND");
     }
-    // console.log(result)
     return result.rows[0];
   } catch (error) {
     console.error(error);
-    if(error === "ID_NOT_FOUND") { // not sure about syntax here
-      throw new Error("ID was not found");
+    if (error.message === "ID_NOT_FOUND") {
+      throw new Error("ERROR - A book with the provided does not exist");
     } else {
       throw new Error("Database Error");
     }

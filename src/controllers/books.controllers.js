@@ -16,8 +16,7 @@ const getBookById = async (req, res) => {
     return res.json({ book });
   } catch (error) {
     console.error(error)
-    console.log(error)
-    res.status(404).json({ error });
+    res.status(404).json({ error: error.message });
   }
 };
 
