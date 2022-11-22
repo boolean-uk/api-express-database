@@ -18,8 +18,8 @@ router.get("/:id", async (req, res) => {
 
   const result = await db.query(sqlQuery, [id]);
 
-  res.json({
-    books: result.rows,
+ return res.json({
+    book: result.rows[0]
   });
 });
 
@@ -35,7 +35,8 @@ router.post("/", async (req, res) => {
   ];
   const sqlQuery = `insert into books (title, type, author, topic, "publicationDate", pages) values ($1 , $2 , $3 , $4, $5, $6 ) returning *`;
   const result = await db.query(sqlQuery, values);
-  res.json({ book: result.rows });
+  // console.log('HEREEEEEEEEEEE', delete ) 
+  res.status(201).json({ book: result.rows[0] });
 });
 
 router.put("/:id", async (req, res) => {
@@ -56,7 +57,7 @@ router.put("/:id", async (req, res) => {
     where id = $7  RETURNING *`;
 
   const result = await db.query(sqlQuery, values);
-  res.json({ book: result.rows });
+  res.status(201).json({ book: result.rows[0] });
 });
 
 router.delete('/:id', async (req, res) => {
@@ -65,7 +66,8 @@ router.delete('/:id', async (req, res) => {
   WHERE id = $1 RETURNING *`
 
   const result = await db.query(sqlQuery, [id])
-  res.json({ book: result.rows });
+  
+  res.status(201).json({ book: result.rows[0] });
 })
 
 module.exports = router;
