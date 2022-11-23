@@ -2,10 +2,48 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../db");
 
-router.get("/", async (req, res) => {
-  const sqlQuery = `select * from books`;
+function queryBuilder(sql, columns) {
+  const page = columns.find((c) => c === "page");
+  const perPage = columns.find((c) => c === "per_page");
+  const indexOfPage = columns.indexOf(page);
+  const indexOfPerPage = columns.indexOf(perPage);
 
-  const result = await db.query(sqlQuery);
+  if (columns.length) {
+    let newColumns = []
+    for (i = 0; i < columns.length; i++) {
+      console.log(columns[i])
+      if (columns[i] !== "per_page" || columns[i] !== "page") {
+        newColumns.push(columns[i]);
+      }
+    }
+
+    const column = newColumns.map((column, index) => {
+      return `${column} = $${index + 1}`;
+    });
+
+    sql += "WHERE " + column.join(" AND ");
+  }
+  if (page && perPage) {
+    return (sql += ` OFFSET (($${indexOfPage + 1} - 1) * 20) LIMIT $${indexOfPerPage + 1}`);
+  }
+  if (page) {
+    const indexOfPage = columns.indexOf(page);
+
+    sql += ` OFFSET (($${indexOfPage + 1} - 1) * 20) LIMIT 20`;
+  }
+  if (perPage) {
+    const indexOfPerPage = columns.indexOf(perPage);
+    sql += ` LIMIT $${indexOfPerPage + 1}`;
+  }
+
+  return sql;
+}
+
+router.get("/", async (req, res) => {
+  const sqlQuery = queryBuilder("SELECT * FROM books ", Object.keys(req.query));
+  console.log("HEREwwwwwww", sqlQuery);
+
+  const result = await db.query(sqlQuery, Object.values(req.query));
 
   res.json({
     books: result.rows,
@@ -18,8 +56,8 @@ router.get("/:id", async (req, res) => {
 
   const result = await db.query(sqlQuery, [id]);
 
- return res.json({
-    book: result.rows[0]
+  return res.json({
+    book: result.rows[0],
   });
 });
 
@@ -35,7 +73,6 @@ router.post("/", async (req, res) => {
   ];
   const sqlQuery = `insert into books (title, type, author, topic, "publicationDate", pages) values ($1 , $2 , $3 , $4, $5, $6 ) returning *`;
   const result = await db.query(sqlQuery, values);
-  // console.log('HEREEEEEEEEEEE', delete ) 
   res.status(201).json({ book: result.rows[0] });
 });
 
@@ -60,14 +97,14 @@ router.put("/:id", async (req, res) => {
   res.status(201).json({ book: result.rows[0] });
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   const sqlQuery = `DELETE from books 
-  WHERE id = $1 RETURNING *`
+  WHERE id = $1 RETURNING *`;
 
-  const result = await db.query(sqlQuery, [id])
-  
+  const result = await db.query(sqlQuery, [id]);
+
   res.status(201).json({ book: result.rows[0] });
-})
+});
 
 module.exports = router;
