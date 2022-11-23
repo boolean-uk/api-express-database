@@ -2,6 +2,13 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../db");
 
+class NotFoundError extends Error {
+  statusCode = 404;
+}
+class EntityExistsError extends Error {
+  statusCode = 409;
+}
+
 function queryBuilder(sql, columns) {
   const page = columns.find((c) => c === "page");
   const perPage = columns.find((c) => c === "per_page");
@@ -9,9 +16,9 @@ function queryBuilder(sql, columns) {
   const indexOfPerPage = columns.indexOf(perPage);
 
   if (columns.length) {
-    let newColumns = []
+    let newColumns = [];
     for (i = 0; i < columns.length; i++) {
-      console.log(columns[i])
+      console.log(columns[i]);
       if (columns[i] !== "per_page" || columns[i] !== "page") {
         newColumns.push(columns[i]);
       }
@@ -24,7 +31,9 @@ function queryBuilder(sql, columns) {
     sql += "WHERE " + column.join(" AND ");
   }
   if (page && perPage) {
-    return (sql += ` OFFSET (($${indexOfPage + 1} - 1) * 20) LIMIT $${indexOfPerPage + 1}`);
+    return (sql += ` OFFSET (($${indexOfPage + 1} - 1) * 20) LIMIT $${
+      indexOfPerPage + 1
+    }`);
   }
   if (page) {
     const indexOfPage = columns.indexOf(page);
@@ -41,8 +50,6 @@ function queryBuilder(sql, columns) {
 
 router.get("/", async (req, res) => {
   const sqlQuery = queryBuilder("SELECT * FROM books ", Object.keys(req.query));
-  console.log("HEREwwwwwww", sqlQuery);
-
   const result = await db.query(sqlQuery, Object.values(req.query));
 
   res.json({
@@ -50,11 +57,17 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   const sqlQuery = `select * from books where id = $1`;
 
   const result = await db.query(sqlQuery, [id]);
+  if (!result.rows.length) {
+    const error = new NotFoundError(
+      `A book with the provided ID does not exist.`
+    );
+    next(error);
+  }
 
   return res.json({
     book: result.rows[0],
@@ -76,7 +89,7 @@ router.post("/", async (req, res) => {
   res.status(201).json({ book: result.rows[0] });
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res, next) => {
   const { id } = req.params;
   const newDate = new Date(req.body.publicationDate);
   const values = [
@@ -92,8 +105,23 @@ router.put("/:id", async (req, res) => {
     set  title = $1 ,  type = $2, author = $3, 
     topic = $4, "publicationDate" = $5, pages = $6
     where id = $7  RETURNING *`;
-
+  const titleQuery = `select * from books where title = $1`;
   const result = await db.query(sqlQuery, values);
+  const titleAlreadyExist = await db.query(titleQuery, [req.body.title]);
+
+  if (!result.rows.length) {
+    const error = new NotFoundError(
+      `A book with the provided ID does not exist.`
+    );
+    next(error);
+  }
+
+  if (titleAlreadyExist) {
+    const error = new EntityExistsError(
+      "A book with the provided title already exists"
+    );
+   next(error);
+  }
   res.status(201).json({ book: result.rows[0] });
 });
 
@@ -103,7 +131,12 @@ router.delete("/:id", async (req, res) => {
   WHERE id = $1 RETURNING *`;
 
   const result = await db.query(sqlQuery, [id]);
-
+  if (!result.rows.length) {
+    const error = new NotFoundError(
+      `A book with the provided ID does not exist.`
+    );
+    next(error);
+  }
   res.status(201).json({ book: result.rows[0] });
 });
 

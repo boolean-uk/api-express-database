@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
 
   const result = await db.query(sqlQuery);
   res.json({
-    pets: result.rows,
+    pets: result.rows
   });
 });
 
