@@ -106,9 +106,16 @@ router.put("/:id", async (req, res, next) => {
     topic = $4, "publicationDate" = $5, pages = $6
     where id = $7  RETURNING *`;
   const titleQuery = `select * from books where title = $1`;
-  const result = await db.query(sqlQuery, values);
   const titleAlreadyExist = await db.query(titleQuery, [req.body.title]);
 
+  if (titleAlreadyExist.rowCount > 0) {
+    const error = new EntityExistsError(
+      "A book with the provided title already exists"
+    );
+    next(error);
+  }
+
+  const result = await db.query(sqlQuery, values);
   if (!result.rows.length) {
     const error = new NotFoundError(
       `A book with the provided ID does not exist.`
@@ -116,12 +123,6 @@ router.put("/:id", async (req, res, next) => {
     next(error);
   }
 
-  if (titleAlreadyExist) {
-    const error = new EntityExistsError(
-      "A book with the provided title already exists"
-    );
-   next(error);
-  }
   res.status(201).json({ book: result.rows[0] });
 });
 

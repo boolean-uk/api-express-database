@@ -8,7 +8,7 @@ module.exports = {
     pages: 1
   },
   book2: {
-    title: "test2",
+    title: "test2 HELLO THERE",
     type: "test2",
     author: "test2",
     topic: "test2",
