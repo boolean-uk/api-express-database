@@ -5,7 +5,6 @@ const getAllBooks = async (req, res) => {
 };
 const getAllBooksByTypeOrTopic = async (type, topic) => {
   let filters = "";
-  console.log("type", type);
 
   if (type && topic) {
     filters = `WHERE type = '${type}' AND topic = '${topic}'`;
@@ -22,7 +21,12 @@ const getAllBooksByTypeOrTopic = async (type, topic) => {
 const getBookByID = async (id) => {
   return db.query(`SELECT * FROM books WHERE id = ${id}`);
 };
-const createBook = async (db_table_column_names) => {};
+const createBook = async (values) => {
+  const data = [...values];
+  return db.query(
+    `INSERT INTO books(title, type, author,topic, "publicationDate", pages) VALUES ('${data}')`
+  );
+};
 module.exports = {
   getAllBooks,
   getAllBooksByTypeOrTopic,

@@ -21,9 +21,17 @@ const getByID = async (req, res) => {
   res.json({ book: result.rows[0] });
 };
 const create = async (req, res) => {
-  const { db_table_column_names } = req.body;
-  const result = await createBook(db_table_column_names);
-  res.json({ book: result });
+  const values = [
+    req.body.title,
+    req.body.type,
+    req.body.author,
+    req.body.topic,
+    req.body.publicationDate,
+    req.body.pages,
+  ];
+  console.log(values);
+  const result = await createBook(values);
+  res.json({ book: result.rows[0] });
 };
 module.exports = {
   getAll,
