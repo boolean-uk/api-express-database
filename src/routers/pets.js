@@ -3,15 +3,15 @@ const router = express.Router();
 const db = require("../../db");
 
 router.get("/", async (req, res) => {
-  const result = await db.query("SELECT * FROM books");
+  const result = await db.query("SELECT * FROM pets");
   res.json({ data: result.rows });
 });
 
 router.post("/", async (req, res) => {
-  const { title, type, author, topic, publicationDate, pages } = req.body;
+  const { name, age, type, breed, microchip, pages } = req.body;
   const result = await db.query(`
-    INSERT INTO books (title, type, author, topic, "publicationDate", pages)
-    VALUES ('${title}', '${type}', '${author}', '${topic}', '${publicationDate}', ${pages} )
+    INSERT INTO pets (name, age, type, breed, microchip)
+    VALUES ('${name}', ${age}, '${type}', '${breed}', ${microchip})
     RETURNING *
     `);
   res.json({ data: result.rows });
@@ -25,10 +25,10 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { title, type, author, topic, publicationDate, pages } = req.body;
+  const { name, age, type, breed, microchip } = req.body;
   const result = await db.query(`
-    UPDATE books 
-    SET title = '${title}', type = '${type}', author = '${author}', topic = '${topic}', "publicationDate" = '${publicationDate}', pages = ${pages}
+    UPDATE pets 
+    SET name = '${name}', age = ${age}, type = '${type}', breed = '${breed}', microchip = ${microchip}
     WHERE id = ${id}
     RETURNING *
     `);
@@ -38,7 +38,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   const result = await db.query(`
-    DELETE FROM books WHERE id = ${id}
+    DELETE FROM pets WHERE id = ${id}
     RETURNING *
     `);
   res.json({ data: result.rows });
