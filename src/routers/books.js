@@ -32,4 +32,15 @@ router.delete("/:id", async (req, res) => {
   res.json({ book: result.rows[0] });
 });
 
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, type, author, topic, publicationDate, pages } = req.body;
+  const result = await db.query(`
+  UPDATE books
+  SET title ='${title}', type ='${type}', author ='${author}',topic = '${topic}', "publicationDate" = '${publicationDate}', pages =  ${pages}
+  WHERE id = ${id} )
+  RETURNING * `);
+  res.json(result.rows[0]);
+});
+
 module.exports = router;
