@@ -29,9 +29,19 @@ const updateBook = async (id, values) => {
 
   return result.rows[0];
 };
+
+const deleteBookById = async (id) => {
+  const result = await db.query(
+    `DELETE FROM books WHERE id = ${id}
+  RETURNING *`
+  );
+  return result.rows[0];
+};
+
 module.exports = {
   getAllBooks,
   getBookById,
   createBook,
   updateBook,
+  deleteBookById,
 };

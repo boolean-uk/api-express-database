@@ -5,8 +5,8 @@ const {
   getById,
   create,
   update,
-  deleteBook,
-} = require("../controllers/books.js");
+  deletePet,
+} = require("../controllers/pets.js");
 
 // GET all
 router.get("/", async (req, res) => {
@@ -18,7 +18,7 @@ router.get("/:id", async (req, res) => {
   await getById(req, res);
 });
 
-// POST create a book
+// POST create a pet
 router.post("/", async (req, res) => {
   await create(req, res);
 });
@@ -29,7 +29,7 @@ router.put("/:id", async (req, res) => {
 
 // Delete
 router.delete("/:id", async (req, res) => {
-  await deleteBook(req, res);
+  await deletePet(req, res);
 });
 
 module.exports = router;

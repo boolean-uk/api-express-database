@@ -3,6 +3,7 @@ const {
   getBookById,
   createBook,
   updateBook,
+  deleteBookById,
 } = require("../repositories/book");
 
 const getAll = async (req, res) => {
@@ -56,9 +57,19 @@ const update = async (req, res) => {
   const book = await updateBook(id, values);
   res.json({ books: book });
 };
+
+const deleteBook = async (req, res) => {
+  const { id } = req.params;
+  const book = await deleteBookById(id);
+  // const book = await db.query(`DELETE FROM books WHERE id = ${id}
+  // RETURNING *`);
+  res.status(201).json({ books: book });
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
+  deleteBook,
 };
