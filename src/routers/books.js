@@ -13,14 +13,14 @@ router.post("/", async (req, res) => {
   ( title, type, author, topic, "publicationDate", pages)
   VALUES ('${title}', '${type}', '${author}','${topic}', '${publicationDate}', ${pages})
   RETURNING * `);
-  res.json(result.rows[0]);
+  res.status(201).json({ book: result.rows[0] });
 });
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const result = await db.query(`SELECT * FROM books
   WHERE id = ${id}`);
-  res.json({ book: result.rows });
+  res.json({ book: result.rows[0] });
 });
 
 router.delete("/:id", async (req, res) => {
@@ -29,7 +29,7 @@ router.delete("/:id", async (req, res) => {
   const result = await db.query(`DELETE FROM books
   WHERE id = ${id}
   RETURNING * `);
-  res.json({ book: result.rows[0] });
+  res.status(201).json({ book: result.rows[0] });
 });
 
 router.put("/:id", async (req, res) => {
@@ -38,9 +38,9 @@ router.put("/:id", async (req, res) => {
   const result = await db.query(`
   UPDATE books
   SET title ='${title}', type ='${type}', author ='${author}',topic = '${topic}', "publicationDate" = '${publicationDate}', pages =  ${pages}
-  WHERE id = ${id} )
+  WHERE id = ${id} 
   RETURNING * `);
-  res.json(result.rows[0]);
+  res.status(201).json({ book: result.rows[0] });
 });
 
 module.exports = router;
