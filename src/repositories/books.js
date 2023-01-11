@@ -1,7 +1,17 @@
 const db = require("../../db");
 
-const getAllBooks = async () => {
-  const books = await db.query("SELECT * FROM books");
+const getAllBooks = async (type, topic) => {
+  let query = `SELECT * FROM books`;
+  if (type) {
+    query += ` WHERE type= ${type}`;
+  }
+  if (topic) {
+    if (type) {
+      query += ` AND topic= ${topic}`;
+    } else 
+    query += ` WHERE topic= ${topic}`;
+  }
+  const books = await db.query(query);
   return books.rows;
 };
 
@@ -27,7 +37,9 @@ const updateBook = async (values, id) => {
 };
 
 const deleteBook = async (id) => {
-  const books = await db.query(`DELETE FROM books WHERE id = ${id} RETURNING *`);
+  const books = await db.query(
+    `DELETE FROM books WHERE id = ${id} RETURNING *`
+  );
   return books.rows[0];
 };
 
@@ -36,5 +48,5 @@ module.exports = {
   getAllBooks,
   getBook,
   updateBook,
-  deleteBook
+  deleteBook,
 };

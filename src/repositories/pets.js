@@ -1,7 +1,11 @@
 const db = require("../../db");
 
-const getAllPets = async () => {
-  const pets = await db.query("SELECT * FROM pets");
+const getAllPets = async (type) => {
+  let query = `SELECT * FROM pets`
+  if (type) {
+    query += ` Where type = ${type}`
+  }
+  const pets = await db.query(query);
   return pets.rows;
 };
 
@@ -36,5 +40,5 @@ module.exports = {
   getAllPets,
   getPet,
   updatePet,
-  deletePet
+  deletePet,
 };

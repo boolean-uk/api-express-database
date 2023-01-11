@@ -4,10 +4,12 @@ const {
   getPet,
   updatePet,
   deletePet,
+  getBreeds,
 } = require("../repositories/Pets");
 
 const getAll = async (req, res) => {
-  const pets = await getAllPets();
+  const type = req.query.type;
+  const pets = await getAllPets(type);
   res.json({ pets });
 };
 
@@ -37,7 +39,7 @@ const getPetById = async (req, res) => {
   try {
     const pet = await getPet(id);
     if (!pet) {
-      res.status(404).json({ error: `pet with ID ${id} not found` });
+      res.status(404).json({ error: `no pet with id: ${id}` });
     } else {
       res.status(200).json({ pet });
     }

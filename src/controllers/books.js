@@ -7,7 +7,9 @@ const {
 } = require("../repositories/books");
 
 const getAll = async (req, res) => {
-  const books = await getAllBooks();
+  const type = req.query.type
+  const topic = req.query.topic
+  const books = await getAllBooks(type,topic);
   res.json({ books });
 };
 
@@ -37,7 +39,7 @@ const getBookById = async (req, res) => {
   try {
     const book = await getBook(id);
     if (!book) {
-      res.status(404).json({ error: `Book with ID ${id} not found` });
+      res.status(404).json({ error: `no book with id: ${id}` });
     } else {
       res.status(200).json({ book });
     }
