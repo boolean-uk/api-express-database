@@ -56,10 +56,16 @@ const bookRemove = async (id) => {
   return result.rows[0]
 }
 
+const titleExists = async (title) => {
+  const result = await db.query('SELECT * FROM books WHERE title = $1', [title])
+  return result.rows[0]
+}
+
 module.exports = {
   getAll,
   create,
   byId,
   update,
-  bookRemove
+  bookRemove,
+  titleExists
 }

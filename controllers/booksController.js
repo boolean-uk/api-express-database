@@ -5,7 +5,8 @@ const {
   create,
   byId,
   update,
-  bookRemove
+  bookRemove,
+  titleExists
 } = require('../queries/bookQueries')
 
 const getAllBooks = async (req, res) => {
@@ -19,6 +20,13 @@ const getAllBooks = async (req, res) => {
 const createBook = async (req, res) => {
   const { title, type, author, topic, publicationDate, pages } = req.body
   const values = [title, type, author, topic, publicationDate, pages]
+  const titleResult = await titleExists(title)
+  if (titleResult) {
+    res.status(409).json({
+      error: ' A book with the provided title exists already'
+    })
+    return
+  }
   const result = await create(values)
   res.status(201).json({ book: result })
 }
@@ -43,6 +51,14 @@ const updateBook = async (req, res) => {
   const { id } = req.params
   const { title, type, author, topic, publicationDate, pages } = req.body
   const values = [title, type, author, topic, publicationDate, pages, id]
+
+  const titleResult = await titleExists(title)
+  if (titleResult) {
+    res.status(409).json({
+      error: ' A book with the provided title exists already'
+    })
+    return
+  }
   try {
     const result = await update(values)
     if (!result) {
