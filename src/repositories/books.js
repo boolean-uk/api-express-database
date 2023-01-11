@@ -33,7 +33,6 @@ const updateBookByID = async (id, values) => {
 };
 
 const createBook = async (values) => {
-	console.log(values);
 	const result = await db.query(
 		'INSERT INTO books(title, type, author,topic, "publicationDate", pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
 		values
@@ -42,11 +41,10 @@ const createBook = async (values) => {
 };
 
 const deleteBookByID = async (id) => {
-	const result = await db.query(
-		"DELETE from books WHERE id = $1  RETURNING *",
-		[id]
-	);
-	return result.rows;
+	const result = await db.query("DELETE from books WHERE id = $1 RETURNING *", [
+		id,
+	]);
+	return result.rows[0];
 };
 
 module.exports = {

@@ -39,7 +39,7 @@ const updateByID = async (req, res) => {
 				body: req.body,
 			});
 		} else {
-			res.json({ data: book });
+			res.status(201).json({ book: book });
 		}
 	} catch (error) {
 		res.status(500).json({ error: error.message });
@@ -59,7 +59,7 @@ const create = async (req, res) => {
 				body: req.body,
 			});
 		} else {
-			res.json({ data: book });
+			res.status(201).json({ book: book });
 		}
 	} catch (error) {
 		res.status(500).json({ error: error.message });
@@ -76,7 +76,7 @@ const deleteByID = async (req, res) => {
 				error: "Failed to delete book with given id, id does not exist",
 			});
 		} else {
-			res.json({ data: book });
+			res.status(201).json({ book: book });
 		}
 	} catch (error) {
 		res.status(500).json({ error: error.message });
