@@ -1,4 +1,3 @@
-const id = require("faker/lib/locales/id_ID");
 const db = require("../../db");
 
 const getAllBooks = async (req, res) => {
