@@ -7,8 +7,8 @@ const getAllBooks = async (author, page = 1, per_page = 10) => {
   if (author) {
     // If AUTHOR is given:
     const result = await db.query(
-      `SELECT * FROM books WHERE author = $3 LIMIT $1 OFFSET $2`,
-      [page, per_page, author]
+      `SELECT * FROM books WHERE author = $1 LIMIT $2 OFFSET $3`,
+      [author, per_page, page]
     );
     return result.rows;
   } else {
@@ -22,7 +22,7 @@ const getAllBooks = async (author, page = 1, per_page = 10) => {
 };
 
 const getBookById = async (id) => {
-  const result = await db.query(`SELECT * FROM books WHERE id = ${id}`);
+  const result = await db.query(`SELECT * FROM books WHERE id = $1`, [id]);
   return result.rows;
 };
 

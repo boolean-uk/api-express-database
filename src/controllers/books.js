@@ -21,10 +21,11 @@ const getById = async (req, res) => {
   try {
     const book = await getBookById(id);
 
-    if (!book) {
+    if (book.length === 0) {
       // If the DB returns no data (i.e. it is `undefined`), we return a custom error message
       res.status(404).json({ error: `Book with ID ${id} not found` });
     } else {
+      console.log("Book returned is: ", book);
       res.json({ data: book });
     }
   } catch (error) {
