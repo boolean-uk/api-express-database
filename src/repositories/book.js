@@ -2,21 +2,21 @@ const { as } = require("pg-promise");
 const db = require("../../db");
 
 const getAllBooks = async (author, page = 1, per_page = 10) => {
+  page = page * per_page - per_page;
+
   if (author) {
     // If AUTHOR is given:
     const result = await db.query(
-      `SELECT * FROM books WHERE author = ${author} LIMIT ${per_page} OFFSET ${
-        page * per_page - per_page
-      }`
+      `SELECT * FROM books WHERE author = $3 LIMIT $1 OFFSET $2`,
+      [page, per_page, author]
     );
     return result.rows;
   } else {
     // If NOT AUTHOR given:
-    const result = await db.query(
-      `SELECT * FROM books LIMIT ${per_page} OFFSET ${
-        page * per_page - per_page
-      }`
-    );
+    const result = await db.query(`SELECT * FROM books LIMIT $1 OFFSET $2`, [
+      per_page,
+      page,
+    ]);
     return result.rows;
   }
 };
