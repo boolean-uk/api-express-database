@@ -1,4 +1,8 @@
-const { getAllBooks, getBookById } = require('../repositories/books');
+const {
+  getAllBooks,
+  getBookById,
+  createBook,
+} = require('../repositories/books');
 
 const getAll = async (req, res) => {
   const books = await getAllBooks();
@@ -13,7 +17,10 @@ const getById = async (req, res) => {
 
 const create = async (req, res) => {
   const { title, type, author, topic, publicationDate, pages } = req.body;
-  res.json();
+  const values = [title, type, author, topic, publicationDate, pages];
+
+  const books = createBook(values);
+  res.json({ data: books });
 };
 
 module.exports = {

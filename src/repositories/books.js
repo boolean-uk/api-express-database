@@ -10,7 +10,13 @@ const getBookById = async (id) => {
   return result.rows;
 };
 
+const createBook = async (values) => {
+  const result = await db.query(``, [values]);
+  return result;
+};
+
 module.exports = {
   getAllBooks,
   getBookById,
+  createBook,
 };
