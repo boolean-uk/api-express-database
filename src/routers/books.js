@@ -6,6 +6,7 @@ const {
 	getByID,
 	updateByID,
 	create,
+	deleteByID,
 } = require("../controllers/books.js");
 
 router.get("/", async (req, res) => {
@@ -22,6 +23,10 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
 	await updateByID(req, res);
+});
+
+router.delete("/:id", async (req, res) => {
+	await deleteByID(req, res);
 });
 
 module.exports = router;

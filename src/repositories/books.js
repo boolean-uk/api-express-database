@@ -9,20 +9,20 @@ const getAllBooksByTypeOrTopic = async (type, topic) => {
 	let filters = "";
 
 	if (type && topic) {
-		filters = `WHERE type = '${type}' AND topic = '${topic}'`;
+		filters = `WHERE type = $1 AND topic = $2`;
 
-		return db.query(`SELECT * FROM books ${filters}`);
+		return db.query(`SELECT * FROM books ${filters}`, [type, topic]);
 	} else if (type) {
-		filters = `WHERE type = '${type}'`;
-		return db.query(`SELECT * FROM books ${filters}`);
+		filters = `WHERE type = $1`;
+		return db.query(`SELECT * FROM books ${filters}`, [type]);
 	} else if (topic) {
-		filters = `WHERE topic = '${topic}'`;
-		return db.query(`SELECT * FROM books ${filters}`);
+		filters = `WHERE topic = $1`;
+		return db.query(`SELECT * FROM books ${filters}`, [topic]);
 	}
 };
 
 const getBookByID = async (id) => {
-	return db.query(`SELECT * FROM books WHERE id = ${id}`);
+	return db.query(`SELECT * FROM books WHERE id = $1`, [id]);
 };
 
 const updateBookByID = async (id, values) => {
@@ -42,10 +42,19 @@ const createBook = async (values) => {
 	return result.rows[0];
 };
 
+const deleteBookByID = async (id) => {
+	const result = await db.query(
+		"DELETE from books WHERE id = $1  RETURNING *",
+		[id]
+	);
+	return result.rows;
+};
+
 module.exports = {
 	getAllBooks,
 	getAllBooksByTypeOrTopic,
 	getBookByID,
 	createBook,
 	updateBookByID,
+	deleteBookByID,
 };

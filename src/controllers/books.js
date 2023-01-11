@@ -4,6 +4,7 @@ const {
 	getBookByID,
 	updateBookByID,
 	createBook,
+	deleteBookByID,
 } = require("../repositories/books.js");
 
 const getAll = async (req, res) => {
@@ -65,9 +66,27 @@ const create = async (req, res) => {
 	}
 };
 
+const deleteByID = async (req, res) => {
+	const { id } = req.params;
+
+	try {
+		const book = await deleteBookByID(id);
+		if (!book) {
+			res.status(400).json({
+				error: "Failed to delete book with given id, id does not exist",
+			});
+		} else {
+			res.json({ data: book });
+		}
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
+};
+
 module.exports = {
 	getAll,
 	getByID,
 	updateByID,
 	create,
+	deleteByID,
 };
