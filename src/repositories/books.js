@@ -4,8 +4,22 @@ const getAllBooks = async (req, res) => {
 	return db.query(`SELECT * FROM books`);
 };
 
-const getAllBooksByTypeOrTopic = async (type, topic) => {
+const getAllBooksByTypeOrTopic = async (
+	type,
+	topic,
+	author,
+	page,
+	per_page
+) => {
 	let filters = "";
+
+	// if statements for type/topic/author
+	if (author) {
+		console.log("");
+	}
+	// use concat(?) at the end to add LIMIT/OFFSET based on page/per_page
+	// Check if page/per_page have been defined or if default values need to be assigned
+	// OFFSET will be per_page * page, LIMIT will be interpolation of per_page
 
 	if (type && topic) {
 		filters = `WHERE type = $1 AND topic = $2`;

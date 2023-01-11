@@ -8,9 +8,15 @@ const {
 } = require("../repositories/books.js");
 
 const getAll = async (req, res) => {
-	const { topic, type } = req.query;
-	if (topic || type) {
-		const result = await getAllBooksByTypeOrTopic(type, topic);
+	const { topic, type, author, page, per_page } = req.query;
+	if (topic || type || author || page || per_page) {
+		const result = await getAllBooksByTypeOrTopic(
+			type,
+			topic,
+			author,
+			page,
+			per_page
+		);
 		res.json({ books: result.rows });
 	} else {
 		const result = await getAllBooks();
@@ -21,7 +27,19 @@ const getAll = async (req, res) => {
 const getByID = async (req, res) => {
 	const { id } = req.params;
 	const result = await getBookByID(id);
-	res.json({ book: result.rows[0] });
+
+	try {
+		const book = await getBookByID(id);
+		if (!book) {
+			res.status(400).json({
+				error: `no book with id: ${id}`,
+			});
+		} else {
+			res.json({ book: result.rows[0] });
+		}
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
 };
 
 const updateByID = async (req, res) => {
