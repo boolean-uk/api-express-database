@@ -7,7 +7,11 @@ const {
 } = require("../repositories/book");
 
 const getAll = async (req, res) => {
-  const books = await getAllBooks();
+  const { author, page, per_page } = req.query;
+  console.log("author: ", author);
+  console.log("page: ", page);
+  console.log("per_page: ", per_page);
+  const books = await getAllBooks(author, page, per_page);
   res.json({ book: books });
 };
 
