@@ -22,7 +22,14 @@ const getAllBooks = async (author, page = 1, per_page = 10) => {
 };
 
 const getBookById = async (id) => {
-  const result = await db.query(`SELECT * FROM books WHERE id = $1`, [id]);
+  const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
+  return result.rows;
+};
+
+const getBookByTitle = async (title) => {
+  const result = await db.query("SELECT * FROM books WHERE title = $1", [
+    title,
+  ]);
   return result.rows;
 };
 
@@ -58,4 +65,5 @@ module.exports = {
   createBook,
   updateBook,
   deleteBookById,
+  getBookByTitle,
 };

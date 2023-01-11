@@ -4,13 +4,11 @@ const {
   createBook,
   updateBook,
   deleteBookById,
+  getBookByTitle,
 } = require("../repositories/book");
 
 const getAll = async (req, res) => {
   const { author, page, per_page } = req.query;
-  console.log("author: ", author);
-  console.log("page: ", page);
-  console.log("per_page: ", per_page);
   const books = await getAllBooks(author, page, per_page);
   res.json({ book: books });
 };
@@ -25,7 +23,6 @@ const getById = async (req, res) => {
       // If the DB returns no data (i.e. it is `undefined`), we return a custom error message
       res.status(404).json({ error: `Book with ID ${id} not found` });
     } else {
-      console.log("Book returned is: ", book);
       res.json({ data: book });
     }
   } catch (error) {
@@ -59,6 +56,24 @@ const update = async (req, res) => {
   const { id } = req.params;
   const { title, type, author, topic, publicationDate, pages } = req.body;
   const values = [title, type, author, topic, publicationDate, pages];
+
+  const foundId = await getBookById(id);
+  if (foundId.length === 0) {
+    // ID DOES NOT EXIST
+    res.status(404).json({
+      error: "A book with the provided ID was not found",
+    });
+    return;
+  }
+  const foundTitle = await getBookByTitle(title);
+  if (foundTitle.length !== 0) {
+    // TITLE ALREADY EXISTS
+    res
+      .status(409)
+      .json({ error: "A book with the provided title already exists" });
+    return;
+  }
+
   const book = await updateBook(id, values);
   res.json({ books: book });
 };

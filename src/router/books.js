@@ -23,6 +23,7 @@ router.post("/", async (req, res) => {
   await create(req, res);
 });
 
+// UPDATE a book
 router.put("/:id", async (req, res) => {
   await update(req, res);
 });
