@@ -11,16 +11,17 @@ router.post("/", async (req, res) => {
   const { name, age, type, breed, microchip } = req.body;
   const result = await db.query(`INSERT INTO pets
   ( name, age, type, breed, microchip )
-  VALUES ('${name}', '${age}', '${type}','${breed}', '${microchip}')
+  VALUES ('${name}', ${age}, '${type}','${breed}', ${microchip})
   RETURNING * `);
-  res.json({ pet: result.rows });
+  res.status(201).json({ pet: result.rows[0] });
 });
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const result = await db.query(`SELECT * FROM pets
+  const result = await db.query(`
+  SELECT * FROM pets
   WHERE id = ${id}`);
-  res.json({ pet: result.rows });
+  res.json({ pet: result.rows[0] });
 });
 
 router.delete("/:id", async (req, res) => {
