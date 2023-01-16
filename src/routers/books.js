@@ -1,5 +1,4 @@
 const express = require('express');
-// const removeSubdocs = require('mongoose/lib/plugins/removeSubdocs');
 const router = express.Router();
 const db = require("../../db");
 
@@ -17,15 +16,17 @@ router.get('/:id', async (req, res) => {
     res.json({data:result.rows});
 });
 
-// post a book
-router.post('/', async (req, res) => {
-    const {title, type, author, topic, publicationDate, pages} = req.body;
-    const result = await db.query(`INSERT INTO books (title, type, author, topic, "publicationDate", pages)
-    VALUES('${title}', '${type}', '${author}', '${topic}' '${publicationDate}', ${pages}) RETURNING *
-    `)
-    res.json({ data: result.rows });
-});
+// // post a book
+// router.post('/', async (req, res) => {
+//     const {title, type, author, topic, publicationDate, pages} = req.body;
+//     const result = await db.query(`
+//     INSERT INTO books (title, type, author, topic, "publicationDate", pages)
+//     VALUES('${title}', '${type}', '${author}', '${topic}' '${publicationDate}', ${pages})
+//     `)
+//     res.json({ data: result.rows });
+// });
 
+// UPDATE books
 router.put('/:id', async(req,res) =>{
     const {id} = req.params;
     const {title, type, author, topic, publicationDate, pages} = req.body;
@@ -37,4 +38,18 @@ router.put('/:id', async(req,res) =>{
     `)
     res.json({ data: result.rows });
 })
+
+// DELETE A BOOK
+router.delete('/:id', async(req, res) =>{
+    const {id} = req.params;
+    
+    const result = db.query(`
+        DELETE FROM books
+        WHERE id = ${id}
+        RETURNING *
+    `)
+
+    res.json({ data: result.rows });
+})
+
 module.exports = router;
