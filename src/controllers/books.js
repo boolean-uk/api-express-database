@@ -10,7 +10,7 @@ const {
 const getAll = async (req, res) => {
   const { author, page, per_page } = req.query;
   const books = await getAllBooks(author, page, per_page);
-  res.json({ book: books });
+  res.json({ books: books });
 };
 
 const getById = async (req, res) => {
@@ -23,7 +23,7 @@ const getById = async (req, res) => {
       // If the DB returns no data (i.e. it is `undefined`), we return a custom error message
       res.status(404).json({ error: `Book with ID ${id} not found` });
     } else {
-      res.json({ data: book });
+      res.json({ book: book });
     }
   } catch (error) {
     // If there is some other error that occurs with the request, we return the built-in error messsage
@@ -45,7 +45,7 @@ const create = async (req, res) => {
         body: req.body,
       });
     } else {
-      res.json({ data: book });
+      res.status(201).json({ book: book });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -66,16 +66,15 @@ const update = async (req, res) => {
     return;
   }
   const foundTitle = await getBookByTitle(title);
-  if (foundTitle.length !== 0) {
+  if (foundTitle) {
     // TITLE ALREADY EXISTS
     res
       .status(409)
       .json({ error: "A book with the provided title already exists" });
-    return;
   }
 
   const book = await updateBook(id, values);
-  res.json({ books: book });
+  res.status(201).json({ book: book });
 };
 
 const deleteBook = async (req, res) => {
@@ -83,7 +82,7 @@ const deleteBook = async (req, res) => {
   const book = await deleteBookById(id);
   // const book = await db.query(`DELETE FROM books WHERE id = ${id}
   // RETURNING *`);
-  res.status(201).json({ books: book });
+  res.status(201).json({ book: book });
 };
 
 module.exports = {
