@@ -11,7 +11,7 @@ const getAll = async (type) => {
 
 const create = async (values) => {
   const result = await db.query(
-    "INSERT INTO pets (name, age, type , breed, microchip) VALUES ($1, $2, $3,$4,$5) RETURNING *",
+    "INSERT INTO pets (name, age, type , breed, microchip) VALUES ($1, $2, $3, $4, $5) RETURNING *",
     values
   );
   return result.rows[0];

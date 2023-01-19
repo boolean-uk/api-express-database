@@ -33,7 +33,7 @@ const updatePet = async (req, res) => {
   const { name, age, type, breed, microchip } = req.body;
   const values = [name, age, type, breed, microchip, id];
   const result = await update(values);
-  res.status(201).json({ pets: result });
+  res.status(201).json({ pet: result });
 };
 
 const deletePet = async (req, res) => {
