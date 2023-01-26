@@ -15,7 +15,7 @@ router.get("/:id", async (req,res) => {
   const {id} = req.params;
   const sqlQuery = 'select * from books where id = $1';
   const result = await db.query(sqlQuery, [id])
-  res.json({books: result.rows})
+  res.json({book: result.rows[0]})
 })
 
 
@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
   const newDate = new Date(req.body.publicationDate)
   const result = await db.query(sqlQuery, [req.body.title, req.body.type, req.body.author, req.body.topic, newDate, req.body.pages])
   console.log(result)
-  res.json({ book: result.rows })
+  res.status(201).json({ book: result.rows[0] })
 })
 
 router.put("/:id", async (req, res) => {
@@ -34,14 +34,14 @@ router.put("/:id", async (req, res) => {
   const newDate = new Date(req.body.publicationDate);
   const sqlQuery = 'update books set title =$1, type = $2, author = $3, topic = $4, "publicationDate" = $5 , pages =$6 where id = $7  RETURNING *';
   const result = await db.query(sqlQuery, [req.body.title, req.body.type, req.body.author, req.body.topic, newDate, req.body.pages, id])
-  res.json({book: result.rows})
+  res.status(201).json({book: result.rows [0]})
 })
 
 router.delete("/:id", async (req, res) => {
   const {id} = req.params;
-  const sqlQuery = 'DELETE from books WHERE id = $1 RETURNING *;'
+  const sqlQuery = 'DELETE FROM books WHERE id = $1 RETURNING *;'
   const results = await db.query(sqlQuery, [id])
-  res.json({book: results.rows})
+  res.status(201).json({book: results.rows [0]})
 })
 
 module.exports = router
