@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../../db');
 const { getAll, getById, create } = require('../controllers/books');
 
 router.get('/', async (req, res) => {
+  console.log('Get all - router');
   await getAll(req, res);
 });
 

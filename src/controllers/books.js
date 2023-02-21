@@ -5,8 +5,9 @@ const {
 } = require('../repositories/books');
 
 const getAll = async (req, res) => {
+  console.log('getAll - controllers');
   const books = await getAllBooks();
-  res.json({ data: books });
+  res.json(books);
 };
 
 const getById = async (req, res) => {

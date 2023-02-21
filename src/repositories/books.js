@@ -1,8 +1,12 @@
 const db = require('../../db');
 
 const getAllBooks = async () => {
-  const result = await db.query('SELECT * FROM books');
-  return result;
+  console.log('getAllBooks - repositories');
+  const queryResult = await db.query('SELECT * FROM books');
+  const response = {
+    books: queryResult.rows,
+  };
+  return response;
 };
 
 const getBookById = async (id) => {
