@@ -1,8 +1,11 @@
-const db = require("../../db");
+const db = require('../../db');
 
 const getBreeds = async (type) => {
-    const breeds = await db.query(`SELECT DISTINCT breed FROM pets WHERE type = ${type}`)
-    return breeds.rows
-}
+  const breeds = await db.query(
+    `SELECT DISTINCT breed FROM pets WHERE type = ${type}`
+  );
+  console.log(breeds);
+  //   return breeds.rows;
+};
 
-module.exports = { getBreeds }
+module.exports = { getBreeds };

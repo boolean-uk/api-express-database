@@ -5,7 +5,7 @@ const {
   updatePet,
   deletePet,
   getBreeds,
-} = require("../repositories/Pets");
+} = require('../repositories/pets');
 
 const getAll = async (req, res) => {
   const type = req.query.type;
@@ -22,7 +22,7 @@ const create = async (req, res) => {
 
     if (!pet) {
       res.status(400).json({
-        error: "Failed to create pet with the values provided.",
+        error: 'Failed to create pet with the values provided.',
         body: req.body,
       });
     } else {
@@ -58,7 +58,7 @@ const updatePetById = async (req, res) => {
 
     if (!pet) {
       res.status(400).json({
-        error: "Failed to create pet with the values provided.",
+        error: 'Failed to create pet with the values provided.',
         body: req.body,
       });
     } else {

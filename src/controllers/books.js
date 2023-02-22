@@ -7,9 +7,9 @@ const {
 } = require("../repositories/books");
 
 const getAll = async (req, res) => {
-  const type = req.query.type
-  const topic = req.query.topic
-  const books = await getAllBooks(type,topic);
+  const type = req.query.type;
+  const topic = req.query.topic;
+  const books = await getAllBooks(type, topic);
   res.json({ books });
 };
 
@@ -80,5 +80,5 @@ module.exports = {
   getAll,
   getBookById,
   updateBookById,
-  deleteBookById
+  deleteBookById,
 };
