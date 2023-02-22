@@ -5,16 +5,14 @@ const {
 } = require('../repositories/books');
 
 const getAll = async (req, res) => {
-  console.log('getAll - controllers');
   const books = await getAllBooks();
-  res.json(books);
+  res.json({ books: books });
 };
 
 const getById = async (req, res) => {
-  console.log('getById - controllers');
   const { id } = req.params;
   const book = await getBookById(id);
-  res.json({ data: book });
+  book ? res.json({ book: book }) : res.json({ book: null });
 };
 
 const create = async (req, res) => {
@@ -23,7 +21,7 @@ const create = async (req, res) => {
   const values = [title, type, author, topic, publicationDate, pages];
 
   const books = await createBook(values);
-  res.status(201).json(books);
+  res.status(201).json({ book: books });
 };
 
 module.exports = {
