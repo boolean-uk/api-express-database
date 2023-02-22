@@ -8,12 +8,13 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
+  console.log('Get book by id - router');
   await getById(req, res);
 });
 
-router.post('/'),
-  async (req, res) => {
-    await create(req, res);
-  };
+router.post('/', async (req, res) => {
+  console.log('Post book - router');
+  await create(req, res);
+});
 
 module.exports = router;

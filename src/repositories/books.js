@@ -10,13 +10,21 @@ const getAllBooks = async () => {
 };
 
 const getBookById = async (id) => {
+  console.log('getBookById - repositories');
   const result = await db.query(`SELECT * FROM books WHERE id = ${id}`);
   return result.rows;
 };
 
 const createBook = async (values) => {
-  const result = await db.query(``, [values]);
-  return result;
+  console.log('createBook - repositories');
+  const queryResult = await db.query(
+    'INSERT INTO books (title, type, author, topic, "publicationDate", pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+    values
+  );
+  const response = {
+    book: queryResult.rows[0],
+  };
+  return response;
 };
 
 module.exports = {

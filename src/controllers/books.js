@@ -11,17 +11,19 @@ const getAll = async (req, res) => {
 };
 
 const getById = async (req, res) => {
+  console.log('getById - controllers');
   const { id } = req.params;
   const book = await getBookById(id);
   res.json({ data: book });
 };
 
 const create = async (req, res) => {
+  console.log('create - controllers');
   const { title, type, author, topic, publicationDate, pages } = req.body;
   const values = [title, type, author, topic, publicationDate, pages];
 
-  const books = createBook(values);
-  res.json({ data: books });
+  const books = await createBook(values);
+  res.status(201).json(books);
 };
 
 module.exports = {
