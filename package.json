@@ -16,7 +16,7 @@
     "faker": "5.5.3",
     "morgan": "1.10.0",
     "pg": "8.6.0",
-    "pg-promise": "^10.11.1"
+    "pg-promise": "^11.3.0"
   },
   "devDependencies": {
     "nodemon": "1.18.4",
