@@ -26,7 +26,6 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const str = `UPDATE pets SET name = $2, age = $3, type = $4, breed = $5, microchip = $6 WHERE id = $1 RETURNING *;`;
   const values = [Number(req.params.id), ...Object.values(req.body)];
-  console.log(values);
   const data = await db.query(str, values);
   res.status(201).json({ pet: data.rows[0] });
 });

@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS books (
   type              VARCHAR(255)   NOT NULL,
   author            VARCHAR(255)   NOT NULL,
   topic             VARCHAR(255)   NOT NULL,
-  "publicationDate" DATE           NOT NULL,
+  "publicationDate" TIMESTAMPTZ    NOT NULL,
   pages             INTEGER        NOT NULL
 );
