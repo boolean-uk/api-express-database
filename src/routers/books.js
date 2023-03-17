@@ -14,9 +14,10 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const { title, type, author, topic, publicationDate, pages } = req.body;
-  const str = ` ('${title}', '${type}', '${author}','${topic}', '${publicationDate}', ${pages})`;
+  const str = ` ($1, $2, $3, $4, $5, $6)`;
+  const values = [title, type, author, topic, publicationDate, pages];
 
-  await createBook(req, res, str);
+  await createBook(req, res, str, values);
 });
 
 router.get("/:id", async (req, res) => {
@@ -28,10 +29,11 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { title, type, author, topic, publicationDate, pages } = req.body;
-  let str = `title ='${title}', type ='${type}', author ='${author}',topic = '${topic}', "publicationDate" = '${publicationDate}', pages =  ${pages}`;
+  let str = `title = $1, type = $2, author = $3,topic = $4, "publicationDate" = $5, pages =  $6`;
   str += ` WHERE id = ${req.params.id} `;
+  const values = [title, type, author, topic, publicationDate, pages];
 
-  await update(req, res, str);
+  await update(req, res, str, values);
 });
 
 router.delete("/:id", async (req, res) => {

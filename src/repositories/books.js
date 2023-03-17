@@ -6,11 +6,12 @@ const getAllBooks = async () => {
   return bookdata.rows;
 };
 
-const createNewBook = async (str) => {
+const createNewBook = async (str, values) => {
   const bookdata = await db.query(
     'INSERT INTO books ( title, type, author, topic, "publicationDate", pages) VALUES' +
       str +
-      "RETURNING *;"
+      "RETURNING *;",
+    values
   );
 
   return bookdata.rows[0];
@@ -22,8 +23,11 @@ const getBookById = async (str) => {
   return bookdata.rows[0];
 };
 
-const updateBook = async (str) => {
-  const bookdata = await db.query("UPDATE books SET " + str + "RETURNING *");
+const updateBook = async (str, values) => {
+  const bookdata = await db.query(
+    "UPDATE books SET " + str + "RETURNING *",
+    values
+  );
 
   return bookdata.rows[0];
 };
