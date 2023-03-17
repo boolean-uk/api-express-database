@@ -1,50 +1,43 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../../db");
+const {
+  getAll,
+  createpet,
+  getpet,
+  update,
+  deleted,
+} = require("../controllers/pets");
 
 router.get("/", async (req, res) => {
-  const petdata = await db.query("SELECT * FROM pets;");
-
-  res.json({ pets: petdata.rows });
+  await getAll(req, res);
 });
 
 router.post("/", async (req, res) => {
   const { name, age, type, breed, microchip } = req.body;
-
   const str = ` ('${name}', '${age}', '${type}','${breed}', '${microchip}')`;
 
-  const petdata = await db.query(
-    "INSERT INTO pets ( name, age, type, breed, microchip) VALUES" +
-      str +
-      "RETURNING *;"
-  );
-
-  res.status(201).json({ pet: petdata.rows[0] });
+  await createpet(req, res, str);
 });
 
 router.get("/:id", async (req, res) => {
   let str = "SELECT * FROM pets";
   str += ` WHERE id = ${req.params.id};`;
 
-  const petdata = await db.query(str);
-
-  res.json({ pet: petdata.rows[0] });
+  await getpet(req, res, str);
 });
 
 router.put("/:id", async (req, res) => {
   const { name, age, type, breed, microchip } = req.body;
   let str = `name ='${name}', age ='${age}',type = '${type}', breed = '${breed}', microchip =  ${microchip}`;
   str += ` WHERE id = ${req.params.id} `;
-  const petdata = await db.query("UPDATE pets SET " + str + "RETURNING *");
 
-  res.status(201).json({ pet: petdata.rows[0] });
+  await update(req, res, str);
 });
 
 router.delete("/:id", async (req, res) => {
   let str = ` WHERE id = ${req.params.id} `;
-  const petdata = await db.query("DELETE FROM pets" + str + "RETURNING *");
 
-  res.status(201).json({ pet: petdata.rows[0] });
+  await deleted(req, res, str);
 });
 
 module.exports = router;
