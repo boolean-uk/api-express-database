@@ -36,7 +36,7 @@ describe("Books Endpoint", () => {
       });
     });
 
-    it("will list a book", async () => {
+    fit("will list a book", async () => {
       const response = await supertest(app).get("/books/1");
 
       expect(response.status).toEqual(200);

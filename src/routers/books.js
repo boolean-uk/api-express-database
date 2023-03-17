@@ -22,6 +22,16 @@ router.post("/", async (req, res) => {
   res.status(201).json({ book: bookdata.rows[0] });
 });
 
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  let str = "SELECT * FROM books";
+  str += ` WHERE id = ${id};`;
+
+  const bookdata = await db.query(str);
+
+  res.json({ book: bookdata.rows[0] });
+});
+
 // router.get("/", async (req, res) => {
 //   const topic = req.query.topic;
 //   const values = [];
