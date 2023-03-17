@@ -72,7 +72,7 @@ describe("Books Endpoint", () => {
       await createBook(Object.values(book1));
     });
 
-    it("will return the deleted the book", async () => {
+    fit("will return the deleted the book", async () => {
       const response = await supertest(app).delete("/books/1");
 
       expect(response.status).toEqual(201);

@@ -40,6 +40,13 @@ router.put("/:id", async (req, res) => {
   res.status(201).json({ book: bookdata.rows[0] });
 });
 
+router.delete("/:id", async (req, res) => {
+  let str = ` WHERE id = ${req.params.id} `;
+  const bookdata = await db.query("DELETE FROM books" + str + "RETURNING *");
+
+  res.status(201).json({ book: bookdata.rows[0] });
+});
+
 // router.get("/", async (req, res) => {
 //   const topic = req.query.topic;
 //   const values = [];
