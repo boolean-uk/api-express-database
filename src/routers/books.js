@@ -1,50 +1,44 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../../db");
+
+const {
+  getAll,
+  createBook,
+  getBook,
+  update,
+  deleted,
+} = require("../controllers/books");
 
 router.get("/", async (req, res) => {
-  const bookdata = await db.query("SELECT * FROM books;");
-
-  res.json({ books: bookdata.rows });
+  await getAll(req, res);
 });
 
 router.post("/", async (req, res) => {
   const { title, type, author, topic, publicationDate, pages } = req.body;
-
   const str = ` ('${title}', '${type}', '${author}','${topic}', '${publicationDate}', ${pages})`;
 
-  const bookdata = await db.query(
-    'INSERT INTO books ( title, type, author, topic, "publicationDate", pages) VALUES' +
-      str +
-      "RETURNING *;"
-  );
-
-  res.status(201).json({ book: bookdata.rows[0] });
+  await createBook(req, res, str);
 });
 
 router.get("/:id", async (req, res) => {
   let str = "SELECT * FROM books";
   str += ` WHERE id = ${req.params.id};`;
 
-  const bookdata = await db.query(str);
-
-  res.json({ book: bookdata.rows[0] });
+  await getBook(req, res, str);
 });
 
 router.put("/:id", async (req, res) => {
   const { title, type, author, topic, publicationDate, pages } = req.body;
   let str = `title ='${title}', type ='${type}', author ='${author}',topic = '${topic}', "publicationDate" = '${publicationDate}', pages =  ${pages}`;
   str += ` WHERE id = ${req.params.id} `;
-  const bookdata = await db.query("UPDATE books SET " + str + "RETURNING *");
 
-  res.status(201).json({ book: bookdata.rows[0] });
+  await update(req, res, str);
 });
 
 router.delete("/:id", async (req, res) => {
   let str = ` WHERE id = ${req.params.id} `;
-  const bookdata = await db.query("DELETE FROM books" + str + "RETURNING *");
 
-  res.status(201).json({ book: bookdata.rows[0] });
+  await deleted(req, res, str);
 });
 
 // router.get("/", async (req, res) => {

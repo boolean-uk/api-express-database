@@ -5,7 +5,7 @@ const createPet = require("../../helpers/createPet.js");
 
 describe("Pets Endpoint", () => {
   describe("POST /pets", () => {
-    fit("will create a new pet", async () => {
+    it("will create a new pet", async () => {
       const response = await supertest(app).post("/pets").send(pet1);
 
       expect(response.status).toEqual(201);
@@ -24,7 +24,7 @@ describe("Pets Endpoint", () => {
       await createPet(Object.values(pet2));
     });
 
-    fit("will list all pets", async () => {
+    it("will list all pets", async () => {
       const response = await supertest(app).get("/pets");
 
       expect(response.status).toEqual(200);
@@ -32,7 +32,7 @@ describe("Pets Endpoint", () => {
       expect(response.body.pets.length).toEqual(2);
     });
 
-    fit("will list a pet", async () => {
+    it("will list a pet", async () => {
       const response = await supertest(app).get("/pets/1");
 
       expect(response.status).toEqual(200);
@@ -50,7 +50,7 @@ describe("Pets Endpoint", () => {
       await createPet(Object.values(pet1));
     });
 
-    fit("will update a pets", async () => {
+    it("will update a pets", async () => {
       const response = await supertest(app).put("/pets/1").send(pet2);
 
       expect(response.status).toEqual(201);
@@ -68,7 +68,7 @@ describe("Pets Endpoint", () => {
       await createPet(Object.values(pet1));
     });
 
-    fit("will return the deleted the pet", async () => {
+    it("will return the deleted the pet", async () => {
       const response = await supertest(app).delete("/pets/1");
 
       expect(response.status).toEqual(201);
