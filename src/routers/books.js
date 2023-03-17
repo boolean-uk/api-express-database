@@ -8,6 +8,20 @@ router.get("/", async (req, res) => {
   res.json({ books: bookdata.rows });
 });
 
+router.post("/", async (req, res) => {
+  const { title, type, author, topic, publicationDate, pages } = req.body;
+
+  const str = ` ('${title}', '${type}', '${author}','${topic}', '${publicationDate}', ${pages})`;
+
+  const bookdata = await db.query(
+    'INSERT INTO books ( title, type, author, topic, "publicationDate", pages) VALUES' +
+      str +
+      "RETURNING *;"
+  );
+
+  res.status(201).json({ book: bookdata.rows[0] });
+});
+
 // router.get("/", async (req, res) => {
 //   const topic = req.query.topic;
 //   const values = [];
