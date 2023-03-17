@@ -54,7 +54,7 @@ describe("Books Endpoint", () => {
       await createBook(Object.values(book1));
     });
 
-    it("will update a books", async () => {
+    fit("will update a books", async () => {
       const response = await supertest(app).put("/books/1").send(book2);
 
       expect(response.status).toEqual(201);

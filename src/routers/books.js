@@ -23,13 +23,21 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  const { id } = req.params;
   let str = "SELECT * FROM books";
-  str += ` WHERE id = ${id};`;
+  str += ` WHERE id = ${req.params.id};`;
 
   const bookdata = await db.query(str);
 
   res.json({ book: bookdata.rows[0] });
+});
+
+router.put("/:id", async (req, res) => {
+  const { title, type, author, topic, publicationDate, pages } = req.body;
+  let str = `title ='${title}', type ='${type}', author ='${author}',topic = '${topic}', "publicationDate" = '${publicationDate}', pages =  ${pages}`;
+  str += ` WHERE id = ${req.params.id} `;
+  const bookdata = await db.query("UPDATE books SET " + str + "RETURNING *");
+
+  res.status(201).json({ book: bookdata.rows[0] });
 });
 
 // router.get("/", async (req, res) => {
