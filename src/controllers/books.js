@@ -1,62 +1,49 @@
-const db = require('../../db');
+const booksRepo = require('../repositories/books');
 
 const getAllBooks = async (req, res) => {
     const { type, topic } = req.query;
-
-    let str = 'SELECT * FROM books';
     let values = [];
+    let query = '';
 
     if (type) {
-        str += ' WHERE type = $1';
+        query = 'type';
         values = [type];
     }
     if (topic) {
-        str += ' WHERE topic = $1';
+        query = 'topic';
         values = [topic];
     }
-    str += ';';
-    const data = await db.query(str, values);
-    const books = data.rows;
+
+    const books = await booksRepo.getAllBooks(values, query);
     res.json({ books });
 };
 
 const getBookById = async (req, res) => {
     const id = req.params.id;
-    const str = 'SELECT * FROM books WHERE id = $1;';
     const values = [id];
-    const data = await db.query(str, values);
-    const book = data.rows[0];
+    const book = await booksRepo.getBookById(values);
     res.json({ book });
 };
 
 const createBook = async (req, res) => {
     const { title, type, author, topic, publicationDate, pages } = req.body;
-    const str =
-        'INSERT INTO books (title, type, author, topic, "publicationDate", pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;';
     const values = [title, type, author, topic, publicationDate, pages];
-    const data = await db.query(str, values);
-    const book = data.rows[0];
-
+    const book = await booksRepo.createBook(values);
     res.status(201).json({ book });
 };
 
 const updateBookById = async (req, res) => {
     const id = req.params.id;
     const { title, type, author, topic, publicationDate, pages } = req.body;
-    const str =
-        'UPDATE books SET title = $1, type = $2, author = $3, topic = $4, "publicationDate" = $5, pages = $6 WHERE id = $7 RETURNING *;';
     const values = [title, type, author, topic, publicationDate, pages, id];
-    const data = await db.query(str, values);
-    const book = data.rows[0];
+    const book = await booksRepo.updateBookById(values);
     res.status(201).json({ book });
 };
 
 const deleteBookById = async (req, res) => {
     const id = req.params.id;
-    const str = 'DELETE from books WHERE id = $1 RETURNING *;';
     const values = [id];
-    const data = await db.query(str, values);
-    const book = data.rows[0];
+    const book = await booksRepo.deleteBookById(values);
     res.status(201).json({ book });
 };
 

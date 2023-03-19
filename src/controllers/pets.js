@@ -1,3 +1,4 @@
+const petsRepo = require('../repositories/pets');
 const db = require('../../db');
 
 const getAllPets = async (req, res) => {
