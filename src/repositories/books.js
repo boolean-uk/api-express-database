@@ -1,6 +1,6 @@
 const db = require('../../db');
 
-const getAllBooks = async (values, query) => {
+const getAllBooks = async (values, query, page = 1, perPage = 20) => {
     let str = 'SELECT * FROM books';
     if (query === 'type') {
         str += ' WHERE type = $1';
@@ -8,10 +8,26 @@ const getAllBooks = async (values, query) => {
     if (query === 'topic') {
         str += ' WHERE topic = $1';
     }
+    if (query === 'author') {
+        str += ' WHERE author = $1';
+    }
+    values.push(perPage);
+    str += ` LIMIT $${values.length}`;
+    if (page > 1) {
+        let pagination = (page - 1) * perPage;
+        str += ` OFFSET ${pagination}`;
+    }
     str += ';';
     const data = await db.query(str, values);
     const books = data.rows;
     return books;
+};
+
+const getBookByTitle = async (values) => {
+    const str = 'SELECT * FROM books WHERE title = $1';
+    const data = await db.query(str, values);
+    const book = data.rows[0];
+    return book;
 };
 
 const getBookById = async (values) => {
@@ -47,6 +63,7 @@ const deleteBookById = async (values) => {
 module.exports = {
     getAllBooks,
     getBookById,
+    getBookByTitle,
     createBook,
     updateBookById,
     deleteBookById,
