@@ -38,9 +38,18 @@ router.delete("/:id", async (req, res) => {
   const data = await db.query(str, values);
   const book = data.rows[0];
 
-  console.log(" bookdata.rows[0].id =", book);
-
   res.status(201).json({ book });
 });
 
+router.put("/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  const { title, type, author, topic, publicationDate, pages } = req.body;
+  const str = `UPDATE books SET title = $1, type = $2, author = $3, topic = $4, "publicationDate" = $5, pages= $6 WHERE id = $7 RETURNING *;`;
+  const values = [title, type, author, topic, publicationDate, pages, id];
+
+  const data = await db.query(str, values);
+  const book = data.rows[0];
+
+  res.status(201).json({ book });
+});
 module.exports = router;
