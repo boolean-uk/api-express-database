@@ -67,7 +67,7 @@ describe("Books Endpoint", () => {
     });
   });
 
-  fdescribe("DELETE /books", () => {
+  describe("DELETE /books", () => {
     beforeEach(async () => {
       await createBook(Object.values(book1));
     });
