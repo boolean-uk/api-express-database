@@ -3,14 +3,14 @@ const app = require("../../../src/server.js");
 const { book1, book2, book3 } = require("../../fixtures/bookData.js");
 const createBook = require("../../helpers/createBook.js");
 const insertBooks = require("../../helpers/insertBooks.js");
-fdescribe("Books Endpoint", () => {
+describe("Books Endpoint", () => {
   describe("GET /books", () => {
     beforeEach(async () => {
       await createBook(Object.values(book1));
       await createBook(Object.values(book2));
     });
 
-    fit("will return a 404 status with message if no book", async () => {
+    it("will return a 404 status with message if no book", async () => {
       const response = await supertest(app).get("/books/3");
 
       expect(response.status).toEqual(404);

@@ -5,23 +5,32 @@ const db = require("../../db");
 router.get("/", async (req, res) => {
   let str = `SELECT * FROM books `;
   const queries = req.query;
+  if (queries.perPage === undefined) queries.perPage = 20;
+  if (queries.page === undefined) queries.page = 1;
+  queries.offset = queries.perPage * (queries.page - 1);
+  const values = [Number(queries.perPage), queries.offset];
 
-  if (queries.page === undefined) queries.page = 0;
-  else queries.page--;
-  if (queries.per_page === undefined) queries.per_page = 20;
-  else queries.per_page = Math.min(Math.max(queries.per_page, 10), 50);
-  queries.page = queries.page * queries.per_page;
-  const values = [queries.per_page, queries.page];
-
-  if (queries.author) {
+  if (queries.author !== undefined) {
     values.push(queries.author);
-    str += `WHERE author = $3`;
+    str += `WHERE author = $3 `;
   }
 
-  str += `LIMIT $1 OFFSET $2 ;`;
+  if (queries.perPage < 10 || queries.perPage > 50) {
+    res.status(400).json({
+      error: `parameter invalid perPage: ${queries.perPage} not valid. Accepted range is 10 - 50`,
+    });
+    return;
+  }
+  str += `LIMIT $1 OFFSET $2`;
+
+  str += `;`;
   const data = await db.query(str, values);
-  const books = data.rows;
-  res.json({ books });
+  const resdata = { books: data.rows };
+  if (queries.perPage || queries.page) {
+    resdata.per_page = Number(queries.perPage);
+    resdata.page = Number(queries.page);
+  }
+  res.json(resdata);
 });
 
 router.post("/", async (req, res) => {
@@ -45,6 +54,15 @@ router.get("/:id", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
+  const checkStr = "SELECT * FROM books WHERE title = $1";
+  const checkValues = [req.body.title];
+  const check = await db.query(checkStr, checkValues);
+  if (check.rows != 0) {
+    res.status(409).json({
+      error: `A book with the title: ${req.body.title} already exists`,
+    });
+    return;
+  }
   const { title, type, author, topic, publicationDate, pages } = req.body;
   const id = Number(req.params.id);
   const str = `UPDATE books SET title = $2, type = $3, author = $4, topic = $5, "publicationDate" = $6, pages = $7 WHERE id = $1 RETURNING *;`;
@@ -66,7 +84,7 @@ router.delete("/:id", async (req, res) => {
     res.status(404).json({ error: `no book with id: ${req.params.id}` });
     return;
   }
-  res.status(201).json({ book: data });
+  res.status(201).json({ book: data.rows[0] });
 });
 
 module.exports = router;
