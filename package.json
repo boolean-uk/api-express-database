@@ -7,6 +7,7 @@
     "start": "npx nodemon src/index.js",
     "test": "npx jest -i test/api/routes --forceExit",
     "test-books": "npx jest -i test/api/routes/books.spec.js",
+    "test-pets": "npx jest -i test/api/routes/pets.spec.js",
     "test-extensions": "npx jest -i test/api/extensions  --forceExit"
   },
   "dependencies": {

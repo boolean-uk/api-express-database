@@ -19,8 +19,7 @@ router.get("/:id", async (req, res) => {
   const values = [id];
 
   const data = await db.query(str, values);
-  const book = data.rows[0];
-  res.status(200).json({ book });
+  res.json({ book: data.rows[0] });
 });
 
 router.post("/", async (req, res) => {
