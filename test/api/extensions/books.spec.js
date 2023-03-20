@@ -30,6 +30,7 @@ describe("Books Endpoint", () => {
 
       expect(response.status).toEqual(200)
       expect(response.body.books).not.toEqual(undefined)
+      console.log("response body", response.body)
       expect(response.body.books.length).toEqual(1)
       const expectedBooks = [book1]
       response.body.books.forEach((retrievedBook, index) => {

@@ -1,46 +1,41 @@
 const express = require('express')
 const router = express.Router()
 const db = require("../../db");
+const {
+    getAll,
+    createPet,
+    getPet,
+    updatePet,
+    deletePet
+} = require("../controllers/pets")
 
 router.get("/", async (req, res) => {
-    const str = `SELECT * FROM pets;`;
-    const values = [];
-    const data = await db.query(str, values);
-    res.json({ pets: data.rows });
+    await getAll(req, res)
 });
 
 router.post("/", async (req, res) => {
     const { name, age, type, breed, microchip} = req.body;
-    const str = `INSERT INTO pets (name, age, type, breed, microchip) 
-    VALUES($1, $2, $3, $4, $5) RETURNING *;`;
+    const str = `($1, $2, $3, $4, $5)`;
     const values = [name, age, type, breed, microchip];
-    const data = await db.query(str, values);
-    res.status(201).json({ pet: data.rows[0] });
+    await createPet(req, res, str, values)
 });
 
 router.get("/:id", async (req, res) => {
-    const id = Number(req.params.id)
-    const str = `SELECT * FROM pets WHERE id = $1`
-    const values = [id]
-    const data = await db.query(str, values)
-    res.json({ pet: data.rows[0] })
+    let str = `SELECT * FROM pets `
+    str += `WHERE id = ${req.params.id}`
+    await getPet(req, res, str)
 })
 
 router.put("/:id", async (req, res) => {
-    const id = Number(req.params.id)
     const { name, age, type, breed, microchip } = req.body;
-    const str = `UPDATE pets SET name = $2, age = $3, type = $4, breed = $5, microchip = $6 
-   WHERE id = $1 RETURNING *;`
-    const values = [id, name, age, type, breed, microchip]
-    const data = await db.query(str, values)
-    res.status(201).json({ pet: data.rows[0] })
+    let str = `UPDATE pets SET name = $1, age = $2, type = $3, breed = $4, microchip = $5`
+    str += `WHERE id = ${req.params.id} RETURNING *;`
+    const values = [name, age, type, breed, microchip]
+    await updatePet(req, res, str, values)
 })
 
 router.delete("/:id", async (req, res) => {
-    const id = Number(req.params.id)
-    const str = `DELETE FROM pets WHERE id = $1 RETURNING *;`
-    const values = [id]
-    const data = await db.query(str, values)
-    res.status(201).json({ pet: data.rows[0] })
+    const str = req.params.id
+    await deletePet(req, res, str)
 })
 module.exports = router
