@@ -5,7 +5,7 @@ const createBook = require('../../helpers/createBook.js');
 const insertBooks = require('../../helpers/insertBooks.js');
 
 describe('Books Endpoint', () => {
-    fdescribe('GET /books', () => {
+    describe('GET /books', () => {
         beforeEach(async () => {
             await createBook(Object.values(book1));
             await createBook(Object.values(book2));
@@ -19,7 +19,7 @@ describe('Books Endpoint', () => {
         });
     });
 
-    fdescribe('GET /books by author', () => {
+    describe('GET /books by author', () => {
         beforeEach(async () => {
             await createBook(Object.values(book1));
             await createBook(Object.values(book2));
@@ -40,12 +40,12 @@ describe('Books Endpoint', () => {
         });
     });
 
-    fdescribe('GET /books Pagination', () => {
+    describe('GET /books Pagination', () => {
         beforeEach(async () => {
             await insertBooks();
         });
 
-        fit('response has pagination properties', async () => {
+        it('response has pagination properties', async () => {
             const response = await supertest(app).get(
                 `/books?page=2&perPage=30`
             );
@@ -56,7 +56,7 @@ describe('Books Endpoint', () => {
             expect(response.body.per_page).toEqual(30);
         });
 
-        fit('will return page 2 only of 30 books', async () => {
+        it('will return page 2 only of 30 books', async () => {
             const response = await supertest(app).get(
                 `/books?page=2&perPage=30`
             );
@@ -70,7 +70,7 @@ describe('Books Endpoint', () => {
             ).toEqual(60);
         });
 
-        fit('will return 400 if pagination parameters are invalid', async () => {
+        it('will return 400 if pagination parameters are invalid', async () => {
             const response = await supertest(app).get(
                 `/books?page=1&perPage=9`
             );
@@ -81,7 +81,7 @@ describe('Books Endpoint', () => {
             );
         });
 
-        fit('will return 400 if pagination parameters are invalid', async () => {
+        it('will return 400 if pagination parameters are invalid', async () => {
             const response = await supertest(app).get(
                 `/books?page=1&perPage=51`
             );
@@ -92,7 +92,7 @@ describe('Books Endpoint', () => {
             );
         });
 
-        fit('pagination parameters are optional, have default values', async () => {
+        it('pagination parameters are optional, have default values', async () => {
             const response = await supertest(app).get(`/books`);
 
             expect(response.status).toEqual(200);
@@ -104,7 +104,7 @@ describe('Books Endpoint', () => {
             ).toEqual(20);
         });
 
-        fit('pagination parameters can be used with author parameter', async () => {
+        it('pagination parameters can be used with author parameter', async () => {
             const response = await supertest(app).get(
                 `/books?author=Nick%20Labadie&page=1&perPage=30`
             );
@@ -121,14 +121,14 @@ describe('Books Endpoint', () => {
             await createBook(Object.values(book2));
         });
 
-        fit('will return a 404 status with message if no book', async () => {
+        it('will return a 404 status with message if no book', async () => {
             const response = await supertest(app).put('/books/9').send(book3);
 
             expect(response.status).toEqual(404);
             expect(response.body.error).toEqual('no book with id: 9');
         });
 
-        fit('will return a 409 status with message if title already exists', async () => {
+        it('will return a 409 status with message if title already exists', async () => {
             const response = await supertest(app).put('/books/1').send(book2);
 
             expect(response.status).toEqual(409);
@@ -138,7 +138,7 @@ describe('Books Endpoint', () => {
         });
     });
 
-    fdescribe('DELETE /books', () => {
+    describe('DELETE /books', () => {
         beforeEach(async () => {
             await createBook(Object.values(book1));
         });
