@@ -15,7 +15,7 @@
     "express": "4.17.1",
     "faker": "6.6.6",
     "morgan": "1.10.0",
-    "pg": "8.6.0",
+    "pg": "8.11.0",
     "pg-promise": "^11.4.1"
   },
   "devDependencies": {
