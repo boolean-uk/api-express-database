@@ -15,10 +15,32 @@ router.get('/', async (req, res) => {
   res.json({ pets: result.rows })
 })
 
+router.post('/', async (req, res) => {
+  const { name, age, type, breed, microchip } = req.body
+  const result = await db.query('INSERT INTO pets (name, age, type, breed, microchip) ' + 
+    'VALUES ($1, $2, $3, $4, $5) RETURNING *', 
+    [ name, age, type, breed, microchip ])
+  return res.status(201).json({ pet: result.rows[0] })
+})
+
 router.get('/:id', async (req, res) => {
   const id = req.params.id
   const result = await db.query('SELECT * FROM pets WHERE id = $1', [id])
-  res.json({ pets: result.rows[0] });
+  res.json({ pet: result.rows[0] });
+})
+
+router.put('/:id', async (req, res) => {
+  const id = req.params.id
+  const { name, age, type, breed, microchip } = req.body
+  const result = await db.query('UPDATE pets SET name = $1, age = $2, type = $3, breed = $4, microchip = $5' + 
+  ' WHERE id = $6' + 'RETURNING *', [ name, age, type, breed, microchip, id ])
+  res.status(201).json({ pet: result.rows[0] });
+})
+
+router.delete('/:id', async (req, res) => {
+  const id = req.params.id
+  const result = await db.query('DELETE FROM pets WHERE id = $1 RETURNING *', [id])
+  res.status(201).json({pet: result.rows[0]})
 })
 
 
