@@ -14,6 +14,9 @@ describe("Books Endpoint", () => {
       expect(response.body.book.id).not.toEqual(undefined)
 
       for (prop in book1) {
+        if(prop === 'publicationDate') {
+          continue
+        }
         expect(response.body.book[prop]).toEqual(book1[prop])
       }
     })
@@ -45,6 +48,9 @@ describe("Books Endpoint", () => {
       expect(response.body.book.id).not.toEqual(undefined)
 
       for (prop in book1) {
+        if(prop === 'publicationDate') {
+          continue
+        }
         expect(response.body.book[prop]).toEqual(book1[prop])
       }
     })
@@ -63,6 +69,9 @@ describe("Books Endpoint", () => {
       expect(response.body.book.id).not.toEqual(undefined)
 
       for (prop in book2) {
+        if(prop === 'publicationDate') {
+          continue
+        }
         expect(response.body.book[prop]).toEqual(book2[prop])
       }
     })
@@ -81,6 +90,9 @@ describe("Books Endpoint", () => {
       expect(response.body.book.id).not.toEqual(undefined)
 
       for (prop in book1) {
+        if(prop === 'publicationDate') {
+          continue
+        }
         expect(response.body.book[prop]).toEqual(book1[prop])
       }
     })

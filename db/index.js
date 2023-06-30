@@ -2,8 +2,11 @@
 require('dotenv').config()
 
 // Require Client obj from the postgres node module
+const pg = require('pg')
 const { Client } = require("pg");
-
+pg.types.setTypeParser(1082, function(stringValue) {
+  return stringValue;  //1082 for date type
+});
 const client = {
   query: async (str, values) => {
     // Get the connection string from process.env -
