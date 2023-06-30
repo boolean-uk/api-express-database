@@ -5,15 +5,14 @@ const createBook = require("../../helpers/createBook.js")
 
 describe("Books Endpoint", () => {
   describe("POST /books", () => {
-
     it("will create a new book", async () => {
       const response = await supertest(app).post("/books").send(book1)
-
       expect(response.status).toEqual(201)
       expect(response.body.book).not.toEqual(undefined)
       expect(response.body.book.id).not.toEqual(undefined)
 
       for (prop in book1) {
+        console.log('THIS IS OUR TEST: ', book1[prop])
         expect(response.body.book[prop]).toEqual(book1[prop])
       }
     })
