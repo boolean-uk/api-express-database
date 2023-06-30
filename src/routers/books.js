@@ -10,15 +10,14 @@ router.get('/', async (req, res) => {
 
 
 // POST books
-router.post('/', async(req, res) => {
+router.post('/', async (req, res) => {
     const {title, type, author, topic, publicationDate, pages} = req.body
-    console.log(title, type, author, topic, publicationDate, pages)
 
-    const result = await db.query('INSERT INTO books (title, type, author, topic, publicationdate, pages)' + 'VALUES($1, $2, $3, $4)' + 'RETURNING *', [title, type, author, topic, publicationDate, pages])
-    console.log('res', result)
 
-    // res.status(201).json({book: result.rows[0]})
+    const result = await db.query('INSERT INTO books (title, type, author, topic, "publicationDate", pages)' + 'VALUES($1, $2, $3, $4, $5, $6)' + 'RETURNING *', [title, type, author, topic, publicationDate, pages])
+    // console.log('res', result)
 
+    res.status(201).json({book: result.rows[0]})
 
 })
 
