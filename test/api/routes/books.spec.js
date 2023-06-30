@@ -6,7 +6,7 @@ const createBook = require("../../helpers/createBook.js")
 describe("Books Endpoint", () => {
   describe("POST /books", () => {
 
-    it("will create a new book", async () => {
+    fit("will create a new book", async () => {
       const response = await supertest(app).post("/books").send(book1)
 
       expect(response.status).toEqual(201)
@@ -25,7 +25,7 @@ describe("Books Endpoint", () => {
       await createBook(Object.values(book2))
     })
 
-    it("will list all books", async () => {
+    fit("will list all books", async () => {
       const response = await supertest(app).get("/books")
 
       expect(response.status).toEqual(200)
@@ -37,7 +37,7 @@ describe("Books Endpoint", () => {
       })
     })
 
-    it("will list a book", async () => {
+    fit("will list a book", async () => {
       const response = await supertest(app).get("/books/1")
 
       expect(response.status).toEqual(200)
@@ -55,7 +55,7 @@ describe("Books Endpoint", () => {
       await createBook(Object.values(book1))
     })
 
-    it("will update a books", async () => {
+    fit("will update a books", async () => {
       const response = await supertest(app).put("/books/1").send(book2)
 
       expect(response.status).toEqual(201)
@@ -73,7 +73,7 @@ describe("Books Endpoint", () => {
       await createBook(Object.values(book1))
     })
 
-    it("will return the deleted the book", async () => {
+    fit("will return the deleted the book", async () => {
       const response = await supertest(app).delete("/books/1")
 
       expect(response.status).toEqual(201)
