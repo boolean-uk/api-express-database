@@ -33,7 +33,7 @@ router.put('/:id', async (req, res) => {
   const id = req.params.id
   const { name, age, type, breed, microchip } = req.body
   const result = await db.query('UPDATE pets SET name = $1, age = $2, type = $3, breed = $4, microchip = $5' + 
-  ' WHERE id = $6' + 'RETURNING *', [ name, age, type, breed, microchip, id ])
+  ' WHERE id = $6 ' + 'RETURNING *', [ name, age, type, breed, microchip, id ])
   res.status(201).json({ pet: result.rows[0] });
 })
 
