@@ -41,7 +41,7 @@ router.post("/", async (req, res) => {
     const id = Number(req.params.id);
     const { name, age, type, breed, microchip } = req.body;
     const result = await db.query(
-      'UPDATE books SET name = $2, age = $3, type = $4, breed = $5, microchip = $6 WHERE id = $1 RETURNING *',
+      'UPDATE pets SET name = $2, age = $3, type = $4, breed = $5, microchip = $6 WHERE id = $1 RETURNING *',
       [id, name, age, type, breed, microchip]
     );
     console.log(result)
