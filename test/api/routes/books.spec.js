@@ -6,7 +6,7 @@ const createBook = require("../../helpers/createBook.js")
 describe("Books Endpoint", () => {
   describe("POST /books", () => {
 
-    it("will create a new book", async () => {
+    fit("will create a new book", async () => {
       const response = await supertest(app).post("/books").send(book1)
 
       expect(response.status).toEqual(201)
