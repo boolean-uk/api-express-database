@@ -6,6 +6,7 @@ const createBook = require("../../helpers/createBook.js")
 describe("Books Endpoint", () => {
   describe("POST /books", () => {
 
+    // Remove if continue statements for time zone fix 
     it("will create a new book", async () => {
       const response = await supertest(app).post("/books").send(book1)
 
