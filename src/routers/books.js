@@ -35,4 +35,10 @@ router.post('/', async (req, res) => {
   res.status(201).json({book: result.rows[0]})
 })
 
+router.get('/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  const result = await db.query('SELECT * FROM books WHERE id = $1', [id])
+  res.json({book: result.rows[0]})
+})
+
 module.exports = router
