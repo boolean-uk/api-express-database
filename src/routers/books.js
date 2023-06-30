@@ -2,18 +2,24 @@ const express = require('express');
 const router = express.Router();
 const db = require("../../db");
 
+
+const getWithTypeAndTopic = async (type, topic) => {
+  let string = 'SELECT * FROM books '
+
+  if (type === 'Fiction' || type === 'Non-Fiction') {
+    if (topic) {
+      string += 'WHERE type = $1 AND topic = $2'
+      return await db.query(string, [type], [topic])
+    }
+    return res.json({ books: result.rows })
+  }
+  return await db.query('SELECT * FROM books')
+}
+
 router.get('/', async (req, res) => {
   const { type, topic } = req.query
 
-  let string = 'SELECT * FROM books WHERE type = $1'
-
-  if (type === 'Fiction' || type === 'Non-Fiction') {
-    const result = await db.query('SELECT * FROM books WHERE type = $1', [type])
-    return res.json({ books: result.rows })
-  }
-
-  
-  const result = await db.query('SELECT * FROM books')
+  const result = getWithTypeAndTopic(type, topic)
   res.json({ books: result.rows })
 })
 
