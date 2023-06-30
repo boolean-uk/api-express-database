@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
     const result = await db.query('INSERT INTO books (title, type, author, topic, "publicationDate", pages)' + 
     'VALUES ($1, $2, $3, $4, $5, $6)' +
     'RETURNING *', [title, type, author, topic, publicationDate, pages]);
-    res.json( { book: result.rows[0]} );
+    res.status(201).json( { book: result.rows[0]} );
 })
 
 // GET book by ID
@@ -33,7 +33,7 @@ router.put('/:id', async (req, res) => {
     SET title = $2, type = $3, author = $4, topic = $5, "publicationDate" = $6, pages = $7
     WHERE id = $1
     RETURNING *`, [id, title, type, author, topic, publicationDate, pages])
-    res.json( { book: result.rows[0]} )
+    res.status(201).json( { book: result.rows[0]} )
 });
 
 // DELETE a book
@@ -42,7 +42,7 @@ router.delete('/:id', async (req, res) => {
     const result = await db.query(`DELETE FROM books
     WHERE id = $1
     RETURNING *`, [id])
-    res.json({ book: result.rows[0]})
+    res.status(201).json({ book: result.rows[0]})
 })
 
 module.exports = router
