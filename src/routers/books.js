@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const id = req.params.id
   const result = await db.query('SELECT * FROM books WHERE id = $1', [id])
-  res.json({ book: result.rows })
+  res.json({ book: result.rows[0] });
 })
 
 
