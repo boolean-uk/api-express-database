@@ -33,6 +33,5 @@ router.delete('/:id', async(req, res) => {
   const { id } = req.params
   const result = await db.query('DELETE FROM books WHERE id = $1 RETURNING *', [id])
   res.status(201).send({book: result.rows[0]})
-
 })
 module.exports = router
