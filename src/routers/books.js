@@ -33,8 +33,18 @@ router.get('/:id', async(req, res) => {
 router.put('/:id', async(req, res) => {
     const {id} = req.params
     const {title, type, author, topic, publicationDate, pages} = req.body
-    
 
-    const result = await db.query('UPDATE books SET title = $2, type = $3, author = $4, topic = $5, publicationDate = $6, pages = $7 WHERE id = $1 ')
+    const result = await db.query('UPDATE books SET title = $2, type = $3, author = $4, topic = $5, "publicationDate" = $6, pages = $7 WHERE id = $1 RETURNING * ', [id, title, type, author, topic, publicationDate, pages])
+    res.status(201).json({book: result.rows[0]})
 })
+
+//Delete a book by id
+
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+    const result = await db.query('DELETE FROM books WHERE id = $1 RETURNING *', [id]);
+    res.status(201).json({book: result.rows[0]})
+})
+
+
 module.exports = router
