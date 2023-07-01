@@ -6,7 +6,6 @@ const { off } = require("../server");
 // GET books
 router.get("/", async (req, res) => {
   let { type, topic, author, page, perPage } = req.query;
-  let result;
   const parameters = [];
   const valuesArray = [];
   let index = 1;
@@ -58,7 +57,7 @@ router.get("/", async (req, res) => {
   } OFFSET $${valuesArray.length + 2}`;
   valuesArray.push(parsedPerPage, offset);
 
-  result = await db.query(myQuery, valuesArray);
+ const result = await db.query(myQuery, valuesArray);
   dataForRes = { books: result.rows };
   if (perPage || page) {
     dataForRes.per_page = parsedPerPage;
