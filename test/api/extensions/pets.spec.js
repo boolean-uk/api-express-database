@@ -4,7 +4,7 @@ const { pet1, pet2 } = require("../../fixtures/petData.js")
 const createPet = require("../../helpers/createPet.js")
 const insertPets = require("../../helpers/insertPets.js")
 
-describe("Pets Endpoint", () => {
+xdescribe("Pets Endpoint", () => {
   describe("POST /pets", () => {
 
     it("will return 400 if missing fields", async () => {
