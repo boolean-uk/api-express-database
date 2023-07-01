@@ -3,10 +3,37 @@ const router = express.Router();
 const db = require("../../db/index");
 
 // Retrieve all books
+// URL FORMAT: http://localhost:3030/books?per_page=51&page=2
 router.get("/", async (req, res) => {
-  const result = await db.query(`SELECT * FROM books`);
+  let { author, page, perPage } = req.query;
+  page = Number(page) || 1;
+  perPage = Number(perPage) || 20;
+
+  if (perPage < 10 || perPage > 50) {
+    return res.status(400).json({
+      error: `parameter invalid perPage: ${perPage} not valid. Accepted range is 10 - 50`,
+    });
+  }
+
+  const per_page_offset = (page - 1) * perPage;
+
+  let dbquery;
+  let result;
+
+  if (author) {
+    dbquery = `SELECT * FROM books WHERE author = $1 LIMIT $2 OFFSET $3`;
+    result = await db.query(dbquery, [author, perPage, per_page_offset]);
+  } else {
+    dbquery = `SELECT * FROM books LIMIT $1 OFFSET $2`;
+    result = await db.query(dbquery, [perPage, per_page_offset]);
+  }
+
   if (result) {
-    res.json({ books: result.rows });
+    res.json({
+      books: result.rows,
+      per_page: perPage,
+      page: page,
+    });
   } else {
     res.send("No books exist");
   }
@@ -19,9 +46,7 @@ router.get("/:id", async (req, res) => {
   if (result.rows.length) {
     res.json({ book: result.rows[0] });
   } else {
-    res.send(
-      `Book with the id of ${id} does not exist in our books collection`
-    );
+    res.status(404).send({ error: `no book with id: ${id}` });
   }
 });
 
@@ -34,13 +59,35 @@ router.post("/", async (req, res) => {
       RETURNING *`,
     [title, type, author, topic, publicationDate, pages]
   );
-  res.status(201).json({ book: result.rows[0] });
+  // res.status(201).json({ book: result.rows[0] });
+
+  if (result.rows.length) {
+    res.status(201).json({ book: result.rows[0] });
+  } else {
+    res.status(404).send({ error: `no book with id: ${id}` });
+  }
 });
 
 // Update a book
 router.put("/:id", async (req, res) => {
-  const id = req.params.id;
+  const currentTitle = await db.query(`SELECT * FROM books WHERE title = $1`, [
+    req.body.title,
+  ]);
+
+  console.log("qqq", currentTitle.rows);
+
+  if (currentTitle.rows.length !== 0) {
+    res.status(409).send({
+      error: `A book with the title: ${req.body.title} already exists`,
+    });
+    return;
+  }
+
+  const id = Number(req.params.id);
   const { title, type, author, topic, publicationDate, pages } = req.body;
+
+  console.log("currentTitle", currentTitle.rows);
+
   const result = await db.query(
     `
     UPDATE books
@@ -49,7 +96,12 @@ router.put("/:id", async (req, res) => {
     RETURNING *`,
     [id, title, type, author, topic, publicationDate, pages]
   );
-  res.status(201).json({ book: result.rows[0] });
+
+  if (result.rows.length) {
+    res.status(201).json({ book: result.rows[0] });
+  } else {
+    res.status(404).send({ error: `no book with id: ${id}` });
+  }
 });
 
 // Delete a book
@@ -62,7 +114,12 @@ router.delete("/:id", async (req, res) => {
   RETURNING *`,
     [id]
   );
-  res.status(201).json({ book: result.rows[0] });
+
+  if (result.rows.length) {
+    res.status(201).json({ book: result.rows[0] });
+  } else {
+    res.status(404).send({ error: `no book with id: ${id}` });
+  }
 });
 
 module.exports = router;
