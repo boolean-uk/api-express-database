@@ -18,8 +18,8 @@ router.get("/", async (req, res) => {
     perPage = 20;
   }
 
-  const parsedPage = Number(page) 
-  const parsedPerPage = Number (perPage)
+  const parsedPage = Number(page);
+  const parsedPerPage = Number(perPage);
 
   const offset = (parsedPage - 1) * parsedPerPage;
 
@@ -57,7 +57,7 @@ router.get("/", async (req, res) => {
   } OFFSET $${valuesArray.length + 2}`;
   valuesArray.push(parsedPerPage, offset);
 
- const result = await db.query(myQuery, valuesArray);
+  const result = await db.query(myQuery, valuesArray);
   dataForRes = { books: result.rows };
   if (perPage || page) {
     dataForRes.per_page = parsedPerPage;
@@ -65,7 +65,6 @@ router.get("/", async (req, res) => {
   }
   res.json(dataForRes);
 });
-
 
 // POST books
 router.post("/", async (req, res) => {
@@ -81,13 +80,13 @@ router.post("/", async (req, res) => {
 
 // GET by id
 router.get("/:id", async (req, res) => {
-    const id = req.params.id;
-    const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
-    if (result.rows[0] === undefined) {
-        return res.status(404).json({
-          error: `no book with id: ${id}`,
-        });
-      }
+  const id = req.params.id;
+  const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
+  if (result.rows[0] === undefined) {
+    return res.status(404).json({
+      error: `no book with id: ${id}`,
+    });
+  }
   res.json({ book: result.rows[0] });
 });
 
@@ -96,25 +95,29 @@ router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { title, type, author, topic, publicationDate, pages } = req.body;
 
-  const result = await db.query(
-    'UPDATE books SET title = $2, type = $3, author = $4, topic = $5, "publicationDate" = $6, pages = $7 WHERE id = $1 RETURNING * ',
-    [id, title, type, author, topic, publicationDate, pages]
-  );
-  if (result.rows[0] === undefined) {
+
+  const seeTitle = await db.query(`SELECT * from books WHERE title = $1`, [
+    title,
+  ]);
+  if (seeTitle.rows.length === 0 || seeTitle.rows[0].id === id) {
+    const result = await db.query(
+      'UPDATE books SET title = $2, type = $3, author = $4, topic = $5, "publicationDate" = $6, pages = $7 WHERE id = $1 RETURNING * ',
+      [id, title, type, author, topic, publicationDate, pages]
+    );
+    if (result.rows.length === 0) {
       return res.status(404).json({
         error: `no book with id: ${id}`,
       });
     }
-    const seeTitle = await db.query(
-      `SELECT * from books WHERE title = $1`,
-      [title]
-    );
-    if(seeTitle.rows !== undefined) {
-      return res.status(409).json({
-        error: `A book with the title: ${title} already exists`,
-      });
-    }
-  res.status(201).json({ book: result.rows[0] });
+    res.status(201).json({ book: result.rows[0] });
+  }
+ else{
+    return res.status(409).json({
+      error: `A book with the title: ${title} already exists`,
+    });
+  }
+
+
 });
 
 //Delete a book by id

@@ -4,7 +4,7 @@ const { book1, book2, book3 } = require("../../fixtures/bookData.js")
 const createBook = require("../../helpers/createBook.js")
 const insertBooks = require("../../helpers/insertBooks.js")
 
-xdescribe("Books Endpoint", () => {
+fdescribe("Books Endpoint", () => {
   describe("GET /books", () => {
     beforeEach(async () => {
       await createBook(Object.values(book1))
