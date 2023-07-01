@@ -2,13 +2,30 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../db/index");
 
-// Retrieve all pets
 router.get("/", async (req, res) => {
-  const result = await db.query(`SELECT * FROM pets`);
+  let { page, perPage } = req.query;
+  page = Number(page) || 1;
+  perPage = Number(perPage) || 20;
+
+  if (perPage < 10 || perPage > 50) {
+    return res.status(400).json({
+      error: `parameter invalid perPage: ${perPage} not valid. Accepted range is 10 - 50`,
+    });
+  }
+
+  const per_page_offset = (page - 1) * perPage;
+
+  const dbquery = `SELECT * FROM pets LIMIT $1 OFFSET $2`;
+  const result = await db.query(dbquery, [perPage, per_page_offset]);
+
   if (result) {
-    res.json({ pets: result.rows });
+    res.json({
+      pets: result.rows,
+      per_page: perPage,
+      page: page,
+    });
   } else {
-    res.send("No pets exist");
+    res.status(404).send({ error: "No pets exist" });
   }
 });
 
@@ -19,13 +36,20 @@ router.get("/:id", async (req, res) => {
   if (result.rows.length) {
     res.json({ pet: result.rows[0] });
   } else {
-    res.send(`Pet with the id of ${id} does not exist`);
+    res.status(404).send({ error: `no pet with id: ${id}` });
   }
 });
 
 // Create a pet
 router.post("/", async (req, res) => {
   const { name, age, type, breed, microchip } = req.body;
+
+  if (!name || !age || !type || !breed || !microchip) {
+    res.status(400).json({ error: `missing fields: age, breed, microchip` });
+    console.log();
+    return;
+  }
+
   const result = await db.query(
     `INSERT INTO pets (name, age, type, breed, microchip)
       VALUES ($1, $2, $3, $4, $5)
@@ -47,7 +71,17 @@ router.put("/:id", async (req, res) => {
     RETURNING *`,
     [id, name, age, type, breed, microchip]
   );
-  res.status(201).json({ pet: result.rows[0] });
+  // res.status(201).json({ pet: result.rows[0] });
+
+
+
+  if (result.rows.length) {
+    res.status(201).json({ pet: result.rows[0] });
+  } else {
+    res.status(404).send({ error: `no pet with id: ${id}` });
+  }
+
+
 });
 
 // Delete a pet
@@ -60,7 +94,13 @@ router.delete("/:id", async (req, res) => {
   RETURNING *`,
     [id]
   );
-  res.status(201).json({ pet: result.rows[0] });
+  // res.status(201).json({ pet: result.rows[0] });
+
+  if (result.rows.length) {
+    res.status(201).json({ pet: result.rows[0] });
+  } else {
+    res.status(404).send({ error: `no pet with id: ${id}` });
+  }
 });
 
 module.exports = router;
