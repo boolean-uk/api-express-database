@@ -114,4 +114,11 @@ router.delete("/:id", async (req, res) => {
   res.status(201).json({ pet: result.rows[0] });
 });
 
+
+router.get("/breeds", async (req, res) => {
+    let { type } = req.query;
+    const result = await db.query("SELECT * from pets WHERE type = $1", [type])
+    console.log('my result', result);
+})
+
 module.exports = router;
