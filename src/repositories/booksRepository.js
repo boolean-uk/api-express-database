@@ -1,6 +1,6 @@
 const db = require('../../db')
 
-const getAllBooks = async (values, query) => {
+const getAllBooks = async (values, query, page = 1, perPage = 20) => {
   let str = 'SELECT * FROM books'
   if (query === 'type') {
     str += ' WHERE type = $1';
@@ -10,6 +10,11 @@ const getAllBooks = async (values, query) => {
   }
   if (query === 'author') {
       str += ' WHERE author = $1';
+  }
+  str += ` LIMIT ${perPage}`
+  if (page > 1) {
+    let pagination = (page - 1) * perPage
+    str += ` OFFSET ${pagination}`
   }
   const data = await db.query(str, values)
   const books = data.rows

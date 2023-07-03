@@ -1,9 +1,14 @@
 const db = require('../../db')
 
-const getAllPets = async (values, query) => {
+const getAllPets = async (values, query, page = 1, perPage = 20) => {
   let str = 'SELECT * FROM pets'
   if (query === 'type') {
     str += ' WHERE type = $1'
+  }
+  str += ` LIMIT ${perPage}`
+  if (page > 1) {
+    const pagination = (page - 1) * perPage
+    str += ` OFFSET ${pagination}`
   }
   const data = await db.query(str, values)
   const pets = data.rows
