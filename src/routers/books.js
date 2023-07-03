@@ -1,96 +1,82 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../../db");
-const { off } = require("../server");
 
-// GET books
 router.get("/", async (req, res) => {
   let { type, topic, author, page, perPage } = req.query;
-  const parameters = [];
-  const valuesArray = [];
+  let result;
+  const query = [];
+  const values = [];
   let index = 1;
+  let myQuery = "";
 
-  if (page === undefined || page === "") {
+  if (page === "" || page === undefined) {
     page = 1;
   }
 
-  if (perPage === undefined || perPage === "") {
+  if (perPage === "" || perPage === undefined) {
     perPage = 20;
   }
 
-  const parsedPage = Number(page);
-  const parsedPerPage = Number(perPage);
-
-  const offset = (parsedPage - 1) * parsedPerPage;
-
-  if (parsedPerPage > 50 || parsedPerPage < 10) {
-    return res.status(400).json({
-      error: `parameter invalid perPage: ${perPage} not valid. Accepted range is 10 - 50`,
-    });
-  }
+  const pageNum = Number(page);
+  const perPageNum = Number(perPage);
+  const offset = (pageNum - 1) * perPageNum;
 
   if (type) {
-    parameters.push("type = $1");
-    valuesArray.push(type);
+    query.push(`type = $${index}`);
+    values.push(type);
     index++;
   }
-
   if (topic) {
-    parameters.push("topic = $" + index);
-    valuesArray.push(topic);
+    query.push(`topic = $${index}`);
+    values.push(topic);
     index++;
   }
-
   if (author) {
-    parameters.push("author = $" + index);
-    valuesArray.push(author);
+    query.push(`author = $${index}`);
+    values.push(author);
     index++;
   }
 
-  let whereForQuery = "";
-  if (parameters.length > 0) {
-    whereForQuery = "WHERE " + parameters.join(" AND ");
+  if (query.length > 0) {
+    myQuery = "WHERE " + query.join(" AND ");
   }
 
-  const myQuery = `SELECT * from books ${whereForQuery} LIMIT $${
-    valuesArray.length + 1
-  } OFFSET $${valuesArray.length + 2}`;
-  valuesArray.push(parsedPerPage, offset);
-
-  const result = await db.query(myQuery, valuesArray);
-  dataForRes = { books: result.rows };
-  if (perPage || page) {
-    dataForRes.per_page = parsedPerPage;
-    dataForRes.page = parsedPage;
+  if (perPageNum > 50 || perPageNum < 10) {
+    res.status(400).json({
+      error: `parameter invalid perPage: ${perPageNum} not valid. Accepted range is 10 - 50`,
+    });
+  } else if (perPage || page) {
+    result = await db.query(
+      `SELECT * from books ${myQuery} LIMIT ${perPage} OFFSET ${offset}`,
+      values
+    );
+    res.json({ books: result.rows, page: pageNum, per_page: perPageNum });
+  } else {
+    result = await db.query(`SELECT * from books ${myQuery}`, values);
+    res.json({ books: result.rows });
   }
-  res.json(dataForRes);
 });
 
-// POST books
 router.post("/", async (req, res) => {
   const { title, type, author, topic, publicationDate, pages } = req.body;
-
   const result = await db.query(
     'INSERT INTO books (title, type, author, topic, "publicationDate", pages) VALUES($1, $2, $3, $4, $5, $6) RETURNING *',
     [title, type, author, topic, publicationDate, pages]
   );
-
   res.status(201).json({ book: result.rows[0] });
 });
 
-// GET by id
 router.get("/:id", async (req, res) => {
-  const id = req.params.id;
-  const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
-  if (result.rows[0] === undefined) {
-    return res.status(404).json({
-      error: `no book with id: ${id}`,
-    });
+  const { id } = req.params;
+  const result = await db.query("SELECT * from books WHERE id = $1", [id]);
+  if (result.rows.length === 0) {
+    res.status(404).json({ error: `no book with id: ${id}` });
+  } else {
+    res.json({ book: result.rows[0] });
   }
-  res.json({ book: result.rows[0] });
 });
 
-// PUT by id
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { title, type, author, topic, publicationDate, pages } = req.body;
@@ -117,22 +103,18 @@ router.put("/:id", async (req, res) => {
     });
   }
 
-
 });
-
-//Delete a book by id
 
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   const result = await db.query("DELETE FROM books WHERE id = $1 RETURNING *", [
     id,
   ]);
-  if (result.rows[0] === undefined) {
-    return res.status(404).json({
-      error: `no book with id: ${id}`,
-    });
+  if (result.rows.length === 0) {
+    res.status(404).json({ error: `no book with id: ${id}` });
+  } else {
+    res.status(201).json({ book: result.rows[0] });
   }
-  res.status(201).json({ book: result.rows[0] });
 });
 
 module.exports = router;
