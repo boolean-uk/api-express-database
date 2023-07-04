@@ -29,7 +29,7 @@ const fetchBooks = async (req, res) => {
 
 const insertBook = async (req, res) => {
   const { title, type, author, topic, publicationDate, pages } = req.body;
-
+  
   try {
     const result = await db.query(
       `INSERT INTO books (title, type, author, topic, "publicationDate", pages)
@@ -40,15 +40,13 @@ const insertBook = async (req, res) => {
     res.status(201).json({ book: result.rows[0] });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ error: "Failed to insert the book into the database" });
+    res.status(500).json({ error: "Failed to insert the book into the database" });
   }
 };
 
 const fetchBookById = async (req, res) => {
   const id = Number(req.params.id);
-
+  
   try {
     const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
     if (result.rows.length === 0) {
@@ -58,16 +56,14 @@ const fetchBookById = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ error: "Failed to fetch the book from the database" });
+    res.status(500).json({ error: "Failed to fetch the book from the database" });
   }
 };
 
 const updateBook = async (req, res) => {
   const id = Number(req.params.id);
   const { title, type, author, topic, publicationDate, pages } = req.body;
-
+  
   try {
     const result = await db.query(
       `UPDATE books
@@ -83,20 +79,15 @@ const updateBook = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ error: "Failed to update the book in the database" });
+    res.status(500).json({ error: "Failed to update the book in the database" });
   }
 };
 
 const deleteBook = async (req, res) => {
   const id = Number(req.params.id);
-
+  
   try {
-    const result = await db.query(
-      "DELETE FROM books WHERE id = $1 RETURNING *",
-      [id]
-    );
+    const result = await db.query("DELETE FROM books WHERE id = $1 RETURNING *", [id]);
     if (result.rows.length === 0) {
       res.status(404).json({ error: "Book not found" });
     } else {
@@ -104,9 +95,7 @@ const deleteBook = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ error: "Failed to delete the book from the database" });
+    res.status(500).json({ error: "Failed to delete the book from the database" });
   }
 };
 

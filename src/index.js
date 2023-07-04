@@ -1,5 +1,4 @@
 const app = require('./server.js')
-const db = require("../db");
 const port = 3030;
 
 app.listen(port, () => {
