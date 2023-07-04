@@ -1,15 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../../db");
 
-router.get("/", async (req, res) => {
-  let { type } = req.query;
-  console.log("type", type);
+const breedsController = require('../controllers/breeds');
 
-  const result = await db.query("SELECT DISTINCT breed from pets WHERE type = $1", [
-    type
-  ]);
-  res.json({breeds: result.rows});
-});
+router.get('/', breedsController.getBreeds);
+
+
+
 
 module.exports = router;
