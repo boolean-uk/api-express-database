@@ -2,10 +2,11 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../db");
 
-router.get("/", async (req, res) => {
+const fetchBooks = async (req, res) => {
   const { type, topic } = req.query;
   let query = "SELECT * FROM books";
   const values = [];
+
   if (type && topic) {
     values.push(type, topic);
     query += " WHERE type = $1 AND topic = $2";
@@ -16,6 +17,7 @@ router.get("/", async (req, res) => {
     values.push(topic);
     query += " WHERE topic = $1";
   }
+
   try {
     const result = await db.query(query, values);
     res.json({ books: result.rows });
@@ -23,10 +25,11 @@ router.get("/", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch books from the database" });
   }
-});
+};
 
-router.post("/", async (req, res) => {
+const insertBook = async (req, res) => {
   const { title, type, author, topic, publicationDate, pages } = req.body;
+  
   try {
     const result = await db.query(
       `INSERT INTO books (title, type, author, topic, "publicationDate", pages)
@@ -39,10 +42,11 @@ router.post("/", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Failed to insert the book into the database" });
   }
-});
+};
 
-router.get("/:id", async (req, res) => {
+const fetchBookById = async (req, res) => {
   const id = Number(req.params.id);
+  
   try {
     const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
     if (result.rows.length === 0) {
@@ -54,11 +58,12 @@ router.get("/:id", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch the book from the database" });
   }
-});
+};
 
-router.put("/:id", async (req, res) => {
+const updateBook = async (req, res) => {
   const id = Number(req.params.id);
   const { title, type, author, topic, publicationDate, pages } = req.body;
+  
   try {
     const result = await db.query(
       `UPDATE books
@@ -76,10 +81,11 @@ router.put("/:id", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Failed to update the book in the database" });
   }
-});
+};
 
-router.delete("/:id", async (req, res) => {
+const deleteBook = async (req, res) => {
   const id = Number(req.params.id);
+  
   try {
     const result = await db.query("DELETE FROM books WHERE id = $1 RETURNING *", [id]);
     if (result.rows.length === 0) {
@@ -91,6 +97,12 @@ router.delete("/:id", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Failed to delete the book from the database" });
   }
-});
+};
+
+router.get("/", fetchBooks);
+router.post("/", insertBook);
+router.get("/:id", fetchBookById);
+router.put("/:id", updateBook);
+router.delete("/:id", deleteBook);
 
 module.exports = router;
