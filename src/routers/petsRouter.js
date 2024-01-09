@@ -44,4 +44,19 @@ router.get('/:id', async (req, res, next) => {
   res.status(200).json({ pet: pet.rows[0] })
 })
 
+// Update a pet
+router.put('/:id', async (req, res, next) => {
+  const { id } = req.params
+  const { name, age, type, breed, has_microchip } = req.body
+
+  await db.query(
+    'update pets set name = $1, age = $2, type = $3, breed = $4, has_microchip = $5 where id = $6',
+    [name, age, type, breed, has_microchip, id]
+  )
+
+  const updatedPet = await db.query('select * from pets where id = $1', [id])
+
+  res.status(201).json({ pet: updatedPet.rows[0] })
+})
+
 module.exports = router
