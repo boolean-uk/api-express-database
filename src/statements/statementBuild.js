@@ -11,22 +11,26 @@
  * @returns { Query }
  */
 function select(table, filter) {
-  const queryText = "SELECT * FROM $1"
-  let valueCount = 1
-  const values = []
-  values.push(table)
+  const queryText = "SELECT * FROM $1";
+  let valueCount = 1;
+  const values = [];
+  values.push(table);
 
-  let whereText = ""
+  let whereText = "";
   if (filter) {
-    whereText = " WHERE"
+    whereText = " WHERE";
     Object.entries(filter).forEach(([key, value], index) => {
-      whereText += `${index > 0 ? " AND" : ""} $${++valueCount} = $${++valueCount}`
-      values.push(key, value)
-    })
+      whereText += `${
+        index > 0 ? " AND" : ""
+      } $${++valueCount} = $${++valueCount}`;
+      values.push(key, value);
+    });
   }
 
   return {
     text: queryText + whereText,
-    values
-  }
+    values,
+  };
+}
+
 }
