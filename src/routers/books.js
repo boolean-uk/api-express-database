@@ -1,6 +1,14 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 const db = require("../../db");
+const { Pool } = require('pg');
+require('dotenv').config(); // to load environment variables
+
+
+const connectionString = process.env.PGURL;
+const pool = new Pool({
+  connectionString: connectionString,
+});
 
 router.get("/", async (req, res) => {
     try {
