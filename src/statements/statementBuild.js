@@ -32,4 +32,27 @@ function select(table, filter) {
   };
 }
 
+/**
+ *
+ * @param { Table } table - name of table to execute insert statement on
+ * @param { {} } values - key value pairs of values to insert eg: { type: "dog", name: "steve" }
+ */
+function insert(table, values) {
+  let valueCount = 1;
+  const returnValues = [];
+  let queryText = `INSERT INTO ${table}`;
+
+  const columns = [];
+  const datas = [];
+  Object.entries(values).forEach(([key, data], index) => {
+    columns.push(`${key}`);
+
+    datas.push(`$${valueCount++}`);
+    returnValues.push(data);
+  });
+
+  return {
+    text: `${queryText} (${columns.toString()}) VALUES (${datas.toString()}) RETURNING *;`,
+    values: returnValues,
+  };
 }
