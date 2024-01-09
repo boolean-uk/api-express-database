@@ -27,11 +27,20 @@ router.get("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  const itemToDelete = await db.query("SELECT * FROM books WHERE id = $1", [
-    id,
-  ]);
+  const itemToDelete = await db.query("SELECT * FROM books WHERE id = $1", [id]);
   await db.query("DELETE FROM books WHERE id = $1", [id]);
   return res.status(201).json({ book: itemToDelete.rows[0] });
+});
+
+router.put("/:id", async (req, res) => {
+  const { id } = req.params
+  const { title, type, author, topic, publication_date, pages } = req.body;
+  await db.query(
+    "UPDATE books SET title = $1, type = $2, author = $3, topic =  $4, publication_date = $5, pages = $6 WHERE id = $7",
+    [title, type, author, topic, publication_date, pages, id]
+  );
+  const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
+  return res.status(201).json({ book: result.rows[0] });
 });
 
 module.exports = router;
