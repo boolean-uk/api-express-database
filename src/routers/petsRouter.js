@@ -35,4 +35,13 @@ router.post('/', async (req, res, next) => {
   res.status(201).json({ pet: createdPet.rows[0] })
 })
 
+// Get a pet by ID
+router.get('/:id', async (req, res, next) => {
+  const { id } = req.params
+
+  const pet = await db.query('select * from pets where id = $1', [id])
+
+  res.status(200).json({ pet: pet.rows[0] })
+})
+
 module.exports = router
