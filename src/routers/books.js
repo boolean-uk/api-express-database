@@ -32,4 +32,15 @@ router.get('/', async (req, res) => {
     return res.status(200).json({ books: books.rows })
 })
 
+// CREATE A BOOK
+router.post('/', async (req, res) =>{
+    const { title, type, author, topic, publication_date, pages } = req.body
+    // console.log(title, type)
+    const newBook = await db.query(
+        'INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ( $1, $2, $3, $4, $5, $6) RETURNING *',
+        [title, type, author, topic, publication_date, pages]
+    )
+    return res.status(201).json({ book: newBook.rows[0] })
+})
+
 module.exports = router
