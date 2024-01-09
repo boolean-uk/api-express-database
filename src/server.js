@@ -10,7 +10,8 @@ app.use(express.json());
 
 //TODO: Implement books and pets APIs using Express Modular Routers
 const booksRouter = require('./routers/books.js')
-//app.use('/pets', petsRouter) // for the Pet
+const petsRouter = require('./routers/pets.js')
+app.use('/pets', petsRouter) // for the Pet
 app.use('/books', booksRouter) // for the Book
 
 module.exports = app
