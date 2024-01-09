@@ -56,3 +56,8 @@ function insert(table, values) {
     values: returnValues,
   };
 }
+
+module.exports = {
+  select,
+  insert,
+};
