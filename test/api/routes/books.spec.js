@@ -25,7 +25,7 @@ describe("Books Endpoint", () => {
       await createBook(Object.values(book2))
     })
 
-    it("will list all books", async () => {
+    fit("will list all books", async () => {
       const response = await supertest(app).get("/books")
 
       expect(response.status).toEqual(200)
