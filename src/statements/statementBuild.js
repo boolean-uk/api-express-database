@@ -6,7 +6,7 @@
 
 /**
  *
- * @param { Table } table
+ * @param { Table } table - name of table to execute select statement on
  * @param { {} } [filter] - key value pairs of filters to apply eg: { type: "dog", name: "steve" }
  * @returns { Query }
  */
