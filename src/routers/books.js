@@ -66,4 +66,14 @@ router.put('/:id', async (req, res) => {
     return res.status(201).json({ book: updatedBook.rows[0] })
 })
 
+// DELETE A BOOK (BY ID)
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params
+    const deletedBook = await db.query(
+        'DELETE FROM books WHERE id = $1 RETURNING *',
+        [id]
+    )
+    return res.status(201).json({ book: deletedBook.rows[0]})
+})
+
 module.exports = router
