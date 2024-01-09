@@ -23,4 +23,11 @@ router.get("/:id", async (req, res) => {
     return res.json({ pet: result.rows[0] });
 });
 
+router.delete("/:id", async (req, res) => {
+    const { id } = req.params
+    const toBeDeleted = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
+    const result = await db.query("DELETE FROM pets WHERE id = $1", [id]);
+    return res.status(201).json({ pet: toBeDeleted.rows[0] });
+});
+
 module.exports = router;
