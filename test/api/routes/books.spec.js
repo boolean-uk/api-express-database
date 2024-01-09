@@ -4,7 +4,7 @@ const { book1, book2 } = require("../../fixtures/bookData.js")
 const createBook = require("../../helpers/createBook.js")
 
 describe("Books Endpoint", () => {
-  describe("POST /books", () => {
+  fdescribe("POST /books", () => {
 
     it("will create a new book", async () => {
       const response = await supertest(app).post("/books").send(book1)
@@ -25,7 +25,7 @@ describe("Books Endpoint", () => {
       await createBook(Object.values(book2))
     })
 
-    fit("will list all books", async () => {
+    it("will list all books", async () => {
       const response = await supertest(app).get("/books")
 
       expect(response.status).toEqual(200)
