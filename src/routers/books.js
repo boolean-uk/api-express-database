@@ -25,4 +25,13 @@ router.get("/:id", async (req, res) => {
   return res.json({ book: result.rows[0] });
 });
 
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  const itemToDelete = await db.query("SELECT * FROM books WHERE id = $1", [
+    id,
+  ]);
+  await db.query("DELETE FROM books WHERE id = $1", [id]);
+  return res.status(201).json({ book: itemToDelete.rows[0] });
+});
+
 module.exports = router;
