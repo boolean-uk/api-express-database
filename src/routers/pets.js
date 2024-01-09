@@ -32,4 +32,13 @@ router.get("/", async (req, res) => {
     )
     res.status(201).json({ pet: updatedPet.rows[0]})
   })
+
+  router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+  
+    const deletedPet = await db.query('DELETE FROM pets WHERE id = $1 RETURNING *', [id]);
+  
+    res.status(201).json({ pet: deletedPet.rows[0] })
+  })
+  
 module.exports = router;
