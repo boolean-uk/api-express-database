@@ -47,4 +47,19 @@ router.get('/:id', async (req, res, next) => {
   res.status(200).json({ book: book.rows[0] })
 })
 
+// Update a book
+router.put('/:id', async (req, res, next) => {
+  const { id } = req.params
+  const { title, type, author, topic, publication_date, pages } = req.body
+
+  await db.query(
+    'update books set title = $1, type = $2, author = $3, topic = $4, publication_date = $5, pages = $6 where id = $7',
+    [title, type, author, topic, publication_date, pages, id]
+  )
+
+  const updatedBook = await db.query('select * from books where id = $1', [id])
+
+  res.status(201).json({ book: updatedBook.rows[0] })
+})
+
 module.exports = router
