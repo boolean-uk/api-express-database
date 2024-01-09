@@ -38,4 +38,13 @@ router.post('/', async (req, res, next) => {
   res.status(201).json({ book: createdBook.rows[0] })
 })
 
+// Get a book by ID
+router.get('/:id', async (req, res, next) => {
+  const { id } = req.params
+
+  const book = await db.query('select * from books where id = $1', [id])
+
+  res.status(200).json({ book: book.rows[0] })
+})
+
 module.exports = router
