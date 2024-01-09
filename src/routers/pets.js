@@ -9,9 +9,8 @@ router.get('/', async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     const { id } = req.params;
-    // The second parameter of the client `query` method takes an array of values
     const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
-    res.json({ book: result.rows[0] });
+    res.json({ books: result.rows[0] });
   });
 
 module.exports = router
