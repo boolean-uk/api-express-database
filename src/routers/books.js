@@ -30,8 +30,15 @@ router.post("/", async (req, res) => {
       'UPDATE books SET title = $2, type = $3, author = $4, topic = $5, publication_date = $6, pages = $7 WHERE id = $1 RETURNING *',
       [id, title, type, author, topic, publication_date, pages]
     )
-  
     res.status(201).json({ book: updatedBook.rows[0]})
+  })
+
+  router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+  
+    const deletedBook = await db.query('DELETE FROM books WHERE id = $1 RETURNING *', [id]);
+  
+    res.status(201).json({ book: deletedBook.rows[0] })
   })
   
 module.exports = router;
