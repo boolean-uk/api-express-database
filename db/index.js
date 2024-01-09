@@ -2,7 +2,7 @@
 require('dotenv').config()
 
 // Require Client obj from the postgres node module
-const { Client } = require("pg");
+const { Client } = require('pg')
 
 const client = {
   query: async (str, values) => {
@@ -22,4 +22,4 @@ const client = {
   }
 }
 
-module.exports = client;
+module.exports = client
