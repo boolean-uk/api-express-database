@@ -63,7 +63,7 @@ describe("Pets Endpoint", () => {
     it("will return 400 if pagination parameters are invalid", async () => {
       const response = await supertest(app).get(`/pets?page=1&perPage=51`)
 
-      expect(response.status).toEqual(400)
+      expect(response.status).toEqual(expected)
       expect(response.body.error).toEqual(`parameter invalid perPage: 51 not valid. Accepted range is 10 - 50`)
     })
 

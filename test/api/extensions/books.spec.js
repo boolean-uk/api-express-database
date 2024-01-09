@@ -19,6 +19,17 @@ describe("Books Endpoint", () => {
     })
   })
 
+  describe("DELETE /books/1", () => {
+    it("should return the deleted book", async () => {
+      const response = await supertest(app).delete("/books/1")
+
+      // Expecting 200 status for successful deletion
+      expect(response.status).toEqual(200)
+      expect(response.body.book).not.toEqual(undefined)
+      expect(response.body.book.id).not.toEqual(undefined)
+    })
+  })
+
   describe("GET /books by author", () => {
     beforeEach(async () => {
       await createBook(Object.values(book1))
@@ -59,7 +70,7 @@ describe("Books Endpoint", () => {
       expect(response.body.books).not.toEqual(undefined)
       expect(response.body.books.length).toEqual(30)
       expect(response.body.books[0].id).toEqual(31)
-      expect(response.body.books[response.body.books.length-1].id).toEqual(60)
+      expect(response.body.books[response.body.books.length - 1].id).toEqual(60)
     })
 
     it("will return 400 if pagination parameters are invalid", async () => {
@@ -83,7 +94,7 @@ describe("Books Endpoint", () => {
       expect(response.body.books).not.toEqual(undefined)
       expect(response.body.books.length).toEqual(20)
       expect(response.body.books[0].id).toEqual(1)
-      expect(response.body.books[response.body.books.length-1].id).toEqual(20)
+      expect(response.body.books[response.body.books.length - 1].id).toEqual(20)
     })
 
     it("pagination parameters can be used with author parameter", async () => {
