@@ -13,7 +13,7 @@ describe("Pets Endpoint", () => {
       expect(response.body.pet).not.toEqual(undefined)
       expect(response.body.pet.id).not.toEqual(undefined)
 
-      for (prop in pet1) {
+      for (const prop in pet1) {
         expect(response.body.pet[prop]).toEqual(pet1[prop])
       }
 
@@ -41,7 +41,7 @@ describe("Pets Endpoint", () => {
       expect(response.body.pet).not.toEqual(undefined)
       expect(response.body.pet.id).not.toEqual(undefined)
 
-      for (prop in pet1) {
+      for (const prop in pet1) {
         expect(response.body.pet[prop]).toEqual(pet1[prop])
       }
     })
@@ -59,7 +59,7 @@ describe("Pets Endpoint", () => {
       expect(response.body.pet).not.toEqual(undefined)
       expect(response.body.pet.id).not.toEqual(undefined)
 
-      for (prop in pet2) {
+      for (const prop in pet2) {
         expect(response.body.pet[prop]).toEqual(pet2[prop])
       }
     })
@@ -77,7 +77,7 @@ describe("Pets Endpoint", () => {
       expect(response.body.pet).not.toEqual(undefined)
       expect(response.body.pet.id).not.toEqual(undefined)
 
-      for (prop in pet1) {
+      for (const prop in pet1) {
         expect(response.body.pet[prop]).toEqual(pet1[prop])
       }
     })
