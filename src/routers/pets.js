@@ -2,10 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../db");
 
-const allPets = "SELECT * FROM pets";
-
 router.get("/", async (req, res) => {
-  const pets = await db.query(allPets);
+  const pets = await db.query("SELECT * FROM pets");
 
   return res.status(200).send({ pets: pets.rows });
 });
@@ -24,7 +22,7 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
-  const pet = await db.query(`${allPets} WHERE id = $1`, [id]);
+  const pet = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
 
   return res.status(200).send({ pet: pet.rows[0] });
 });
