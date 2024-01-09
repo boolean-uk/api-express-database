@@ -20,4 +20,14 @@ router.get('/', async (req, res) => {
     return res.status(200).json({ pets: pet.rows })
 })
 
+// CREATE A PET
+router.post('/', async (req, res) => {
+    const { name, age, type, breed, has_microchip } = req.body
+    const newPet = await db.query(
+        'INSERT INTO pets (name, age, type, breed, has_microchip) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        [name, age, type, breed, has_microchip]
+    )
+    return res.status(201).json({ pet: newPet.rows[0]})
+})
+
 module.exports = router
