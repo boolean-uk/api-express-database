@@ -11,10 +11,9 @@
  * @returns { Query }
  */
 function select(table, filter) {
-  const queryText = "SELECT * FROM $1";
+  const queryText = `SELECT * FROM ${table}`;
   let valueCount = 1;
   const values = [];
-  values.push(table);
 
   let whereText = "";
   if (filter) {
@@ -22,7 +21,7 @@ function select(table, filter) {
     Object.entries(filter).forEach(([key, value], index) => {
       whereText += `${
         index > 0 ? " AND" : ""
-      } $${++valueCount} = $${++valueCount}`;
+      } $${valueCount++} = $${valueCount++}`;
       values.push(key, value);
     });
   }
