@@ -59,4 +59,15 @@ router.put('/:id', async (req, res, next) => {
   res.status(201).json({ pet: updatedPet.rows[0] })
 })
 
+// Delete a pet
+router.delete('/:id', async (req, res, next) => {
+  const { id } = req.params
+
+  const deletedPet = await db.query('select * from pets where id = $1', [id])
+
+  await db.query('delete from pets where id = $1', [id])
+
+  res.status(201).json({ pet: deletedPet.rows[0] })
+})
+
 module.exports = router
