@@ -7,7 +7,6 @@ const { Client } = require("pg");
 const client = {
   /**
    * @param {Object} query
-   * @param {String} query.name
    * @param {String} query.text
    * @param {any[]} query.values
    * @return {Promise<import('pg').QueryResult>}
