@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const { name, age, type, breed, has_microchip } = req.body;
   await db.query(
-    "INSERT INTO pets (name, age, type, breed, has_microchip ) VALUES ($1, $2, $3, $4, $5)",
+    "INSERT INTO pets (name, age, type, breed, has_microchip) VALUES ($1, $2, $3, $4, $5)",
     [name, age, type, breed, has_microchip]
   );
   const result = await db.query("SELECT * FROM pets WHERE name = $1", [name]);
@@ -18,16 +18,27 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-    const { id } = req.params
-    const result = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
-    return res.json({ pet: result.rows[0] });
+  const { id } = req.params;
+  const result = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
+  return res.json({ pet: result.rows[0] });
 });
 
 router.delete("/:id", async (req, res) => {
-    const { id } = req.params
-    const toBeDeleted = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
-    const result = await db.query("DELETE FROM pets WHERE id = $1", [id]);
-    return res.status(201).json({ pet: toBeDeleted.rows[0] });
+  const { id } = req.params;
+  const toBeDeleted = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
+  const result = await db.query("DELETE FROM pets WHERE id = $1", [id]);
+  return res.status(201).json({ pet: toBeDeleted.rows[0] });
+});
+
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, age, type, breed, has_microchip } = req.body;
+  await db.query(
+    "UPDATE pets SET name =  $1, age = $2, type = $3, breed = $4, has_microchip = $5 WHERE id = $6",
+    [name, age, type, breed, has_microchip, id]
+  );
+  const result = await db.query("SELECT * FROM pets WHERE id = $1", [id])
+  return res.status(201).json({ pet: result.rows[0] });
 });
 
 module.exports = router;

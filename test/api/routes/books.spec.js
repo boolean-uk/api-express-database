@@ -3,7 +3,7 @@ const app = require("../../../src/server.js")
 const { book1, book2 } = require("../../fixtures/bookData.js")
 const createBook = require("../../helpers/createBook.js")
 
-xdescribe("Books Endpoint", () => {
+describe("Books Endpoint", () => {
   describe("POST /books", () => {
 
     it("will create a new book", async () => {
