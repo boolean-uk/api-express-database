@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const db = require("../../db");
 
+/// Add new pet ///
+
 router.post('/', async (req, res) => {
     const { name, age, type, breed, has_microchip } = req.body;
   
@@ -12,16 +14,22 @@ router.post('/', async (req, res) => {
     res.status(201).json({ pet: newpet.rows[0] })
   })
 
+/// Find pet by ID ///  
+
   router.get("/:id", async (req, res) => {
     const { id } = req.params;
     const result = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
     res.json({ pet: result.rows[0] });
   });
 
+/// Find all pets ///
+
   router.get('/', async (req, res) => {
     const pets = await db.query('SELECT * FROM pets')
     res.json({ pets: pets.rows })
   })
+
+/// Update pet by ID ///
 
   router.put('/:id', async (req, res) => {
     const { id } = req.params;
@@ -34,6 +42,8 @@ router.post('/', async (req, res) => {
   
     res.status(201).json({ pet: updatedpet.rows[0]})
   })
+
+/// Delete a pet /// 
 
   router.delete('/:id', async (req, res) => {
     const { id } = req.params;
