@@ -62,4 +62,15 @@ router.put('/:id', async (req, res, next) => {
   res.status(201).json({ book: updatedBook.rows[0] })
 })
 
+// Delete a book
+router.delete('/:id', async (req, res, next) => {
+  const { id } = req.params
+
+  const book = await db.query('select * from books where id = $1', [id])
+
+  await db.query('delete from books where id = $1', [id])
+
+  res.status(201).json({ book: book.rows[0] })
+})
+
 module.exports = router
