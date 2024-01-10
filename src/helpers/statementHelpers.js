@@ -44,7 +44,7 @@ function select(tableName, filter) {
  * @param { {} } values - key value pairs of values to insert eg: { type: "dog", name: "steve" }
  * @returns { Query }
  */
-function insert(tableName, values) {
+function insertRow(tableName, values) {
   let paramQueryIndex = 1;
   const returnValues = [];
 
@@ -69,7 +69,7 @@ function insert(tableName, values) {
  * @param { ExistingValues } values
  * @returns { Query }
  */
-function update(tableName, values) {
+function updateRow(tableName, values) {
   let paramQueryIndex = 1;
   const returnValues = [];
 
@@ -92,6 +92,6 @@ function update(tableName, values) {
 
 module.exports = {
   select,
-  insert,
-  update,
+  insertRow,
+  updateRow,
 };
