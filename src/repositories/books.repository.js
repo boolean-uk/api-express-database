@@ -14,6 +14,17 @@ async function getBooks(filter) {
   return result.rows;
 }
 
+/**
+ *
+ * @param { Types.BookValues } values
+ */
+async function insertBook(values) {
+  const stmt = stmtHelper.insertRowStmt("books", values);
+  const result = await db.query(stmt);
+  return result.rows[0]
+}
+
 module.exports = {
-  getBooks
+  getBooks,
+  insertBook
 }
