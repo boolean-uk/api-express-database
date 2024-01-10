@@ -54,7 +54,7 @@ async function putBook(req, res) {
  */
 async function deleteBook(req, res) {
   const response = await books.deleteBook(Number(req.params.id));
-  res.json(response)
+  res.status(201).json(response)
 }
 
 module.exports = {
