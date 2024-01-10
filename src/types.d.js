@@ -16,6 +16,8 @@
   @typedef { FilterBookValues | FilterPetValues } FilterValues
   @typedef { ExistingBookValues | ExistingPetValues } ExistingValues
 
+  @typedef { import("express").Request} Request
+  @typedef { import("express").Response} Response
  */
 
 const Types = {}
