@@ -94,6 +94,10 @@ router.get('/:id', async (req, res, next) => {
 
   const book = await db.query('select * from books where id = $1', [id])
 
+  if (book.rows.length === 0) {
+    return res.status(404).json({ error: `no book with id: ${id}` })
+  }
+
   res.status(200).json({ book: book.rows[0] })
 })
 
