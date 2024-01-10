@@ -5,8 +5,8 @@ const db = require("../../db");
 const { getAllBooks } = require("../controllers/books.js");
 // GET route for retrieving all books from the database
 router.get("/", async (req, res) => {
-  const books = await getAllBooks();
-  res.json({ books });
+  const books = await getAllBooks(req.query);
+  return res.json({ books });
 });
 
 // GET route for retrieving a single book by its ID
