@@ -11,27 +11,19 @@ router.get("/:id", petsController.getPetById);
 
 router.post("/", petsController.createPet);
 
-router.put("/:id", async (req, res) => {
-  const { id } = req.params;
-  const { name, age, type, breed, has_microchip } = req.body;
+router.put("/:id", petsController.updatePetById);
 
-  const updatedPet = await db.query(
-    "UPDATE pets SET name = $2, age = $3, type = $4, breed = $5, has_microchip = $6 WHERE id = $1 RETURNING *",
-    [id, name, age, type, breed, has_microchip]
-  );
+router.delete("/:id", petsController.deletePet);
 
-  res.status(201).json({ pet: updatedPet.rows[0] });
-});
+// router.delete("/:id", async (req, res) => {
+//   const { id } = req.params;
 
-router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
+//   const deletedPet = await db.query(
+//     "DELETE FROM pets WHERE id = $1 RETURNING *",
+//     [id]
+//   );
 
-  const deletedPet = await db.query(
-    "DELETE FROM pets WHERE id = $1 RETURNING *",
-    [id]
-  );
-
-  res.status(201).json({ pet: deletedPet.rows[0] });
-});
+//   res.status(201).json({ pet: deletedPet.rows[0] });
+// });
 
 module.exports = router;
