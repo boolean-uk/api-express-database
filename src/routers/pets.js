@@ -8,4 +8,11 @@ router.get('/', async (req, res) => {
   res.json( {  pets: pets.rows })
 })
 
+router.get('/:id', async ( req, res ) => {
+  const { id } = req.params
+
+  const pets = await db.query('SELECT * FROM pets WHERE id = $1', [id])
+  res.json( { pets: pets.rows[0] })
+})
+
 module.exports = router
