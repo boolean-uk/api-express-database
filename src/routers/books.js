@@ -20,4 +20,18 @@ router.get('/', async (req, res) => {
   res.json({ books: books.rows })
 })
 
+router.post('/', async (req, res) => {
+  const { title, type, author, topic, publication_date, pages } = req.body
+  const values = [title, type, author, topic, publication_date, pages ]
+
+  const book = await db.query('INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', values)
+  res.json( { book })
+})
+
+router.get('/:id', async (req, res) => {
+  const { id } = req.params
+  const book = await db.query('SELECT * FROM books WHERE id = $1', [id])
+  res.json( { book: book.rows[0] } )
+})
+
 module.exports = router
