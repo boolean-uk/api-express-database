@@ -58,7 +58,28 @@ function insert(table, values) {
   };
 }
 
+function update(table, values) {
+  let valueCount = 1;
+  const returnValues = [];
+
+  returnValues.push(values.id);
+  const idValueCount = valueCount++;
+  delete values.id;
+
+  const newValues = [];
+  Object.entries(values).forEach(([key, value], index) => {
+    newValues.push(`${key}=$${valueCount++}`);
+    returnValues.push(value);
+  });
+
+  return {
+    text: `UPDATE ${table} SET ${newValues} WHERE id=$${idValueCount}`,
+    values: returnValues,
+  };
+}
+
 module.exports = {
   select,
   insert,
+  update
 };
