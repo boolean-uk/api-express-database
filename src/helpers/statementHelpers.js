@@ -3,7 +3,7 @@ const Types = require("../types.d.js");
 /**
  *
  * @param { Types.TableName } tableName - name of table to execute select statement on
- * @param { {} } [filter] - key value pairs of filters to apply eg: { type: "dog", name: "steve" }
+ * @param { Types.FilterValues } [filter] - key value pairs of filters to apply eg: { type: "dog", name: "steve" }
  * @returns { Types.Query }
  */
 function selectStmt(tableName, filter) {
@@ -31,7 +31,7 @@ function selectStmt(tableName, filter) {
 /**
  *
  * @param { Types.TableName } tableName - name of table to execute insert statement on
- * @param { {} } values - key value pairs of values to insert eg: { type: "dog", name: "steve" }
+ * @param { Types.NewValues } values - key value pairs of values to insert eg: { type: "dog", name: "steve" }
  * @returns { Types.Query }
  */
 function insertRowStmt(tableName, values) {
