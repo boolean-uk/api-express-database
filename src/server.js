@@ -8,9 +8,18 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 
-//TODO: Implement books and pets APIs using Express Modular Routers
-const booksRouter = require('./routers/books.js')
+// Import routers
+const booksRouter = require('./routers/books.js');
+const petsRouter = require('./routers/pets.js'); 
 
-app.use('/books', booksRouter)
+// Use routers
+app.use('/books', booksRouter);
+app.use('/pets', petsRouter);
 
-module.exports = app
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+module.exports = app;
