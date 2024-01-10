@@ -16,7 +16,7 @@
  * @param { {} } [filter] - key value pairs of filters to apply eg: { type: "dog", name: "steve" }
  * @returns { Query }
  */
-function select(tableName, filter) {
+function selectStmt(tableName, filter) {
   const queryText = ``;
   let paramQueryIndex = 1;
   const returnValues = [];
@@ -44,7 +44,7 @@ function select(tableName, filter) {
  * @param { {} } values - key value pairs of values to insert eg: { type: "dog", name: "steve" }
  * @returns { Query }
  */
-function insertRow(tableName, values) {
+function insertRowStmt(tableName, values) {
   let paramQueryIndex = 1;
   const returnValues = [];
 
@@ -69,7 +69,7 @@ function insertRow(tableName, values) {
  * @param { ExistingValues } values
  * @returns { Query }
  */
-function updateRow(tableName, values) {
+function updateRowStmt(tableName, values) {
   let paramQueryIndex = 1;
   const returnValues = [];
 
@@ -96,7 +96,7 @@ function updateRow(tableName, values) {
  * @param { Number } id
  * @returns { Query }
  */
-function deleteRow(tableName, id) {
+function deleteRowStmt(tableName, id) {
   return {
     text: `DELETE FROM ${tableName} WHERE id = $1`,
     values: [id],
@@ -104,8 +104,8 @@ function deleteRow(tableName, id) {
 }
 
 module.exports = {
-  select,
-  insertRow,
-  updateRow,
-  deleteRow,
+  selectStmt,
+  insertRowStmt,
+  updateRowStmt,
+  deleteRowStmt,
 };
