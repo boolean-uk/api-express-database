@@ -1,3 +1,10 @@
+const determineType = (str) => {
+  if (Number(str)) {
+    return 'number'
+  }
+  return 'string'
+}
+
 const extractParams = (reqParamsObj) => {
   const keys = Object.keys(reqParamsObj)
 
@@ -5,7 +12,7 @@ const extractParams = (reqParamsObj) => {
     const obj = {
       name: key,
       value: reqParamsObj[key],
-      type: typeof reqParamsObj[key]
+      type: determineType(reqParamsObj[key])
     }
     return obj
   })
