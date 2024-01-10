@@ -11,7 +11,7 @@
  * @returns { Query }
  */
 function select(tableName, filter) {
-  const queryText = `SELECT * FROM ${tableName}`;
+  const queryText = ``;
   let paramQueryIndex = 1;
   const returnValues = [];
 
@@ -27,8 +27,8 @@ function select(tableName, filter) {
   }
 
   return {
-    text: queryText + whereText,
-    values: returnValues
+    text: `SELECT * FROM ${tableName}${whereText}`,
+    values: returnValues,
   };
 }
 
@@ -41,7 +41,6 @@ function select(tableName, filter) {
 function insert(tableName, values) {
   let paramQueryIndex = 1;
   const returnValues = [];
-  let queryText = `INSERT INTO ${tableName}`;
 
   const columns = [];
   const datas = [];
@@ -53,11 +52,10 @@ function insert(tableName, values) {
   });
 
   return {
-    text: `${queryText} (${columns.toString()}) VALUES (${datas.toString()}) RETURNING *;`,
+    text: `INSERT INTO ${tableName} (${columns.toString()}) VALUES (${datas.toString()}) RETURNING *;`,
     values: returnValues,
   };
 }
-
 
 function update(tableName, values) {
   let paramQueryIndex = 1;
@@ -82,5 +80,5 @@ function update(tableName, values) {
 module.exports = {
   select,
   insert,
-  update
+  update,
 };
