@@ -26,11 +26,23 @@ const createBook = async (req_body) => {
         `INSERT INTO books (${sqlBookKeys}) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
         [title, type, author, topic, publication_date, pages]
     );
-
     return newBook.rows[0];
 };
+
+const updateBookById = async (req_params, req_body) => {
+    const { id } = req_params;
+    const { title, type, author, topic, publication_date, pages } = req_body;
+
+    const updateBook = await db.query(
+        "UPDATE books SET title = $2, type = $3, author = $4, topic = $5, publication_date = $6, pages = $7 WHERE id = $1 RETURNING *",
+        [id, title, type, author, topic, publication_date, pages]
+    );
+
+    return updateBook.rows[0]
+}
 
 module.exports = {
     getBooks,
     createBook,
+    updateBookById
 };
