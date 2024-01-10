@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../db");
 
-const { getBooks, createBook } = require('../controllers/books.js')
+const { getBooks, createBook, updateBookById } = require('../controllers/books.js')
 
 router.get("/", async (req, res) => {
     const books = await getBooks()
@@ -22,14 +22,8 @@ router.get("/:id", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-    const { id } = req.params;
-    const { title, type, author, topic, publication_date, pages } = req.body;
-
-    const updateBook = await db.query(
-        "UPDATE books SET title = $2, type = $3, author = $4, topic = $5, publication_date = $6, pages = $7 WHERE id = $1 RETURNING *",
-        [id, title, type, author, topic, publication_date, pages]
-    );
-    return res.status(201).json({ book: updateBook.rows[0] });
+    const updateBook = await updateBookById(req.params, req.body)
+    return res.status(201).json({ book: updateBook });
 });
 
 router.delete('/:id', async (req, res) => {
