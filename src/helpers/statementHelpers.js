@@ -1,19 +1,19 @@
 /**
   @typedef { "SELECT" | "INSERT" | "UPDATE" | "DELETE" } Statement
-  @typedef { "books" | "pets" } Table
+  @typedef { "books" | "pets" } TableName
   @typedef { { text: String, values: ( Number | String | Boolean )[] } } Query
  */
 
 /**
  *
- * @param { Table } table - name of table to execute select statement on
+ * @param { TableName } tableName - name of table to execute select statement on
  * @param { {} } [filter] - key value pairs of filters to apply eg: { type: "dog", name: "steve" }
  * @returns { Query }
  */
-function select(table, filter) {
-  const queryText = `SELECT * FROM ${table}`;
-  let valueCount = 1;
-  const values = [];
+function select(tableName, filter) {
+  const queryText = `SELECT * FROM ${tableName}`;
+  let paramQueryIndex = 1;
+  const returnValues = [];
 
   let whereText = "";
   if (filter) {
@@ -21,34 +21,34 @@ function select(table, filter) {
     Object.entries(filter).forEach(([key, value], index) => {
       whereText += `${
         index > 0 ? " AND" : ""
-      } $${valueCount++} = $${valueCount++}`;
-      values.push(key, value);
+      } $${paramQueryIndex++} = $${paramQueryIndex++}`;
+      returnValues.push(key, value);
     });
   }
 
   return {
     text: queryText + whereText,
-    values,
+    values: returnValues
   };
 }
 
 /**
  *
- * @param { Table } table - name of table to execute insert statement on
+ * @param { TableName } tableName - name of table to execute insert statement on
  * @param { {} } values - key value pairs of values to insert eg: { type: "dog", name: "steve" }
  * @returns { Query }
  */
-function insert(table, values) {
-  let valueCount = 1;
+function insert(tableName, values) {
+  let paramQueryIndex = 1;
   const returnValues = [];
-  let queryText = `INSERT INTO ${table}`;
+  let queryText = `INSERT INTO ${tableName}`;
 
   const columns = [];
   const datas = [];
   Object.entries(values).forEach(([key, value], index) => {
     columns.push(`${key}`);
 
-    datas.push(`$${valueCount++}`);
+    datas.push(`$${paramQueryIndex++}`);
     returnValues.push(value);
   });
 
@@ -58,22 +58,23 @@ function insert(table, values) {
   };
 }
 
-function update(table, values) {
-  let valueCount = 1;
+
+function update(tableName, values) {
+  let paramQueryIndex = 1;
   const returnValues = [];
 
   returnValues.push(values.id);
-  const idValueCount = valueCount++;
+  const idValueCount = paramQueryIndex++;
   delete values.id;
 
   const newValues = [];
   Object.entries(values).forEach(([key, value], index) => {
-    newValues.push(`${key}=$${valueCount++}`);
+    newValues.push(`${key}=$${paramQueryIndex++}`);
     returnValues.push(value);
   });
 
   return {
-    text: `UPDATE ${table} SET ${newValues} WHERE id=$${idValueCount}`,
+    text: `UPDATE ${tableName} SET ${newValues} WHERE id=$${idValueCount}`,
     values: returnValues,
   };
 }
