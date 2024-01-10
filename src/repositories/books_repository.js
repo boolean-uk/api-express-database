@@ -27,38 +27,82 @@ const getAllBooks = async (title, author) => {
   }
 };
 
-// router.get("/", async (req, res) => {
-//   const { title, author } = req.query;
+const getBookById = async (id) => {
+  try {
+    const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
+    return result.rows[0];
+  } catch (error) {
+    console.log(error);
+    throw new Error("Database error occured");
+  }
+};
 
-//   if (title && author) {
-//     const books = await db.query(
-//       "SELECT * FROM books WHERE title = $1 AND author = $2",
-//       [title, author]
-//     );
+const createBook = async (
+  title,
+  type,
+  author,
+  topic,
+  publication_date,
+  pages
+) => {
+  try {
+    // const existingBook = await db.query(
+    //   "SELECT * FROM books WHERE title = $1",
+    //   [title]
+    // );
 
-//     return res.json({ books: books.rows });
-//   }
+    // if (existingBook.rows.length > 0) {
+    //   if (existingBook.rows[0].title === title) {
+    //     res
+    //       .status(409)
+    //       .json({ error: "A book with the provided title already exists" });
+    //   }
+    // }
+    const result = await db.query(
+      "INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [title, type, author, topic, publication_date, pages]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.log(error);
+    throw new Error("Database error occured");
+  }
+};
 
-//   if (title) {
-//     const books = await db.query("SELECT * FROM books WHERE title = $1", [
-//       title,
-//     ]);
+const updateBook = async (
+  id,
+  title,
+  type,
+  author,
+  topic,
+  publication_date,
+  pages
+) => {
+  try {
+    const result = await db.query(
+      "UPDATE books SET title = $2, type = $3, author = $4, topic = $5, publication_date = $6, pages = $7 WHERE id = $1 RETURNING *",
+      [id, title, type, author, topic, publication_date, pages]
+    );
+    return result.rows[0];
+  } catch (error) {
+    throw new Error("Database error occured");
+  }
+};
 
-//     return res.json({ books: books.rows });
-//   }
+const deleteBook = async (id) => {
+    try {
+        const result = await db.query('DELETE FROM books WHERE id = $1 RETURNING *', [id])
+        return result.rows[0]
+    }catch (error) {
+        throw new Error("Database error occured");
+    }
+}
 
-//   if (author) {
-//     const books = await db.query("SELECT * FROM books WHERE author = $1", [
-//       author,
-//     ]);
-
-//     return res.json({ books: books.rows });
-//   }
-
-//   const books = await db.query("SELECT * FROM books");
-//   res.json({ books: books.rows });
-// });
 
 module.exports = {
   getAllBooks,
+  getBookById,
+  createBook,
+  updateBook,
+  deleteBook,
 };
