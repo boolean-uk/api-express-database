@@ -44,11 +44,11 @@ function insert(table, values) {
 
   const columns = [];
   const datas = [];
-  Object.entries(values).forEach(([key, data], index) => {
+  Object.entries(values).forEach(([key, value], index) => {
     columns.push(`${key}`);
 
     datas.push(`$${valueCount++}`);
-    returnValues.push(data);
+    returnValues.push(value);
   });
 
   return {
