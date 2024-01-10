@@ -2,10 +2,12 @@ const express = require('express')
 const router = express.Router()
 const db = require("../../db");
 
+const extractParams = require('../helper')
+
 router.get('/', async (req, res) => {
   // const queryParamsArr = [ type, topic ].filter((param) => !!param === true)
   const queryParamsKeys = Object.keys(req.query)
-  console.log(queryParamsKeys)
+  console.log(extractParams(req.query))
 
   let queryStr = 'SELECT * from books'
 
