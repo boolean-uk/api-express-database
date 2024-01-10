@@ -81,8 +81,8 @@ function updateRow(tableName, values) {
     }
   });
 
-  returnValues.push(values.id)
-  const idQueryIndex = paramQueryIndex++
+  returnValues.push(values.id);
+  const idQueryIndex = paramQueryIndex++;
 
   return {
     text: `UPDATE ${tableName} SET ${newValues} WHERE id=$${idQueryIndex}`,
