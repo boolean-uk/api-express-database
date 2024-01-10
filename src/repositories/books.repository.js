@@ -9,6 +9,9 @@ const Types = require("../types.d.js");
  * @returns { Promise<Object[]> }
  */
 async function getBooks(filter) {
+  if (!filter || Object.keys(filter).length === 0) {
+    filter = undefined
+  }
   const stmt = stmtHelper.selectStmt("books", filter);
   const result = await db.query(stmt);
   return result.rows;
