@@ -22,7 +22,6 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const { title, type, author, topic, publication_date, pages } = req.body
-  console.log(req.body)
   const values = [title, type, author, topic, publication_date, pages]
 
   const book = await db.query('INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', values)
@@ -32,6 +31,18 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params
   const book = await db.query('SELECT * FROM books WHERE id = $1', [id])
+  res.json( { book: book.rows[0] } )
+})
+
+router.put('/:id', async (req, res) => {
+  const { id } = req.params
+  const { title, type, author, topic, publication_date, pages } = req.body
+
+  const values = [id, title, type, author, topic, publication_date, pages]
+
+  const book = await db.query('UPDATE books SET title = $2, type = $3, author = $4, publication_date = $5, pages = $6 WHERE id = $1 RETURNING *', values)
+  console.log(book)
+
   res.json( { book: book.rows[0] } )
 })
 
