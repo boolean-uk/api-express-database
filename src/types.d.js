@@ -13,7 +13,7 @@
   @typedef { PetValues & { id: Number } } ExistingPetValues
   
   @typedef { BookValues | PetValues } NewValues
-  @typedef { BookValues | PetValues } FilterValues
+  @typedef { FilterBookValues | FilterPetValues } FilterValues
   @typedef { ExistingBookValues | ExistingPetValues } ExistingValues
 
  */
