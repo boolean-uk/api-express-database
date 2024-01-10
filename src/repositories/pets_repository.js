@@ -37,7 +37,21 @@ const getPetById = async (id) => {
   }
 };
 
+const createPet = async (name, age, type, breed, has_microchip) => {
+  try {
+    const result = await db.query(
+      "INSERT INTO pets (name, age, type, breed, has_microchip) VALUES ($1, $2, $3, $4, $5) RETURNING *", [name, age, type, breed, has_microchip]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.log(error);
+    throw new Error("Database error");
+  }
+};
+
+
 module.exports = {
   getAllPets,
   getPetById,
+  createPet,
 };

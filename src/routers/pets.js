@@ -9,24 +9,7 @@ router.get("/", petsController.getAllPets);
 
 router.get("/:id", petsController.getPetById);
 
-// router.get("/:id", async (req, res) => {
-//   const { id } = req.params;
-
-//   const pet = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
-
-//   res.json({ pet: pet.rows[0] });
-// });
-
-router.post("/", async (req, res) => {
-  const { name, age, type, breed, has_microchip } = req.body;
-
-  const newPet = await db.query(
-    "INSERT INTO pets (name, age, type, breed, has_microchip) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-    [name, age, type, breed, has_microchip]
-  );
-
-  res.status(201).json({ pet: newPet.rows[0] });
-});
+router.post("/", petsController.createPet);
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;

@@ -21,7 +21,25 @@ const getPetById = async (req, res) => {
   }
 };
 
+const createPet = async (req, res) => {
+  const { name, age, type, breed, has_microchip } = req.body;
+
+  try {
+    const newPet = await petsRepository.createPet(
+      name,
+      age,
+      type,
+      breed,
+      has_microchip
+    );
+    res.status(201).json({ pet: newPet });
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
 module.exports = {
   getAllPets,
   getPetById,
+  createPet,
 };
