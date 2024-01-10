@@ -3,32 +3,9 @@ const router = express.Router();
 
 const db = require("../../db");
 
-router.get("/", async (req, res) => {
-  const { name, breed } = req.query;
+const petsController = require("../controllers/petsController.js");
 
-  if (name && breed) {
-    const pets = await db.query(
-      "SELECT * FROM pets WHERE name = $1 AND breed = $2",
-      [name, breed]
-    );
-
-    return res.json({ pets: pets.rows });
-  }
-
-  if (name) {
-    const pets = await db.query("SELECT * FROM pets WHERE name = $1", [name]);
-
-    return res.json({ pets: pets.rows });
-  }
-
-  if (breed) {
-    const pets = await db.query("SELECT * FROM pets WHERE name = $1", [breed]);
-
-    return res.json({ pets: pets.rows });
-  }
-  const pets = await db.query("SELECT * FROM pets");
-  res.json({ pets: pets.rows });
-});
+router.get("/", petsController.getPets);
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
@@ -62,15 +39,14 @@ router.put("/:id", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
-    const { id } = req.params;
-  
-    const deletedPet = await db.query(
-      "DELETE FROM pets WHERE id = $1 RETURNING *",
-      [id]
-    );
-  
-    res.status(201).json({ pet: deletedPet.rows[0] });
-  });
-  
+  const { id } = req.params;
+
+  const deletedPet = await db.query(
+    "DELETE FROM pets WHERE id = $1 RETURNING *",
+    [id]
+  );
+
+  res.status(201).json({ pet: deletedPet.rows[0] });
+});
 
 module.exports = router;
