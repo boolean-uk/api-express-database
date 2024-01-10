@@ -75,12 +75,12 @@ router.post('/', async (req, res) =>{
 // GET A BOOK BY ID
 router.get('/:id', async (req, res) => {
     const { id } = req.params
-
     const foundBook = await db.query(
         'SELECT * FROM books WHERE id = $1', 
         [id]
     )
-
+    if (foundBook.rows.length === 0)
+        return res.status(404).json({ error: `no book with id: ${id}` })
     return res.status(200).json({ book: foundBook.rows[0] })
 })
 
