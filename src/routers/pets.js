@@ -49,6 +49,19 @@ router.get('/', async (req, res) => {
 // CREATE A PET
 router.post('/', async (req, res) => {
     const { name, age, type, breed, has_microchip } = req.body
+
+    let missingFields = []
+    if (name === undefined) missingFields.push('name')
+    if (age === undefined) missingFields.push('age')
+    if (type === undefined) missingFields.push('type')
+    if (breed === undefined) missingFields.push('breed')
+    if (has_microchip === undefined) missingFields.push('has_microchip')
+    if (missingFields.length > 0) {
+        const missingFieldsList = missingFields.join(', ')
+        // console.log(missingFieldsList)
+        return res.status(400).json({error: `missing fields: ${missingFieldsList}` })
+    }
+
     const newPet = await db.query(
         'INSERT INTO pets (name, age, type, breed, has_microchip) VALUES ($1, $2, $3, $4, $5) RETURNING *',
         [name, age, type, breed, has_microchip]
