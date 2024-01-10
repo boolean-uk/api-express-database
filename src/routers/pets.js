@@ -58,7 +58,6 @@ router.post('/', async (req, res) => {
     if (has_microchip === undefined) missingFields.push('has_microchip')
     if (missingFields.length > 0) {
         const missingFieldsList = missingFields.join(', ')
-        // console.log(missingFieldsList)
         return res.status(400).json({error: `missing fields: ${missingFieldsList}` })
     }
 
@@ -89,6 +88,8 @@ router.put('/:id', async (req, res) => {
         'UPDATE pets SET name = $2, age = $3, type = $4, breed = $5, has_microchip = $6 WHERE ID = $1 RETURNING *',
         [id, name, age, type, breed, has_microchip]
     )
+    if (updatedPet.rows.length ===  0)
+        return res.status(404).json({ error: `no pet with id: ${id}`})
     return res.status(201).json({ pet: updatedPet.rows[0] })
 })
 
@@ -99,6 +100,8 @@ router.delete('/:id', async (req, res) => {
         'DELETE FROM pets WHERE id = $1 RETURNING *',
         [id]
     )
+    if (deletedPet.rows.length === 0)
+        return res.status(404).json({ error: `no pet with id: ${id}`})
     return res.status(201).json({ pet: deletedPet.rows[0] })
 })
 
