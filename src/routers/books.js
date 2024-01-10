@@ -9,13 +9,13 @@ router.get("/", async (req, res) => {
     res.status(200).json({ books: books });
 });
 
-const SqlBookKeys = "title, type, author, topic, publication_date, pages";
+const sqlBookKeys = "title, type, author, topic, publication_date, pages";
 
 router.post("/", async (req, res) => {
     const { title, type, author, topic, publication_date, pages } = req.body;
 
     const newBook = await db.query(
-        `INSERT INTO books (${SqlBookKeys}) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+        `INSERT INTO books (${sqlBookKeys}) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
         [title, type, author, topic, publication_date, pages]
     );
 
