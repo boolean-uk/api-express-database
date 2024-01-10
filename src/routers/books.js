@@ -1,59 +1,41 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../../db");
+const {
+  getAllBooks,
+  getBookById,
+  createBook,
+  updateBook,
+  deleteBook,
+} = require("../controllers/books.js");
 
-/// Get all books ///
+// GET route for retrieving all books from the database
+router.get("/", async (req, res) => {
+  const books = await getAllBooks(req.query);
+  return res.json({ books });
+});
 
-  router.get("/", async (req, res) => {
-    const books = await db.query("SELECT * FROM books");
-    res.json({ books: books.rows });
-  });
+// GET route for retrieving a single book by its ID
+router.get("/:id", async (req, res) => {
+  const book = await getBookById(req.params.id);
+  res.status(200).json({ book });
+});
 
-  /// Update a book ///
+// POST route for creating a new book
+router.post("/", async (req, res) => {
+  const newBook = await createBook(req.body);
+  res.status(201).json({ book: newBook });
+});
 
-  router.put("/:id", async (req, res) => {
-    const { id } = req.params;
-    const { title, type, author, topic, publication_date, pages } = req.body;
+// PUT route for updating an existing book by its ID
+router.put("/:id", async (req, res) => {
+  const updatedBook = await updateBook(req.params.id, req.body);
+  res.status(201).json({ book: updatedBook });
+});
 
-    const updatedBook = await db.query(
-      "UPDATE books SET title = $2, type = $3, author = $4, topic = $5, publication_date = $6, pages = $7 WHERE id = $1 RETURNING *",
-      [id, title, type, author, topic, publication_date, pages]
-    );
-
-    res.status(201).json({ book: updatedBook.rows[0] });
-  });
-
-  /// Delete a book ///
-
-  router.delete("/:id", async (req, res) => {
-    const { id } = req.params;
-
-    const deletedBook = await db.query(
-      "DELETE FROM books WHERE id = $1 RETURNING *",
-      [id]
-    );
-
-    res.status(201).json({ book: deletedBook.rows[0] });
-  });
-
-  /// Create a book ///
-
-  router.post("/", async (req, res) => {
-    const { title, type, author, topic, publication_date, pages } = req.body;
-
-    const newBook = await db.query(
-      "INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [title, type, author, topic, publication_date, pages]
-    );
-    res.status(201).json({ book: newBook.rows[0] });
-  });
-
-  /// Get book by id ///
-
-  router.get("/:id", async (req, res) => {
-    const { id } = req.params;
-    const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
-    res.json({ book: result.rows[0] });
-  });
+// DELETE route for removing a book from the database by its ID
+router.delete("/:id", async (req, res) => {
+  const deletedBook = await deleteBook(req.params.id);
+  res.status(201).json({ book: deletedBook });
+});
 
 module.exports = router;

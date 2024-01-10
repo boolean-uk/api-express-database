@@ -1,56 +1,41 @@
-const express = require('express')
-const router = express.Router()
-const db = require("../../db");
+const express = require("express");
+const router = express.Router();
+const {
+  getAllPets,
+  getPetById,
+  createPet,
+  updatePet,
+  deletePet,
+} = require("../controllers/pets.js");
 
-/// Add new pet ///
+// GET route to retrieve all pets from the database
+router.get("/", async (req, res) => {
+  const pets = await getAllPets();
+  res.json({ pets });
+});
 
-router.post('/', async (req, res) => {
-    const { name, age, type, breed, has_microchip } = req.body;
-  
-    const newpet = await db.query(
-      'INSERT INTO pets (name, age, type, breed, has_microchip) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [name, age, type, breed, has_microchip]
-    )
-    res.status(201).json({ pet: newpet.rows[0] })
-  })
+// GET route to retrieve a specific pet by its ID
+router.get("/:id", async (req, res) => {
+  const pet = await getPetById(req.params.id);
+  res.status(200).json({ pet });
+});
 
-/// Find pet by ID ///  
+// POST route to create a new pet in the database
+router.post("/", async (req, res) => {
+  const newPet = await createPet(req.body);
+  res.status(201).json({ pet: newPet });
+});
 
-  router.get("/:id", async (req, res) => {
-    const { id } = req.params;
-    const result = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
-    res.json({ pet: result.rows[0] });
-  });
+// PUT route to update an existing pet by its ID
+router.put("/:id", async (req, res) => {
+  const updatedPet = await updatePet(req.params.id, req.body);
+  res.status(201).json({ pet: updatedPet });
+});
 
-/// Find all pets ///
+// DELETE route to remove a pet from the database by its ID
+router.delete("/:id", async (req, res) => {
+  const deletedPet = await deletePet(req.params.id);
+  res.status(201).json({ pet: deletedPet });
+});
 
-  router.get('/', async (req, res) => {
-    const pets = await db.query('SELECT * FROM pets')
-    res.json({ pets: pets.rows })
-  })
-
-/// Update pet by ID ///
-
-  router.put('/:id', async (req, res) => {
-    const { id } = req.params;
-    const { name, age, type, breed, has_microchip } = req.body;
-  
-    const updatedpet = await db.query(
-      'UPDATE pets SET name = $2, age = $3, type = $4, breed = $5, has_microchip = $6 WHERE id = $1 RETURNING *',
-      [id, name, age, type, breed, has_microchip]
-    )
-  
-    res.status(201).json({ pet: updatedpet.rows[0]})
-  })
-
-/// Delete a pet /// 
-
-  router.delete('/:id', async (req, res) => {
-    const { id } = req.params;
-  
-    const deletedpet = await db.query('DELETE FROM pets WHERE id = $1 RETURNING *', [id]);
-  
-    res.status(201).json({ pet: deletedpet.rows[0] })
-  })
-
-  module.exports = router
+module.exports = router;
