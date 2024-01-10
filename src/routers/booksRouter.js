@@ -6,12 +6,30 @@ const db = require('../../db')
 router.get('/', async (req, res) => {
   const { type, topic, author, page, perPage } = req.query
 
+  // Error handling
+  if (perPage < 10 || perPage > 50) {
+    return res.status(400).json({
+      error: `parameter invalid perPage: ${perPage} not valid. Accepted range is 10 - 50`
+    })
+  }
+
   const offset = (page - 1) * perPage
+
+  const result = {}
 
   // States of filtered data
   const conditions = []
   const queryParams = []
   const paginator = []
+
+  // Checking paginator queries
+  if (page) {
+    result.page = Number(page)
+  }
+
+  if (perPage) {
+    result.per_page = Number(perPage)
+  }
 
   // Checking all provided data and combine all of them for request
   if (type) {
@@ -44,12 +62,14 @@ router.get('/', async (req, res) => {
   // Creating request
   const query = `SELECT * FROM books${
     conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : ''
-  } ${paginator.length > 0 && paginator}`
+  } ${paginator.length > 0 ? paginator : 'LIMIT 20'}`
 
   // Send request to database
-  const result = await db.query(query, queryParams)
+  const books = await db.query(query, queryParams)
 
-  res.status(200).json({ books: result.rows })
+  result.books = books.rows
+
+  res.status(200).json(result)
 })
 
 // Create a book
