@@ -10,9 +10,16 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async ( req, res ) => {
   const { id } = req.params
-
   const pets = await db.query('SELECT * FROM pets WHERE id = $1', [id])
   res.json( { pets: pets.rows[0] })
+})
+
+router.post('/', async (req, res) => {
+  const { name, age, type, breed, has_microchip } = req.body
+  const values = [name, age, type, breed, has_microchip]
+  const pet = await db.query('INSERT INTO pets (name, age, type, breed, has_microchip) SET name = $1, age = $2, type = $3, breed = $4, has_microchip = $5 RETURNING *', values)
+
+  res.json( { pet: pet.rows[0] })
 })
 
 router.delete('/:id', async ( req, res ) => {
