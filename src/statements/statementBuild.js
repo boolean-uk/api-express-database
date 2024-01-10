@@ -36,6 +36,7 @@ function select(table, filter) {
  *
  * @param { Table } table - name of table to execute insert statement on
  * @param { {} } values - key value pairs of values to insert eg: { type: "dog", name: "steve" }
+ * @returns { Query }
  */
 function insert(table, values) {
   let valueCount = 1;
