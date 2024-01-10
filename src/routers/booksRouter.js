@@ -4,22 +4,52 @@ const db = require('../../db')
 
 // Retrieve all books
 router.get('/', async (req, res) => {
-  const { type, topic } = req.query
-  let books = null
+  const { type, topic, author, page, perPage } = req.query
 
+  const offset = (page - 1) * perPage
+
+  // States of filtered data
+  const conditions = []
+  const queryParams = []
+  const paginator = []
+
+  // Checking all provided data and combine all of them for request
   if (type) {
-    books = await db.query('select * from books where type = $1', [type])
+    conditions.push('type = $1')
+    queryParams.push(type)
   }
 
   if (topic) {
-    books = await db.query('select * from books where type = $1', [topic])
+    conditions.push(`topic = $${queryParams.length + 1}`)
+    queryParams.push(topic)
   }
 
-  if (!type && !topic) {
-    books = await db.query('select * from books')
+  if (author) {
+    conditions.push(`author = $${queryParams.length + 1}`)
+    queryParams.push(author)
   }
 
-  res.status(200).json({ books: books.rows })
+  if (perPage && !offset) {
+    paginator.push(`LIMIT $${queryParams.length + 1}`)
+    queryParams.push(perPage)
+  }
+
+  if (offset) {
+    paginator.push(
+      `LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`
+    )
+    queryParams.push(perPage, offset)
+  }
+
+  // Creating request
+  const query = `SELECT * FROM books${
+    conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : ''
+  } ${paginator.length > 0 && paginator}`
+
+  // Send request to database
+  const result = await db.query(query, queryParams)
+
+  res.status(200).json({ books: result.rows })
 })
 
 // Create a book
