@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
   const values = [name, age, type, breed, has_microchip]
   const pet = await db.query('INSERT INTO pets (name, age, type, breed, has_microchip) SET name = $1, age = $2, type = $3, breed = $4, has_microchip = $5 RETURNING *', values)
 
-  res.json( { pet: pet.rows[0] })
+  res.status(201).json( { pet: pet.rows[0] })
 })
 
 router.put('/:id', async (req, res) => {
@@ -29,13 +29,13 @@ router.put('/:id', async (req, res) => {
   console.log(values)
   const pet = await db.query('UPDATE pets SET name = $2, age = $3, type = $4, breed = $5, has_microchip = $6 WHERE id = $1 RETURNING *', values)
 
-  res.json( { pet: pet.rows[0] })
+  res.status(201).json( { pet: pet.rows[0] })
 })
 
 router.delete('/:id', async ( req, res ) => {
   const { id } = req.params
   const pets = await db.query('DELETE FROM pets WHERE id = $1 RETURNING *', [id])
-  res.json( { pets: pets.rows[0] })
+  res.status(201).json( { pets: pets.rows[0] })
 })
 
 module.exports = router

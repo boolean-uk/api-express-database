@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
   const values = [title, type, author, topic, publication_date, pages]
 
   const book = await db.query('INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', values)
-  res.json( { book: book.rows })
+  res.status(201).json( { book: book.rows })
 })
 
 router.get('/:id', async (req, res) => {
@@ -42,13 +42,13 @@ router.put('/:id', async (req, res) => {
 
   const book = await db.query('UPDATE books SET title = $2, type = $3, author = $4, topic = $5, publication_date = $6, pages = $7 WHERE id = $1 RETURNING *', values)
 
-  res.json( { book: book.rows[0] } )
+  res.status(201).json( { book: book.rows[0] } )
 })
 
 router.delete('/:id', async (req, res) => {
   const { id } = req.params
   const book = await db.query('DELETE FROM books WHERE id = $1 RETURNING *', [id])
-  res.json( { book: book.rows[0] } )
+  res.status(201).json( { book: book.rows[0] } )
 })
 
 module.exports = router
