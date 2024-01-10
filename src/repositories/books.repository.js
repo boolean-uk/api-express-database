@@ -35,8 +35,21 @@ async function insertBook(values) {
   return result.rows[0];
 }
 
+/**
+ *
+ * @param {Types.ExistingBookValues} values
+ * @returns { Promise<Types.ExistingBookValues> }
+ */
+async function updateBook(values) {
+  const stmt = stmtHelper.updateRowStmt("books", values);
+  const result = await db.query(stmt);
+  return result.rows[0];
+}
+
+
 module.exports = {
   getBooks,
   getBookById,
   insertBook,
+  updateBook,
 };
