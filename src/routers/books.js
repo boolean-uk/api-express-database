@@ -4,6 +4,7 @@ const db = require("../../db");
 
 const {
     getBooks,
+    getBookById,
     createBook,
     updateBookById,
     deleteBookById,
@@ -20,7 +21,7 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-    const foundBook = await getBooks(req.params);
+    const foundBook = await getBookById(req.params);
     res.status(200).json({ book: foundBook });
 });
 
