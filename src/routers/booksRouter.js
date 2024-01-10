@@ -2,6 +2,19 @@ const express = require('express')
 const router = express.Router()
 const db = require('../../db')
 
+//Global functions
+const getBookById = async (id) => {
+  const book = await db.query('select * from books where id = $1', [id])
+
+  if (book.rows.length === 0) {
+    const error = new Error(`no book with id: ${id}`)
+    error.status = 404
+    throw error
+  }
+
+  return book
+}
+
 // Retrieve all books
 router.get('/', async (req, res) => {
   const { type, topic, author, page, perPage } = req.query
@@ -90,41 +103,49 @@ router.post('/', async (req, res, next) => {
 
 // Get a book by ID
 router.get('/:id', async (req, res, next) => {
-  const { id } = req.params
+  try {
+    const { id } = req.params
 
-  const book = await db.query('select * from books where id = $1', [id])
+    const book = await getBookById(id)
 
-  if (book.rows.length === 0) {
-    return res.status(404).json({ error: `no book with id: ${id}` })
+    res.status(200).json({ book: book.rows[0] })
+  } catch (error) {
+    res.status(error.status).json({ error: error.message })
   }
-
-  res.status(200).json({ book: book.rows[0] })
 })
 
 // Update a book
 router.put('/:id', async (req, res, next) => {
-  const { id } = req.params
-  const { title, type, author, topic, publication_date, pages } = req.body
+  try {
+    const { id } = req.params
+    const { title, type, author, topic, publication_date, pages } = req.body
 
-  await db.query(
-    'update books set title = $1, type = $2, author = $3, topic = $4, publication_date = $5, pages = $6 where id = $7',
-    [title, type, author, topic, publication_date, pages, id]
-  )
+    await db.query(
+      'update books set title = $1, type = $2, author = $3, topic = $4, publication_date = $5, pages = $6 where id = $7',
+      [title, type, author, topic, publication_date, pages, id]
+    )
 
-  const updatedBook = await db.query('select * from books where id = $1', [id])
+    const updatedBook = await getBookById(id)
 
-  res.status(201).json({ book: updatedBook.rows[0] })
+    res.status(201).json({ book: updatedBook.rows[0] })
+  } catch (error) {
+    res.status(error.status).json({ error: error.message })
+  }
 })
 
 // Delete a book
 router.delete('/:id', async (req, res, next) => {
-  const { id } = req.params
+  try {
+    const { id } = req.params
 
-  const book = await db.query('select * from books where id = $1', [id])
+    const book = await getBookById(id)
 
-  await db.query('delete from books where id = $1', [id])
+    await db.query('delete from books where id = $1', [id])
 
-  res.status(201).json({ book: book.rows[0] })
+    res.status(201).json({ book: book.rows[0] })
+  } catch (error) {
+    res.status(error.status).json({ error: error.message })
+  }
 })
 
 module.exports = router
