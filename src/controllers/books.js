@@ -1,11 +1,10 @@
 const db = require("../../db");
 
+ let select_query = "SELECT * FROM books";
+let books;
+
 const getAllBooks = async () => {
-    let select_query = "SELECT * FROM books";
-    let books;
-
     books = await db.query(select_query);
-
     return books.rows;
 };
 
