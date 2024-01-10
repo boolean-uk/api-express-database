@@ -15,6 +15,13 @@ const fetchAllBooks = async (queryParams) => {
   return books.rows;
 };
 
+// Function to retrieve a single book by ID
+const fetchBookById = async (id) => {
+  const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
+  return result.rows[0];
+};
+
 module.exports = {
   fetchAllBooks,
+  fetchBookById,
 };
