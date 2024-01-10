@@ -4,18 +4,17 @@ let pets;
 let select_query = "SELECT * FROM pets";
 const sqlPetKeys = "name, age, type, breed, has_microchip";
 
-const getPets = async (req_params) => {
-    if (!req_params) {
+const getPets = async () => {
         pets = await db.query(select_query);
         return pets.rows;
-    }
-
-    if (req_params) {
-        const { id } = req_params;
-        pets = await db.query(select_query.concat(" WHERE id = $1"), [id]);
-        return pets.rows[0];
-    }
+    
 };
+
+const getPetsById = async (req_params) => {
+    const { id } = req_params;
+    pets = await db.query(select_query.concat(" WHERE id = $1"), [id]);
+    return pets.rows[0];
+}
 
 const addNewPet = async (req_body) => {
     const { name, age, type, breed, has_microchip } = req_body;
@@ -51,6 +50,7 @@ const deletePetById = async (req_params) => {
 
 module.exports = {
     getPets,
+    getPetsById,
     addNewPet,
     updatePetById,
     deletePetById,
