@@ -63,6 +63,12 @@ function insert(tableName, values) {
   };
 }
 
+/**
+ *
+ * @param { TableName } tableName
+ * @param { ExistingValues } values
+ * @returns { Query }
+ */
 function update(tableName, values) {
   let paramQueryIndex = 1;
   const returnValues = [];
@@ -70,8 +76,8 @@ function update(tableName, values) {
   const newValues = [];
   Object.entries(values).forEach(([key, value], index) => {
     if (key !== "id") {
-    newValues.push(`${key}=$${paramQueryIndex++}`);
-    returnValues.push(value);
+      newValues.push(`${key}=$${paramQueryIndex++}`);
+      returnValues.push(value);
     }
   });
 
