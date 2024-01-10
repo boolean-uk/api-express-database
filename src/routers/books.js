@@ -11,8 +11,8 @@ const {
 } = require("../controllers/books.js");
 
 router.get("/", async (req, res) => {
-    const books = await getBooks();
-    res.status(200).json({ books: books });
+    const books = await getBooks(req.query);
+    res.status(200).json(books);
 });
 
 router.post("/", async (req, res) => {

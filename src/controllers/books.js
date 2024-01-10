@@ -4,9 +4,37 @@ let select_query = "SELECT * FROM books";
 let books;
 const sqlBookKeys = "title, type, author, topic, publication_date, pages";
 
-const getBooks = async () => {
-    books = await db.query(select_query);
-    return books.rows;
+const getBooks = async (query_params) => {
+    let query = "SELECT * FROM books";
+    let index = 1
+    const values = [];
+    const { author, page, perPage } = query_params;
+
+    if (author) {
+        query +=  `WHERE author = $${1}`;
+        values.push(author);
+        index++
+    }
+
+    let limit = 20;
+    let offset = 0;
+
+    if (perPage) {
+        limit = perPage;
+    }
+
+    if (page) {
+        offset = (page - 1) * limit;
+    }
+
+    query += ` LIMIT $${index++} OFFSET $${index++}`;
+    values.push(limit, offset);
+    
+    books = await db.query(query, values);
+
+    return page && perPage
+        ? { books: books.rows, page: page, perPage: perPage }
+        : { books: books.rows };
 };
 
 const getBookById = async (req_params) => {
