@@ -2,38 +2,9 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../db");
 
-router.get("/", async (req, res) => {
-  const { title, author } = req.query;
+const booksController = require("../controllers/books_controller.js");
 
-  if (title && author) {
-    const books = await db.query(
-      "SELECT * FROM books WHERE title = $1 AND author = $2",
-      [title, author]
-    );
-
-    return res.json({ books: books.rows });
-  }
-
-  if (title) {
-    const books = await db.query("SELECT * FROM books WHERE title = $1", [
-      title,
-    ]);
-
-    return res.json({ books: books.rows });
-  }
-
-  if (author) {
-    const books = await db.query("SELECT * FROM books WHERE author = $1", [
-      author,
-    ]);
-
-    return res.json({ books: books.rows });
-  }
-
-  const books = await db.query("SELECT * FROM books");
-  res.json({ books: books.rows });
-});
-
+router.get("/", booksController.getAllBooks);
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
