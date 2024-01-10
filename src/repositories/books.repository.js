@@ -6,7 +6,7 @@ const Types = require("../types.d.js");
 /**
  *
  * @param { Types.FilterValues } [filter]
- * @returns { Promise<Object[]> }
+ * @returns { Promise<{books: Types.ExistingBookValues[]}> }
  */
 async function getBooks(filter) {
   if (!filter || Object.keys(filter).length === 0) {
@@ -14,50 +14,50 @@ async function getBooks(filter) {
   }
   const stmt = stmtHelper.selectStmt("books", filter);
   const result = await db.query(stmt);
-  return result.rows;
+  return { books: result.rows };
 }
 
 /**
  *
  * @param { Number } id
- * @returns { Promise<Types.ExistingBookValues> }
+ * @returns { Promise<{ book: Types.ExistingBookValues }> }
  */
 async function getBookById(id) {
   const result = await getBooks({ id });
-  return result[0];
+  return { book: result.books[0] };
 }
 
 /**
  *
  * @param { Types.BookValues } values
- * @returns { Promise<Types.ExistingBookValues> }
+ * @returns { Promise<{ book: Types.ExistingBookValues }> }
  */
 async function insertBook(values) {
   const stmt = stmtHelper.insertRowStmt("books", values);
   const result = await db.query(stmt);
-  return result.rows[0];
+  return { book: result.rows[0] };
 }
 
 /**
  *
  * @param {Types.ExistingBookValues} values
- * @returns { Promise<Types.ExistingBookValues> }
+ * @returns { Promise<{book: Types.ExistingBookValues}> }
  */
 async function updateBook(values) {
   const stmt = stmtHelper.updateRowStmt("books", values);
   const result = await db.query(stmt);
-  return result.rows[0];
+  return { book: result.rows[0] };
 }
 
 /**
  *
  * @param { Number } id
- * @returns
+ * @returns { Promise<{book: Types.ExistingBookValues}> }
  */
 async function deleteBook(id) {
   const stmt = stmtHelper.deleteRowStmt("books", id);
   const result = await db.query(stmt);
-  return result.rows[0];
+  return { book: result.rows[0] };
 }
 
 module.exports = {
