@@ -61,18 +61,19 @@ function update(tableName, values) {
   let paramQueryIndex = 1;
   const returnValues = [];
 
-  returnValues.push(values.id);
-  const idValueCount = paramQueryIndex++;
-  delete values.id;
-
   const newValues = [];
   Object.entries(values).forEach(([key, value], index) => {
+    if (key !== "id") {
     newValues.push(`${key}=$${paramQueryIndex++}`);
     returnValues.push(value);
+    }
   });
 
+  returnValues.push(values.id)
+  const idQueryIndex = paramQueryIndex++
+
   return {
-    text: `UPDATE ${tableName} SET ${newValues} WHERE id=$${idValueCount}`,
+    text: `UPDATE ${tableName} SET ${newValues} WHERE id=$${idQueryIndex}`,
     values: returnValues,
   };
 }
