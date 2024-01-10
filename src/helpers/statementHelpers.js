@@ -90,8 +90,22 @@ function updateRow(tableName, values) {
   };
 }
 
+/**
+ *
+ * @param { TableName } tableName
+ * @param { Number } id
+ * @returns { Query }
+ */
+function deleteRow(tableName, id) {
+  return {
+    text: `DELETE FROM ${tableName} WHERE id = $1`,
+    values: [id],
+  };
+}
+
 module.exports = {
   select,
   insertRow,
   updateRow,
+  deleteRow,
 };
