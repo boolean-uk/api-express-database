@@ -15,4 +15,10 @@ router.get('/:id', async ( req, res ) => {
   res.json( { pets: pets.rows[0] })
 })
 
+router.delete('/:id', async ( req, res ) => {
+  const { id } = req.params
+  const pets = await db.query('DELETE FROM pets WHERE id = $1 RETURNING *', [id])
+  res.json( { pets: pets.rows[0] })
+})
+
 module.exports = router
