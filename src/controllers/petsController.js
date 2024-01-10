@@ -1,8 +1,11 @@
 const db = require("../../db");
+const select_table = require("../routers/helpers.js");
+
+// let selec_query = 'SELECT * FROM pets'
+let selec_query = select_table("pets");
 
 const getPets = async (req, res) => {
   const { name, breed } = req.query;
-  let selec_query = "SELECT * FROM pets";
   let pets;
 
   if (name && breed) {
