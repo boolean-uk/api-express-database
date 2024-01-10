@@ -37,5 +37,6 @@ async function insertBook(values) {
 
 module.exports = {
   getBooks,
+  getBookById,
   insertBook,
 };
