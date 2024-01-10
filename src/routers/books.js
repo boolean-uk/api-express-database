@@ -4,33 +4,61 @@ const db = require("../../db");
 
 // GET ALL BOOKS (INC. QUERY PARAMS)
 router.get('/', async (req, res) => {
-    const { type, topic, author } = req.query
+    const { type, topic, author, page, perPage } = req.query
 
+    let select_query = 'SELECT * FROM books'
     let books
     if (type) {
         books = await db.query(
-            'SELECT * FROM books WHERE type = $1',
+            select_query.concat(' WHERE type = $1'),
             [type])
-        return res.status(200).json({ books: books.rows })
     }
 
     if (topic) {
         books = await db.query(
-            'SELECT * FROM books WHERE topic = $1',
+            select_query.concat(' WHERE topic = $1'),
             [topic]
         )
-        return res.status(200).json({ books: books.rows })
+    }
+
+    if (!type && !topic) {
+        books = await db.query(select_query)
+    }
+
+    // EXTENSION SEPARATION
+    let pageQuery = Number(page) || 1
+    let per_page = Number(perPage) || 20
+
+    if (perPage < 10 || perPage > 50) {
+        return res.status(400).json({ error: `parameter invalid perPage: ${perPage} not valid. Accepted range is 10 - 50` })
+    }
+    if (!perPage && !page) {
+        books = await db.query(
+            select_query.concat(' LIMIT $1'),
+            [per_page])
+    }
+    if (perPage && !page) {
+        books = await db.query(
+            select_query.concat(' LIMIT $1'),
+            [per_page])
+    }
+    if (!perPage && page) {
+        books = await db.query(
+            select_query.concat(' LIMIT $1 OFFSET $2'),
+            [per_page, per_page * (pageQuery -1)])
+    }
+    if (perPage && page) {
+        books = await db.query(
+            select_query.concat(' LIMIT $1 OFFSET $2'),
+            [per_page, per_page * (pageQuery -1)])
     }
 
     if (author) {
         books = await db.query(
-            'SELECT * FROM books WHERE author = $1',
+            select_query.concat(' WHERE author = $1'),
             [author])
-        return res.status(200).json({ books: books.rows })
     }
-
-    books = await db.query('SELECT * FROM books')
-    return res.status(200).json({ books: books.rows })
+    return res.status(200).json({ books: books.rows, per_page: per_page, page: pageQuery })
 })
 
 // CREATE A BOOK
