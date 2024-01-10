@@ -37,8 +37,16 @@ const updatePetById = async (req_body, req_params) => {
     return updatePet.rows[0]
 }
 
+const deletePetById = async (req_params) => {
+    const {id} = req_params
+    const deletePet = await db.query('DELETE FROM pets WHERE id = $1 RETURNING *', [id])
+
+    return deletePet.rows[0]
+}
+
 module.exports = {
     getPets,
     addNewPet,
-    updatePetById
+    updatePetById, 
+    deletePetById
 };
