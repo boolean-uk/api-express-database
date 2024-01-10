@@ -1,18 +1,30 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../../db')
+const ErrorConstructor = require('../helpers/ErrorConstructor')
 
 //Global functions
 const getBookById = async (id) => {
   const book = await db.query('select * from books where id = $1', [id])
 
   if (book.rows.length === 0) {
-    const error = new Error(`no book with id: ${id}`)
-    error.status = 404
-    throw error
+    throw ErrorConstructor(`no book with id: ${id}`, 404)
   }
 
   return book
+}
+
+const titleErrorHandler = async (title) => {
+  const book = await db.query('select * from books where title = $1', [title])
+
+  if (book.rows.length !== 0) {
+    throw ErrorConstructor(
+      `A book with the title: ${title} already exists`,
+      409
+    )
+  }
+
+  return
 }
 
 // Retrieve all books
@@ -119,6 +131,8 @@ router.put('/:id', async (req, res, next) => {
   try {
     const { id } = req.params
     const { title, type, author, topic, publication_date, pages } = req.body
+
+    await titleErrorHandler(title)
 
     await db.query(
       'update books set title = $1, type = $2, author = $3, topic = $4, publication_date = $5, pages = $6 where id = $7',
