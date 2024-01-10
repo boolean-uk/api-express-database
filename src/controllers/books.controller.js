@@ -29,8 +29,20 @@ async function createBook(req, res) {
   res.status(201).json(response);
 }
 
+/**
+ *
+ * @param { Types.Request } req
+ * @param { Types.Response } res
+ * @returns { Promise<void> }
+ */
+async function putBook(req, res) {
+  const response = await books.updateBook(req.body);
+  res.status(201).json(response);
+}
+
 module.exports = {
   getAllBooks,
   getBookById,
   createBook,
+  putBook,
 };
