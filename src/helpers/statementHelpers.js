@@ -17,8 +17,8 @@ function selectStmt(tableName, filter) {
     Object.entries(filter).forEach(([key, value], index) => {
       whereText += `${
         index > 0 ? " AND" : ""
-      } $${paramQueryIndex++} = $${paramQueryIndex++}`;
-      returnValues.push(key, value);
+      } ${key} = $${paramQueryIndex++}`;
+      returnValues.push(value);
     });
   }
 
