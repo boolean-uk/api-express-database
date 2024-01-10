@@ -11,7 +11,7 @@ describe("Pets Endpoint", () => {
       const response = await supertest(app).post("/pets").send({name: 'Joey', type: 'dog'})
 
       expect(response.status).toEqual(400)
-      expect(response.body.error).toEqual(`missing fields: age, breed, publication_date`)
+      expect(response.body.error).toEqual(`missing fields: age, breed, has_microchip`)
     })
   })
 
