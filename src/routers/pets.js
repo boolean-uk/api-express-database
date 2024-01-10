@@ -1,38 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const {
-  getAllPets,
-  addPet,
-  getPetBy,
-  deletePet,
-  editPet,
-} = require("../controllers/pets");
+const petControllers = require("../controllers/pets");
 
-router.get("/", async (req, res) => {
-  const result = await getAllPets();
-  res.json({ pets: result.rows });
-});
+router.get("/", petControllers.getAllPets);
 
-router.post("/", async (req, res) => {
-  await addPet(req.body);
-  const result = await getPetBy({ name: req.body.name });
-  res.status(201).json({ pet: result.rows[0] });
-});
+router.post("/", petControllers.addPet);
 
-router.get("/:id", async (req, res) => {
-  const result = await getPetBy(req.params);
-  res.json({ pet: result.rows[0] });
-});
+router.get("/:id", petControllers.getPetBy);
 
-router.delete("/:id", async (req, res) => {
-  const toBeDeleted = await deletePet(req.params);
-  res.status(201).json({ pet: toBeDeleted.rows[0] });
-});
+router.delete("/:id", petControllers.deletePet);
 
-router.put("/:id", async (req, res) => {
-  await editPet(req.params, req.body);
-  const result = await getPetBy(req.params);
-  res.status(201).json({ pet: result.rows[0] });
-});
+router.put("/:id", petControllers.editPet);
 
 module.exports = router;

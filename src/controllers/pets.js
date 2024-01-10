@@ -1,56 +1,27 @@
-const db = require("../../db");
+const petsRepository = require("../repositories/pets");
 
-const getAllPets = async () => {
-  const result = await db.query("SELECT * FROM pets");
-  return result;
+const getAllPets = async (req, res) => {
+  const result = await petsRepository.getAllPets();
+  res.json({ pets: result.rows });
 };
-const getPetBy = async (request_param) => {
-  const key = Object.keys(request_param)[0];
-  const value = Object.values(request_param)[0];
-  const base_query_string = "SELECT * FROM pets WHERE ";
-  let query_string;
-  if (key === "id") {
-    query_string = base_query_string.concat("id = $1");
-  }
-  if (key === "name") {
-    query_string = base_query_string.concat("name = $1");
-  }
-  const result = await db.query(query_string, [value]);
-  return result;
+const getPetBy = async (req, res) => {
+  await petsRepository.getPetBy(req.params);
+  const result = await petsRepository.getPetBy(req.params);
+  res.json({ pet: result.rows[0] });
 };
-const deletePet = async (request_param) => {
-  const itemToDelete = await getPetBy(request_param);
-  const { id } = request_param;
-  await db.query("DELETE FROM pets WHERE id = $1", [id]);
-  return itemToDelete;
+const deletePet = async (req, res) => {
+  const toBeDeleted = await petsRepository.deletePet(req.params);
+  res.status(201).json({ pet: toBeDeleted.rows[0] });
 };
-const addPet = async (pet) => {
-  const properties = Object.keys(pet);
-  const values = Object.values(pet);
-  const query_string =
-    "INSERT INTO pets ".concat(`(${properties.map((p) => " ".concat(p))})`) +
-    " VALUES ( $1, $2, $3, $4, $5)";
-  await db.query(
-    query_string,
-    values.map((value) => value)
-  );
+const addPet = async (req, res) => {
+  await petsRepository.addPet(req.body);
+  const result = await petsRepository.getPetBy({ name: req.body.name });
+  res.status(201).json({ pet: result.rows[0] });
 };
-const editPet = async (request_param, request_body) => {
-  const { id } = request_param;
-  const properties = Object.keys(request_body);
-  const values = Object.values(request_body);
-  values.push(id);
-  const base_query_string = "UPDATE pets SET ";
-  const query_string_updates = properties.map((property, index) =>
-    property.concat(` = $${index + 1} `)
-  );
-  const query_string_where = " WHERE id = $6";
-  const full_query_string =
-    base_query_string + query_string_updates + query_string_where;
-  await db.query(
-    full_query_string,
-    values.map((value) => value)
-  );
+const editPet = async (req, res) => {
+  await petsRepository.editPet(req.params, req.body);
+  const result = await petsRepository.getPetBy(req.params);
+  res.status(201).json({ pet: result.rows[0] });
 };
 
 module.exports = {

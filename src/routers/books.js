@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const { getAllBooks, addBook, getBookBy, deleteBook, editBook } = require("../controllers/books");
 const booksControllers = require("../controllers/books")
 
 router.get("/",  booksControllers.getAllBooks);
