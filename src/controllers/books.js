@@ -37,12 +37,23 @@ const updateBookById = async (req_params, req_body) => {
         "UPDATE books SET title = $2, type = $3, author = $4, topic = $5, publication_date = $6, pages = $7 WHERE id = $1 RETURNING *",
         [id, title, type, author, topic, publication_date, pages]
     );
+    return updateBook.rows[0];
+};
 
-    return updateBook.rows[0]
-}
+const deleteBookById = async (req_params) => {
+    const { id } = req_params;
+    const deleteBook = await db.query(
+        "DELETE FROM books WHERE id = $1 RETURNING *",
+        [id]
+    );
+    return deleteBook.rows[0];
+};
+
+
 
 module.exports = {
     getBooks,
     createBook,
-    updateBookById
+    updateBookById,
+    deleteBookById,
 };
