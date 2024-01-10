@@ -16,6 +16,16 @@ async function getBooks(filter) {
 
 /**
  *
+ * @param { Number } id
+ * @returns { Promise<Types.ExistingBookValues> }
+ */
+async function getBookById(id) {
+  const result = await getBooks({ id });
+  return result[0];
+}
+
+/**
+ *
  * @param { Types.BookValues } values
  */
 async function insertBook(values) {
