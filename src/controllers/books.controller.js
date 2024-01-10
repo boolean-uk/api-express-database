@@ -20,11 +20,17 @@ async function getAllBooks(req, res) {
  * @returns { Promise<void> }
  */
 async function getBookById(req, res) {
-  const response = await books.getBookById(Number(req.params.id))
-  res.json(response)
+  const response = await books.getBookById(Number(req.params.id));
+  res.json(response);
+}
+
+async function createBook(req, res) {
+  const response = await books.insertBook(req.body);
+  res.status(201).json(response);
 }
 
 module.exports = {
   getAllBooks,
   getBookById,
+  createBook,
 };
