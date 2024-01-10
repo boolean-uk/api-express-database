@@ -20,7 +20,7 @@ async function getAllBooks(req, res) {
  * @returns { Promise<void> }
  */
 async function getBookById(req, res) {
-  const response = await books.getBookById(req.params)
+  const response = await books.getBookById(Number(req.params.id))
   res.json(response)
 }
 
