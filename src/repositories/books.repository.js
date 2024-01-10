@@ -46,10 +46,21 @@ async function updateBook(values) {
   return result.rows[0];
 }
 
+/**
+ *
+ * @param { Number } id
+ * @returns
+ */
+async function deleteBook(id) {
+  const stmt = stmtHelper.deleteRowStmt("books", id);
+  const result = await db.query(stmt);
+  return result.rows[0];
+}
 
 module.exports = {
   getBooks,
   getBookById,
   insertBook,
   updateBook,
+  deleteBook,
 };
