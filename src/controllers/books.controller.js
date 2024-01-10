@@ -42,6 +42,7 @@ async function createBook(req, res) {
  * @returns { Promise<void> }
  */
 async function putBook(req, res) {
+  req.body.id = req.params.id
   const response = await books.updateBook(req.body);
   res.status(201).json(response);
 }
