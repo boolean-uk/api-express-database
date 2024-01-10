@@ -3,9 +3,9 @@ const router = express.Router();
 
 const db = require("../../db");
 
-const petsController = require("../controllers/petsController.js");
+const petsController = require("../controllers/pets_controller.js");
 
-router.get("/", petsController.getPets);
+router.get("/", petsController.getAllPets);
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
