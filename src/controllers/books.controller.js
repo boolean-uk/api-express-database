@@ -13,6 +13,12 @@ async function getAllBooks(req, res) {
   res.json(response);
 }
 
+async function getBookById(req, res) {
+  const response = await books.getBookById(req.params)
+  res.json(response)
+}
+
 module.exports = {
   getAllBooks,
+  getBookById,
 };
