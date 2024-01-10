@@ -13,6 +13,12 @@ async function getAllBooks(req, res) {
   res.json(response);
 }
 
+/**
+ *
+ * @param { Types.Request } req
+ * @param { Types.Response } res
+ * @returns { Promise<void> }
+ */
 async function getBookById(req, res) {
   const response = await books.getBookById(req.params)
   res.json(response)
