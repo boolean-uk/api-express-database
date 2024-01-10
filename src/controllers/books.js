@@ -6,7 +6,6 @@ const getAllBooks = async (req, res) => {
 const getBookBy = async (req, res) => {
   const { id } = req.params;
   const result = await booksRepository.getBookBy(req.params);
-
   if (result.rows.length === 0) {
     res.status(404).json({ error: `no book with id: ${id}` });
     return;

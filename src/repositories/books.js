@@ -2,12 +2,23 @@ const db = require("../../db");
 
 const getAllBooks = async (request_query) => {
   let result;
-  const { author } = request_query;
-  console.log(request_query);
-  if (author) {
-    result = await db.query("SELECT * FROM books WHERE author = $1", [author]);
+  const keys = Object.keys(request_query)
+  const values = Object.values(request_query)
+  if (keys.length === 1 && keys[0] === 'author') {
+    result = await db.query("SELECT * FROM books WHERE author = $1", [values[0]]);
   }
-  if (!author) {
+  if (keys[0] === "page" && keys[1] === "perPage") {
+    let limit
+    if(!values[0]) {
+      limit = 20
+    }
+    if(values[0]) {
+      limit = values[1]
+    }
+    const offset = (values[0] - 1) * values[1]
+    result = await db.query("SELECT * FROM books LIMIT $1 OFFSET $2", [limit, offset]);
+  }
+  if (keys.length === 0) {
     result = await db.query("SELECT * FROM books");
   }
   return result;
