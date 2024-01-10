@@ -1,20 +1,10 @@
-/**
-  @typedef { "SELECT" | "INSERT" | "UPDATE" | "DELETE" } Statement
-  @typedef { "books" | "pets" } TableName
-  @typedef { { text: String, values: ( Number | String | Boolean )[] } } Query
-  @typedef { { title: String, type: String, author: String, topic: String, publication_date: String, pages: Number } } BookValues
-  @typedef { { name: String, age: Number, type: String, breed: String, has_microchip: Boolean } } PetValues
-  @typedef { BookValues & { id: Number } } ExistingBookValues
-  @typedef { PetValues & { id: Number } } ExistingPetValues
-  @typedef { BookValues | PetValues } Values
-  @typedef { ExistingBookValues | ExistingPetValues } ExistingValues
- */
+const Types = require("../types.d.js");
 
 /**
  *
- * @param { TableName } tableName - name of table to execute select statement on
+ * @param { Types.TableName } tableName - name of table to execute select statement on
  * @param { {} } [filter] - key value pairs of filters to apply eg: { type: "dog", name: "steve" }
- * @returns { Query }
+ * @returns { Types.Query }
  */
 function selectStmt(tableName, filter) {
   const queryText = ``;
@@ -40,9 +30,9 @@ function selectStmt(tableName, filter) {
 
 /**
  *
- * @param { TableName } tableName - name of table to execute insert statement on
+ * @param { Types.TableName } tableName - name of table to execute insert statement on
  * @param { {} } values - key value pairs of values to insert eg: { type: "dog", name: "steve" }
- * @returns { Query }
+ * @returns { Types.Query }
  */
 function insertRowStmt(tableName, values) {
   let paramQueryIndex = 1;
@@ -65,9 +55,9 @@ function insertRowStmt(tableName, values) {
 
 /**
  *
- * @param { TableName } tableName
- * @param { ExistingValues } values
- * @returns { Query }
+ * @param { Types.TableName } tableName
+ * @param { Types.ExistingValues } values
+ * @returns { Types.Query }
  */
 function updateRowStmt(tableName, values) {
   let paramQueryIndex = 1;
@@ -92,9 +82,9 @@ function updateRowStmt(tableName, values) {
 
 /**
  *
- * @param { TableName } tableName
+ * @param { Types.TableName } tableName
  * @param { Number } id
- * @returns { Query }
+ * @returns { Types.Query }
  */
 function deleteRowStmt(tableName, id) {
   return {
