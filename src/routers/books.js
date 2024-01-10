@@ -71,7 +71,6 @@ router.post('/', async (req, res) =>{
     return res.status(201).json({ book: newBook.rows[0] })
 })
 
-
 // GET A BOOK BY ID
 router.get('/:id', async (req, res) => {
     const { id } = req.params
@@ -88,6 +87,21 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     const { id } = req.params
     const { title, type, author, topic, publication_date, pages } = req.body
+
+    const isValidBookId = await db.query(
+        'SELECT * FROM books WHERE id = $1',
+        [id]
+    )
+    if (isValidBookId.rows.length === 0)
+        return res.status(404).json({ error: `no book with id: ${id}` })
+
+    const isValidBookTitle = await db.query(
+        'SELECT * FROM books WHERE title = $1',
+        [title]
+    )
+    if (isValidBookTitle.rows.length > 0)
+        return res.status(409).json({ error: `A book with the title: ${title} already exists`})
+
     const updatedBook = await db.query(
         'UPDATE books SET title = $2, type = $3, author = $4, topic = $5, publication_date = $6, pages = $7 WHERE id = $1 RETURNING *',
         [id, title, type, author, topic, publication_date, pages]
@@ -102,6 +116,8 @@ router.delete('/:id', async (req, res) => {
         'DELETE FROM books WHERE id = $1 RETURNING *',
         [id]
     )
+    if (deletedBook.rows.length === 0)
+        return res.status(404).json({ error: `no book with id: ${id}` })
     return res.status(201).json({ book: deletedBook.rows[0]})
 })
 
