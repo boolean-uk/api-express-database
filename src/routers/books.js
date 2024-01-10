@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
-router.get('/', async (req, res) => {
+const booksController = require("../controllers/books.controller.js")
 
-})
+router.get('/', booksController.getAllBooks)
 
 module.exports = router
