@@ -75,7 +75,7 @@ function updateRowStmt(tableName, values) {
   const idQueryIndex = paramQueryIndex++;
 
   return {
-    text: `UPDATE ${tableName} SET ${newValues} WHERE id=$${idQueryIndex}`,
+    text: `UPDATE ${tableName} SET ${newValues} WHERE id=$${idQueryIndex} RETURNING *`,
     values: returnValues,
   };
 }
