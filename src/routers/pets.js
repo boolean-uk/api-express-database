@@ -1,14 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const db = require("../../db")
-
-
+const extractParams = require('../helper')
 
 router.get('/', async (req, res) => {
-  console.log(extractParams(req.query))
-
-  let queryStr = "SELECT * FROM pets"
-  const pets = await db.query(queryStr)
+  const pets = await db.query("SELECT * FROM pets")
   res.json( {  pets: pets.rows })
 })
 
