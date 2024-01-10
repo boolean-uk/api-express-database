@@ -42,7 +42,7 @@ router.get('/', async (req, res) => {
             select_query.concat(' LIMIT $1 OFFSET $2'),
             [per_page, per_page * (pageQuery -1)])
     }
-    
+
     return res.status(200).json({ pets: pet.rows, per_page: per_page, page: pageQuery })
 })
 
@@ -63,6 +63,8 @@ router.get('/:id', async (req, res) => {
         'SELECT * FROM pets WHERE id = $1',
         [id]
     )
+    if (foundPet.rows.length === 0)
+        return res.status(404).json({ error: `no pet with id: ${id}` })
     return res.status(200).json({ pet: foundPet.rows[0] })
 })
 
