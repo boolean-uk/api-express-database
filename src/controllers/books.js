@@ -1,6 +1,6 @@
 const booksRepository = require("../repositories/books")
 const getAllBooks = async (req, res) => {
-  const result = await booksRepository.getAllBooks()
+  const result = await booksRepository.getAllBooks(req.query)
   res.json({ books: result.rows });
 };
 const getBookBy = async (req, res) => {

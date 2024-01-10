@@ -1,42 +1,50 @@
 const db = require("../../db");
 
-const getAllBooks = async () => {
-    const result = await db.query("SELECT * FROM books");
-    return result;
-}
+const getAllBooks = async (request_query) => {
+  let result;
+  const { author } = request_query;
+  console.log(request_query);
+  if (author) {
+    result = await db.query("SELECT * FROM books WHERE author = $1", [author]);
+  }
+  if (!author) {
+    result = await db.query("SELECT * FROM books");
+  }
+  return result;
+};
 const getBookBy = async (request_param) => {
-    const key = Object.keys(request_param)[0];
-    const value = Object.values(request_param)[0];
-    const base_query_string = "SELECT * FROM books WHERE ";
-    let query_string;
-    if (key === "id") {
-      query_string = base_query_string.concat("id = $1");
-    }
-    if (key === "title") {
-      query_string = base_query_string.concat("title = $1");
-    }
-    const result = await db.query(query_string, [value]);
-    return result;
-}
+  const key = Object.keys(request_param)[0];
+  const value = Object.values(request_param)[0];
+  const base_query_string = "SELECT * FROM books WHERE ";
+  let query_string;
+  if (key === "id") {
+    query_string = base_query_string.concat("id = $1");
+  }
+  if (key === "title") {
+    query_string = base_query_string.concat("title = $1");
+  }
+  const result = await db.query(query_string, [value]);
+  return result;
+};
 const deleteBook = async (request_param) => {
-    const itemToDelete = await getBookBy(request_param);
-    const { id } = request_param;
-    await db.query("DELETE FROM books WHERE id = $1", [id]);
-    return itemToDelete;
-}
+  const itemToDelete = await getBookBy(request_param);
+  const { id } = request_param;
+  await db.query("DELETE FROM books WHERE id = $1", [id]);
+  return itemToDelete;
+};
 const addBook = async (book) => {
-    const properties = Object.keys(book);
-    const values = Object.values(book);
-    const query_string =
-      "INSERT INTO books ".concat(`(${properties.map((p) => " ".concat(p))})`) +
-      " VALUES ( $1, $2, $3, $4, $5, $6)";
-    await db.query(
-      query_string,
-      values.map((value) => value)
-    );
-}
+  const properties = Object.keys(book);
+  const values = Object.values(book);
+  const query_string =
+    "INSERT INTO books ".concat(`(${properties.map((p) => " ".concat(p))})`) +
+    " VALUES ( $1, $2, $3, $4, $5, $6)";
+  await db.query(
+    query_string,
+    values.map((value) => value)
+  );
+};
 const editBook = async (request_param, request_body) => {
-    const { id } = request_param;
+  const { id } = request_param;
   const properties = Object.keys(request_body);
   const values = Object.values(request_body);
   values.push(id);
@@ -51,13 +59,12 @@ const editBook = async (request_param, request_body) => {
     full_query_string,
     values.map((value) => value)
   );
-}
+};
 
 module.exports = {
-    getAllBooks,
-    getBookBy,
-    deleteBook,
-    addBook,
-    editBook,
+  getAllBooks,
+  getBookBy,
+  deleteBook,
+  addBook,
+  editBook,
 };
-  
