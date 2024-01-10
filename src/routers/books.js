@@ -9,4 +9,6 @@ router.get("/", booksController.getBookById);
 router.post("/", booksController.createBook);
 router.put("/", booksController.putBook);
 
+router.delete("/",)
+
 module.exports = router;

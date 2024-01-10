@@ -46,6 +46,17 @@ async function putBook(req, res) {
   res.status(201).json(response);
 }
 
+/**
+ *
+ * @param { Types.Request } req
+ * @param { Types.Response } res
+ * @returns { Promise<void> }
+ */
+async function deleteBook(req, res) {
+  const response = await books.deleteBook(Number(req.params.id));
+  res.json(response)
+}
+
 module.exports = {
   getAllBooks,
   getBookById,
