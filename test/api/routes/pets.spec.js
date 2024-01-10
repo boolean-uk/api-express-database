@@ -3,7 +3,7 @@ const app = require("../../../src/server.js")
 const { pet1, pet2 } = require("../../fixtures/petData.js")
 const createPet = require("../../helpers/createPet.js")
 
-xdescribe("Pets Endpoint", () => {
+describe("Pets Endpoint", () => {
   describe("POST /pets", () => {
 
     it("will create a new pet", async () => {
