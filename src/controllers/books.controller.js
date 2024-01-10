@@ -12,3 +12,7 @@ async function getAllBooks(req, res) {
   const response = await books.getBooks(req.query);
   res.json(response);
 }
+
+module.exports = {
+  getAllBooks,
+};
