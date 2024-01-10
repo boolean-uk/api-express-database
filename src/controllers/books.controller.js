@@ -62,4 +62,5 @@ module.exports = {
   getBookById,
   createBook,
   putBook,
+  deleteBook,
 };
