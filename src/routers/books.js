@@ -44,7 +44,7 @@ router.delete('/:id', async (req, res) => {
     const { id } = req.params
     const deleteBook = await db.query('DELETE FROM books WHERE id = $1 RETURNING *', [id])
 
-    res.status(201).json({book: deleteBook.rows})
+    res.status(201).json({book: deleteBook.rows[0]})
 })
 
 
