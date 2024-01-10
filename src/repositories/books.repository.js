@@ -31,10 +31,10 @@ async function getBookById(id) {
 async function insertBook(values) {
   const stmt = stmtHelper.insertRowStmt("books", values);
   const result = await db.query(stmt);
-  return result.rows[0]
+  return result.rows[0];
 }
 
 module.exports = {
   getBooks,
-  insertBook
-}
+  insertBook,
+};
