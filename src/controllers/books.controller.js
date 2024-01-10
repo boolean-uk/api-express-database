@@ -24,6 +24,12 @@ async function getBookById(req, res) {
   res.json(response);
 }
 
+/**
+ *
+ * @param { Types.Request } req
+ * @param { Types.Response } res
+ * @returns { Promise<void> }
+ */
 async function createBook(req, res) {
   const response = await books.insertBook(req.body);
   res.status(201).json(response);
