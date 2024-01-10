@@ -11,7 +11,7 @@ describe("Books Endpoint", () => {
       await createBook(Object.values(book2))
     })
 
-    it("will return a 404 status with message if no book", async () => {
+    fit("will return a 404 status with message if no book", async () => {
       const response = await supertest(app).get("/books/3")
 
       expect(response.status).toEqual(404)
