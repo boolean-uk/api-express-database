@@ -4,20 +4,46 @@ const db = require('../../db')
 
 // GET ALL PETS (INC. BY TYPE)
 router.get('/', async (req, res) => {
-    const { type } = req.query
+    const { type, page, perPage } = req.query
 
+    let select_query = 'SELECT * FROM pets'
+    let pet
     if (type) {
-        const pet = await db.query(
-            'SELECT * FROM pets WHERE type = $1',
-            [type]
-        )
-        return res.status(200).json({ pets: pet.rows})
+        pet = await db.query(
+            select_query.concat(' WHERE type = $1'),
+            [type])
     }
+    pet = await db.query(select_query)
 
-    const pet = await db.query(
-        'SELECT * FROM pets'
-    )
-    return res.status(200).json({ pets: pet.rows })
+    // EXTENSION SEPARATION
+    let pageQuery = Number(page) || 1
+    let per_page = Number(perPage) || 20
+    
+    if (perPage < 10 || perPage > 50) {
+        return res.status(400).json({ error: `parameter invalid perPage: ${perPage} not valid. Accepted range is 10 - 50` })
+    }
+    if (!perPage && !page) {
+        pet = await db.query(
+            select_query.concat(' LIMIT $1'),
+            [per_page])
+    }
+    if (perPage && !page) {
+        pet = await db.query(
+            select_query.concat(' LIMIT $1'),
+            [per_page])
+    }
+    if (!perPage && page) {
+        pet = await db.query(
+            select_query.concat(' LIMIT $1 OFFSET $2'),
+            [per_page, per_page * (pageQuery -1)])
+    }
+    if (perPage && page) {
+        pet = await db.query(
+            select_query.concat(' LIMIT $1 OFFSET $2'),
+            [per_page, per_page * (pageQuery -1)])
+    }
+    
+    return res.status(200).json({ pets: pet.rows, per_page: per_page, page: pageQuery })
 })
 
 // CREATE A PET
