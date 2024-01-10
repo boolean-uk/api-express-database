@@ -2,31 +2,23 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../db");
 
-const { getAllBooks } = require('../controllers/books.js')
+const { getBooks, createBook } = require('../controllers/books.js')
 
 router.get("/", async (req, res) => {
-    const books = await getAllBooks()
+    const books = await getBooks()
     res.status(200).json({ books: books });
 });
 
-const sqlBookKeys = "title, type, author, topic, publication_date, pages";
 
 router.post("/", async (req, res) => {
-    const { title, type, author, topic, publication_date, pages } = req.body;
+    const newBook = await createBook(req.body)
 
-    const newBook = await db.query(
-        `INSERT INTO books (${sqlBookKeys}) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-        [title, type, author, topic, publication_date, pages]
-    );
-
-    return res.status(201).json({ book: newBook.rows[0] });
+    res.status(201).json({ book: newBook });
 });
 
 router.get("/:id", async (req, res) => {
-    const { id } = req.params;
-    const foundBook = await db.query("SELECT * FROM books WHERE id = $1", [id]);
-
-    return res.status(200).json({ book: foundBook.rows[0] });
+    const foundBook = await getBooks(req.params)
+    res.status(200).json({ book: foundBook });
 });
 
 router.put("/:id", async (req, res) => {
