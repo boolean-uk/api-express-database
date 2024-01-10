@@ -10,6 +10,18 @@ const getAllPets = async (req, res) => {
   }
 };
 
+const getPetById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const pet = await petsRepository.getPetById(id);
+    res.json({ pet });
+  } catch (error) {
+    res.status(500).json({ error: "An error occured" });
+  }
+};
+
 module.exports = {
   getAllPets,
+  getPetById,
 };

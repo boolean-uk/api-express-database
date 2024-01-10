@@ -1,21 +1,21 @@
 const db = require("../../db");
 
+let selectAllPets = "SELECT * FROM pets";
 const getAllPets = async (name, breed) => {
   try {
-    let selectAllPets = "SELECT * FROM pets";
     const params = [];
 
     if (name && breed) {
-      selectAllPets = selectAllPets.concat(" Where name = $1 AND breed = $2");
+      selectAllPets += " Where name = $1 AND breed = $2";
       params.push(name, breed);
     }
     if (name && !breed) {
-      selectAllPets = selectAllPets.concat(" WHERE name = $1");
+      selectAllPets += " WHERE name = $1";
       params.push(name);
     }
 
     if (!name && breed) {
-      selectAllPets = selectAllPets.concat(" WHERE breed = $1");
+      selectAllPets += " WHERE breed = $1";
       params.push(breed);
       console.log(params);
     }
@@ -27,6 +27,17 @@ const getAllPets = async (name, breed) => {
   }
 };
 
+const getPetById = async (id) => {
+  try {
+    const result = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
+    return result.rows[0];
+  } catch (error) {
+    console.log(error);
+    throw new Error("Database error");
+  }
+};
+
 module.exports = {
   getAllPets,
+  getPetById,
 };

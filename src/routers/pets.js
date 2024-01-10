@@ -7,13 +7,15 @@ const petsController = require("../controllers/pets_controller.js");
 
 router.get("/", petsController.getAllPets);
 
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
+router.get("/:id", petsController.getPetById);
 
-  const pet = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
+// router.get("/:id", async (req, res) => {
+//   const { id } = req.params;
 
-  res.json({ pet: pet.rows[0] });
-});
+//   const pet = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
+
+//   res.json({ pet: pet.rows[0] });
+// });
 
 router.post("/", async (req, res) => {
   const { name, age, type, breed, has_microchip } = req.body;
