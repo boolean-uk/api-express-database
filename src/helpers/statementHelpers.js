@@ -88,7 +88,7 @@ function updateRowStmt(tableName, values) {
  */
 function deleteRowStmt(tableName, id) {
   return {
-    text: `DELETE FROM ${tableName} WHERE id = $1`,
+    text: `DELETE FROM ${tableName} WHERE id = $1 RETURNING *`,
     values: [id],
   };
 }
