@@ -27,7 +27,7 @@ async function getBookById(id) {
 /**
  *
  * @param { Types.BookValues } values
- * @returns { Promise<Types.ExistingBookValues> } 
+ * @returns { Promise<Types.ExistingBookValues> }
  */
 async function insertBook(values) {
   const stmt = stmtHelper.insertRowStmt("books", values);
