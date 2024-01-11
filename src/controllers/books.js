@@ -1,4 +1,5 @@
 const booksRepository = require("../repositories/books");
+
 const getAllBooks = async (req, res) => {
   const perPage = req.query.perPage;
   const page = req.query.page;
@@ -12,6 +13,7 @@ const getAllBooks = async (req, res) => {
   const result = await booksRepository.getAllBooks(author, page, perPage);
   res.json(result);
 };
+
 const getBookBy = async (req, res) => {
   const { id } = req.params;
   const result = await booksRepository.getBookBy(req.params);
@@ -21,6 +23,7 @@ const getBookBy = async (req, res) => {
   }
   res.json({ book: result.rows[0] });
 };
+
 const deleteBook = async (req, res) => {
   const selectItemToDelete = await booksRepository.getBookBy(req.params);
   const itemToDelete = selectItemToDelete.rows[0];
@@ -32,11 +35,13 @@ const deleteBook = async (req, res) => {
   await booksRepository.deleteBook(id);
   res.status(201).json({ book: itemToDelete });
 };
+
 const addBook = async (req, res) => {
   await booksRepository.addBook(req.body);
   const result = await booksRepository.getBookBy({ title: req.body.title });
   res.status(201).json({ book: result.rows[0] });
 };
+
 const editBook = async (req, res) => {
   await booksRepository.editBook(req.params, req.body);
   await booksRepository.editBook(req.params, req.body);

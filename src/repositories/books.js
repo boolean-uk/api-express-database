@@ -27,6 +27,7 @@ const getAllBooks = async (author = "", page = 1, perPage = 20) => {
   result = { books: result.rows, page: parseInt(page), per_page: parseInt(perPage) };
   return result;
 };
+
 const getBookBy = async (request_param) => {
   const key = Object.keys(request_param)[0];
   const value = Object.values(request_param)[0];
@@ -41,9 +42,11 @@ const getBookBy = async (request_param) => {
   const result = await db.query(query_string, [value]);
   return result;
 };
+
 const deleteBook = async (id) => {
   await db.query("DELETE FROM books WHERE id = $1", [id]);
 };
+
 const addBook = async (book) => {
   const properties = Object.keys(book);
   const values = Object.values(book);
@@ -55,6 +58,7 @@ const addBook = async (book) => {
     values.map((value) => value)
   );
 };
+
 const editBook = async (request_param, request_body) => {
   const { id } = request_param;
   const properties = Object.keys(request_body);

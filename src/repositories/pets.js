@@ -4,6 +4,7 @@ const getAllPets = async () => {
   const result = await db.query("SELECT * FROM pets");
   return result;
 };
+
 const getPetBy = async (request_param) => {
   const key = Object.keys(request_param)[0];
   const value = Object.values(request_param)[0];
@@ -18,12 +19,14 @@ const getPetBy = async (request_param) => {
   const result = await db.query(query_string, [value]);
   return result;
 };
+
 const deletePet = async (request_param) => {
   const itemToDelete = await getPetBy(request_param);
   const { id } = request_param;
   await db.query("DELETE FROM pets WHERE id = $1", [id]);
   return itemToDelete;
 };
+
 const addPet = async (pet) => {
   const properties = Object.keys(pet);
   const values = Object.values(pet);
@@ -35,6 +38,7 @@ const addPet = async (pet) => {
     values.map((value) => value)
   );
 };
+
 const editPet = async (request_param, request_body) => {
   const { id } = request_param;
   const properties = Object.keys(request_body);
