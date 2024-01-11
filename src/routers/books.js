@@ -1,9 +1,11 @@
-const express = require('express')
-const router = express.Router()
-const db = require("../../db");
+const express = require("express");
+const router = express.Router();
+const booksControllers = require("../controllers/books")
 
-router.get('/', async (req, res) => {
+router.get("/",  booksControllers.getAllBooks);
+router.post("/", booksControllers.addBook)
+router.get("/:id", booksControllers.getBookBy);
+router.delete("/:id", booksControllers.deleteBook);
+router.put("/:id", booksControllers.editBook);
 
-})
-
-module.exports = router
+module.exports = router;
