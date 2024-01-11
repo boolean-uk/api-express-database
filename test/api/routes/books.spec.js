@@ -13,7 +13,7 @@ describe("Books Endpoint", () => {
       expect(response.body.book).not.toEqual(undefined)
       expect(response.body.book.id).not.toEqual(undefined)
 
-      for (prop in book1) {
+      for (const prop in book1) {
         expect(response.body.book[prop]).toEqual(book1[prop])
       }
     })
@@ -44,7 +44,7 @@ describe("Books Endpoint", () => {
       expect(response.body.book).not.toEqual(undefined)
       expect(response.body.book.id).not.toEqual(undefined)
 
-      for (prop in book1) {
+      for (const prop in book1) {
         expect(response.body.book[prop]).toEqual(book1[prop])
       }
     })
@@ -62,7 +62,7 @@ describe("Books Endpoint", () => {
       expect(response.body.book).not.toEqual(undefined)
       expect(response.body.book.id).not.toEqual(undefined)
 
-      for (prop in book2) {
+      for (const prop in book2) {
         expect(response.body.book[prop]).toEqual(book2[prop])
       }
     })
@@ -80,7 +80,7 @@ describe("Books Endpoint", () => {
       expect(response.body.book).not.toEqual(undefined)
       expect(response.body.book.id).not.toEqual(undefined)
 
-      for (prop in book1) {
+      for (const prop in book1) {
         expect(response.body.book[prop]).toEqual(book1[prop])
       }
     })
