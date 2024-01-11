@@ -1,26 +1,30 @@
 const db = require("../../db");
 
-const getAllBooks = async (request_query) => {
+const getAllBooks = async (author = "", page = 1, perPage = 20) => {
   let result;
-  const keys = Object.keys(request_query)
-  const values = Object.values(request_query)
-  if (keys.length === 1 && keys[0] === 'author') {
-    result = await db.query("SELECT * FROM books WHERE author = $1", [values[0]]);
+  let limit;
+  let offset;
+  if (parseInt(perPage)) {
+    limit = perPage;
   }
-  if (keys[0] === "page" && keys[1] === "perPage") {
-    let limit
-    if(!values[0]) {
-      limit = 20
-    }
-    if(values[0]) {
-      limit = values[1]
-    }
-    const offset = (values[0] - 1) * values[1]
-    result = await db.query("SELECT * FROM books LIMIT $1 OFFSET $2", [limit, offset]);
+  if (parseInt(page)) {
+    offset = (page - 1) * perPage;
   }
-  if (keys.length === 0) {
-    result = await db.query("SELECT * FROM books");
+
+  if (author.length !== 0) {
+    result = await db.query(
+      "SELECT * FROM books WHERE author = $1 LIMIT $2 OFFSET $3",
+      [author, limit, offset]
+    );
+
+    result = { books: result.rows, page: page, perPage: perPage };
+    return result;
   }
+  result = await db.query("SELECT * FROM books LIMIT $1 OFFSET $2", [
+    limit,
+    offset,
+  ]);
+  result = { books: result.rows, page: parseInt(page), per_page: parseInt(perPage) };
   return result;
 };
 const getBookBy = async (request_param) => {

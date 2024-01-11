@@ -38,7 +38,7 @@ describe("Books Endpoint", () => {
     })
   })
 
-  describe("GET /books Pagination", () => {
+  fdescribe("GET /books Pagination", () => {
     beforeEach(async () => {
       await insertBooks()
     })

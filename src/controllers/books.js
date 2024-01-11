@@ -1,7 +1,18 @@
 const booksRepository = require("../repositories/books");
 const getAllBooks = async (req, res) => {
-  const result = await booksRepository.getAllBooks(req.query);
-  res.json({ books: result.rows });
+  const perPage = req.query.perPage;
+  const page = req.query.page;
+  const author = req.query.author;
+  if ((perPage && perPage > 50) || perPage < 10) {
+    res
+      .status(400)
+      .json({
+        error: `parameter invalid perPage: ${perPage} not valid. Accepted range is 10 - 50`,
+      });
+    return;
+  }
+  const result = await booksRepository.getAllBooks(author, page, perPage);
+  res.json(result);
 };
 const getBookBy = async (req, res) => {
   const { id } = req.params;
