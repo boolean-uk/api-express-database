@@ -44,7 +44,6 @@ const addBook = async (req, res) => {
 
 const editBook = async (req, res) => {
   await booksRepository.editBook(req.params, req.body);
-  await booksRepository.editBook(req.params, req.body);
   const result = await booksRepository.getBookBy(req.params);
   res.status(201).json({ book: result.rows[0] });
 };
