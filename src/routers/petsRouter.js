@@ -2,6 +2,18 @@ const express = require('express')
 const router = express.Router()
 const db = require('../../db')
 const FieldsErrorHandler = require('../helpers/FieldsErrorHandler')
+const ErrorConstructor = require('../helpers/ErrorConstructor')
+
+//Global functions
+const getPetById = async (id) => {
+  const pet = await db.query('select * from pets where id = $1', [id])
+
+  if (pet.rows.length === 0) {
+    throw ErrorConstructor(`no pet with id: ${id}`, 404)
+  }
+
+  return pet
+}
 
 // Retrieve all pets
 router.get('/', async (req, res, next) => {
@@ -94,11 +106,15 @@ router.post('/', async (req, res, next) => {
 
 // Get a pet by ID
 router.get('/:id', async (req, res, next) => {
-  const { id } = req.params
+  try {
+    const { id } = req.params
 
-  const pet = await db.query('select * from pets where id = $1', [id])
+    const pet = await getPetById(id)
 
-  res.status(200).json({ pet: pet.rows[0] })
+    res.status(200).json({ pet: pet.rows[0] })
+  } catch (error) {
+    res.status(error.status).json({ error: error.message })
+  }
 })
 
 // Update a pet
