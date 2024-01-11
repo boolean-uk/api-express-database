@@ -1,38 +1,95 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../../db')
+const FieldsErrorHandler = require('../helpers/FieldsErrorHandler')
 
 // Retrieve all pets
 router.get('/', async (req, res, next) => {
-  const { type } = req.query
+  const { type, page, perPage } = req.query
 
-  let pets = null
+  // Error handling
+  if (perPage < 10 || perPage > 50) {
+    return res.status(400).json({
+      error: `parameter invalid perPage: ${perPage} not valid. Accepted range is 10 - 50`
+    })
+  }
 
+  const offset = (page - 1) * perPage
+
+  const result = {}
+
+  // States of filtered data
+  const conditions = []
+  const queryParams = []
+  const paginator = []
+
+  // Checking paginator queries
+  if (page) {
+    result.page = Number(page)
+  }
+
+  if (perPage) {
+    result.per_page = Number(perPage)
+  }
+
+  // Checking all provided data and combine all of them for request
   if (type) {
-    pets = await db.query('select * from pets where type = $1', [type])
+    conditions.push('type = $1')
+    queryParams.push(type)
   }
 
-  if (!type) {
-    pets = await db.query('select * from pets')
+  if (perPage && !offset) {
+    paginator.push(`LIMIT $${queryParams.length + 1}`)
+    queryParams.push(perPage)
   }
 
-  res.status(200).json({ pets: pets.rows })
+  if (offset) {
+    paginator.push(
+      `LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`
+    )
+    queryParams.push(perPage, offset)
+  }
+
+  // Creating request
+  const query = `SELECT * FROM pets${
+    conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : ''
+  } ${paginator.length > 0 ? paginator : 'LIMIT 20'}`
+
+  // Send request to database
+  const pets = await db.query(query, queryParams)
+
+  result.pets = pets.rows
+
+  res.status(200).json(result)
 })
 
 // Create a pet
 router.post('/', async (req, res, next) => {
-  const { name, age, type, breed, has_microchip } = req.body
+  try {
+    const { name, age, type, breed, has_microchip } = req.body
 
-  await db.query(
-    'insert into pets (name, age, type, breed, has_microchip) values ($1, $2, $3, $4, $5)',
-    [name, age, type, breed, has_microchip]
-  )
+    // Error handler
+    FieldsErrorHandler(req.body, [
+      'name',
+      'age',
+      'type',
+      'breed',
+      'has_microchip'
+    ])
 
-  const createdPet = await db.query('select * from pets where name = $1', [
-    name
-  ])
+    await db.query(
+      'insert into pets (name, age, type, breed, has_microchip) values ($1, $2, $3, $4, $5)',
+      [name, age, type, breed, has_microchip]
+    )
 
-  res.status(201).json({ pet: createdPet.rows[0] })
+    const createdPet = await db.query('select * from pets where name = $1', [
+      name
+    ])
+
+    res.status(201).json({ pet: createdPet.rows[0] })
+  } catch (error) {
+    res.status(error.status).json({ error: error.message })
+  }
 })
 
 // Get a pet by ID
