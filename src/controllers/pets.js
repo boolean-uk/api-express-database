@@ -21,8 +21,28 @@ const addPet = async (dataOfPet) => {
   return result.rows[0];
 };
 
+// Function to modify an existing pet
+const modifyPet = async (id, thePetData) => {
+  const { name, age, type, breed, has_microchip } = thePetData;
+  const result = await db.query(
+    "UPDATE pets SET name=$2, age=$3, type=$4, breed=$5, has_microchip=$6 WHERE id = $1 RETURNING *",
+    [id, name, age, type, breed, has_microchip]
+  );
+  return result.rows[0];
+};
+
+// Function to remove a pet
+const removePet = async (id) => {
+  const result = await db.query("DELETE FROM pets WHERE id = $1 RETURNING *", [
+    id,
+  ]);
+  return result.rows[0];
+};
+
 module.exports = {
   fetchAllPets,
   fetchPetById,
   addPet,
+  modifyPet,
+  removePet,
 };
