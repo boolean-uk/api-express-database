@@ -30,8 +30,28 @@ const addBook = async (bookData) => {
   return result.rows[0];
 };
 
+// Function to modify an existing book
+const modifyBook = async (id, bookData) => {
+  const { title, type, author, topic, publication_date, pages } = bookData;
+  const result = await db.query(
+    "UPDATE books SET title = $2, type = $3, author = $4, topic = $5, publication_date = $6, pages = $7 WHERE id = $1 RETURNING *",
+    [id, title, type, author, topic, publication_date, pages]
+  );
+  return result.rows[0];
+};
+
+// Function to remove a book
+const removeBook = async (id) => {
+  const result = await db.query("DELETE FROM books WHERE id = $1 RETURNING *", [
+    id,
+  ]);
+  return result.rows[0];
+};
+
 module.exports = {
   fetchAllBooks,
   fetchBookById,
   addBook,
+  modifyBook,
+  removeBook,
 };

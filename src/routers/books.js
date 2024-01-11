@@ -5,6 +5,8 @@ const {
   fetchAllBooks,
   fetchBookById,
   addBook,
+  modifyBook,
+  removeBook,
 } = require("../controllers/books");
 
 // GET route for retrieving all books from the database
@@ -24,4 +26,19 @@ router.post("/", async (req, res) => {
   const theNewBook = await addBook(req.body);
   res.status(201).json({ book: theNewBook });
 });
+
+// PUT route for updating an existing book by its ID
+router.put("/:id", async (req, res) => {
+  const modifiedBook = await modifyBook(req.params.id, req.body);
+  res.status(201).json({ book: modifiedBook });
+});
+
+// DELETE route for removing a book from the database by its ID
+router.delete("/:id", async (req, res) => {
+  const removedBook = await removeBook(req.params.id);
+  res.status(201).json({ book: removedBook });
+});
+
+module.exports = router;
+
 module.exports = router;
