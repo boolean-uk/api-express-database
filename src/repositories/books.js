@@ -41,11 +41,8 @@ const getBookBy = async (request_param) => {
   const result = await db.query(query_string, [value]);
   return result;
 };
-const deleteBook = async (request_param) => {
-  const itemToDelete = await getBookBy(request_param);
-  const { id } = request_param;
+const deleteBook = async (id) => {
   await db.query("DELETE FROM books WHERE id = $1", [id]);
-  return itemToDelete;
 };
 const addBook = async (book) => {
   const properties = Object.keys(book);

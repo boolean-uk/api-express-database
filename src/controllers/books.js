@@ -4,11 +4,9 @@ const getAllBooks = async (req, res) => {
   const page = req.query.page;
   const author = req.query.author;
   if ((perPage && perPage > 50) || perPage < 10) {
-    res
-      .status(400)
-      .json({
-        error: `parameter invalid perPage: ${perPage} not valid. Accepted range is 10 - 50`,
-      });
+    res.status(400).json({
+      error: `parameter invalid perPage: ${perPage} not valid. Accepted range is 10 - 50`,
+    });
     return;
   }
   const result = await booksRepository.getAllBooks(author, page, perPage);
@@ -24,8 +22,15 @@ const getBookBy = async (req, res) => {
   res.json({ book: result.rows[0] });
 };
 const deleteBook = async (req, res) => {
-  const itemToDelete = await booksRepository.deleteBook(req.params);
-  res.status(201).json({ book: itemToDelete.rows[0] });
+  const selectItemToDelete = await booksRepository.getBookBy(req.params);
+  const itemToDelete = selectItemToDelete.rows[0];
+  const { id } = req.params;
+  if (!itemToDelete) {
+    res.status(404).json({ error: `no book with id: ${id}` });
+    return;
+  }
+  await booksRepository.deleteBook(id);
+  res.status(201).json({ book: itemToDelete });
 };
 const addBook = async (req, res) => {
   await booksRepository.addBook(req.body);
