@@ -138,13 +138,17 @@ router.put('/:id', async (req, res, next) => {
 
 // Delete a pet
 router.delete('/:id', async (req, res, next) => {
-  const { id } = req.params
+  try {
+    const { id } = req.params
 
-  const deletedPet = await db.query('select * from pets where id = $1', [id])
+    const deletedPet = await getPetById(id)
 
-  await db.query('delete from pets where id = $1', [id])
+    await db.query('delete from pets where id = $1', [id])
 
-  res.status(201).json({ pet: deletedPet.rows[0] })
+    res.status(201).json({ pet: deletedPet.rows[0] })
+  } catch (error) {
+    res.status(error.status).json({ error: error.message })
+  }
 })
 
 module.exports = router
