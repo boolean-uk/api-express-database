@@ -39,7 +39,7 @@ All being well, you will have a terminal window that looks like the following:
 ![](images/terminal.png)
 
 _Figure 2: The terminal window where the express server is running successfully_
-
+npm
 ## Interacting with the Database
 To interact with the database we will use the [node-postgres](https://node-postgres.com/) library. We will use the [query](https://node-postgres.com/features/queries) method to send SQL queries to the database sever and receive responses. The `db/index.js` file establishes the connection to the database. Your instructor will walk through this with you.
 
