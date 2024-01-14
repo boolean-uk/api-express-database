@@ -13,4 +13,11 @@ const postBookById = async ( request_body) => {
   )
   return newBook.rows[0]
 };
-module.exports = { getAllBooks, postBookById };
+const getABookById = async(id) => {
+    
+    const book = await db.query("SELECT * FROM books WHERE id = $1", [id])
+    
+
+    return book.rows;
+}
+module.exports = { getAllBooks, postBookById , getABookById};
