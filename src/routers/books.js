@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getAllBooks, postBookById, getABookById, updateBookById } = require("../controllers/books");
+const { getAllBooks, postBookById, getABookById, updateBookById, deleteBookById } = require("../controllers/books");
 
 router.get("/", async (req, res) => {
   const books = await getAllBooks();
@@ -21,6 +21,11 @@ router.get("/:id", async (req, res) => {
 })
 router.put('/:id', async (req, res) => {
   const updatedBook = await updateBookById(req.params.id, req.body);
-  res.json({ book: updatedBook })
+  res.status(201).json({ book: updatedBook })
+})
+router.delete('/:id', async (req, res)=> {
+  const bookId = req.params.id;
+  const deletedbook = await deleteBookById(bookId);
+  res.status(201).json({book: deletedbook})
 })
 module.exports = router;
