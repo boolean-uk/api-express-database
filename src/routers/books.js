@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getAllBooks, postBookById, getABookById } = require("../controllers/books");
+const { getAllBooks, postBookById, getABookById, updateBookById } = require("../controllers/books");
 
 router.get("/", async (req, res) => {
   const books = await getAllBooks();
@@ -19,5 +19,8 @@ router.get("/:id", async (req, res) => {
   res.status(200).json({ book: book })
 
 })
-
+router.put('/:id', async (req, res) => {
+  const updatedBook = await updateBookById(req.params.id, req.body);
+  res.json({ book: updatedBook })
+})
 module.exports = router;

@@ -20,4 +20,20 @@ const getABookById = async(id) => {
 
     return book.rows;
 }
-module.exports = { getAllBooks, postBookById , getABookById};
+// controllers/movies.js
+// Same file where `getAllMovies` function lives
+
+const updateBookById = async (id, request_body) => {
+    const { title, type, author, topic, publication_date, pages } = request_body;
+  
+    const updatedBook = await db.query(
+      'UPDATE books SET title = $2, type = $3, author = $4, topic = $5 , publication_date = $6, pages = $7 WHERE id = $1 RETURNING *',
+      [id, title, type, author, topic, publication_date, pages]
+    )
+  
+    return updatedBook.rows[0];
+  }
+  
+  // Exporting this new update function
+  
+module.exports = { getAllBooks, postBookById , getABookById, updateBookById};
