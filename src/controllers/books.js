@@ -16,7 +16,7 @@ const postBookById = async (request_body) => {
 const getABookById = async (id) => {
   const book = await db.query("SELECT * FROM books WHERE id = $1", [id]);
 
-  return book.rows;
+  return book.rows[0];
 };
 // controllers/movies.js
 // Same file where `getAllMovies` function lives
