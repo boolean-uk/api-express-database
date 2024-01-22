@@ -16,7 +16,7 @@ const postPetById = async (request_body) => {
 const getAPetById = async (id) => {
   const pet = await db.query("SELECT * FROM pets WHERE id = $1", [id]);
 
-  return pet.rows;
+  return pet.rows[0];
 };
 // controllers/movies.js
 // Same file where `getAllMovies` function lives
