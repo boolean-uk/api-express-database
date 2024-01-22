@@ -21,11 +21,11 @@ router.get("/:id", async (req, res) => {
 })
 router.put('/:id', async (req, res) => {
   const updatedPet = await updatePetById(req.params.id, req.body);
-  res.status(201).json({ book: updatedPet })
+  res.status(201).json({ pet: updatedPet })
 })
 router.delete('/:id', async (req, res)=> {
   const petId = req.params.id;
   const deletedPet = await deletePetById(petId);
-  res.status(201).json({book: deletedPet})
+  res.status(201).json({pet: deletedPet})
 })
 module.exports = router;
