@@ -24,13 +24,10 @@ const createBook = async (newBook) => {
 };
 
 const getBookById = async (id) => {
-    const result = await db.query(
-      "SELECT * FROM books WHERE id = $1",
-      [id]
-    );
-    return result.rows[0];
+  const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
+  return result.rows[0];
 };
-  
+
 const updateBook = async (id, newBook) => {
   const { title, type, author, topic, publication_date, pages } = newBook;
   const result = await db.query(
@@ -41,11 +38,16 @@ const updateBook = async (id, newBook) => {
 };
 
 const deleteBook = async (id) => {
-    const result = await db.query(
-      "DELETE FROM books WHERE id = $1 RETURNING *",
-      [id]
-    );
-    return result.rows[0];
+  const result = await db.query("DELETE FROM books WHERE id = $1 RETURNING *", [
+    id,
+  ]);
+  return result.rows[0];
 };
 
-module.exports = { getAllBooks, createBook ,getBookById, updateBook,deleteBook };
+module.exports = {
+  getAllBooks,
+  createBook,
+  getBookById,
+  updateBook,
+  deleteBook,
+};

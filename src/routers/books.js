@@ -1,12 +1,17 @@
-const express = require('express')
-const router = express.Router()
-const {getAllBooks,createBook,getBookById,updateBook,deleteBook} = require("../controllers/books")
+const express = require("express");
+const router = express.Router();
+const {
+  getAllBooks,
+  createBook,
+  getBookById,
+  updateBook,
+  deleteBook,
+} = require("../controllers/books");
 
-
-router.get('/', async (req, res) => {
-    const books = await getAllBooks(req.query)
-    res.status(200).json({books})
-})
+router.get("/", async (req, res) => {
+  const books = await getAllBooks(req.query);
+  res.status(200).json({ books });
+});
 
 router.post("/", async (req, res) => {
   const newBook = await createBook(req.body);
@@ -28,6 +33,4 @@ router.delete("/:id", async (req, res) => {
   res.status(201).json({ book: deletedBook });
 });
 
-
-
-module.exports = router
+module.exports = router;
