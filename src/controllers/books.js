@@ -11,6 +11,7 @@ const getBooks = async (query_params) => {
     const { author, page, perPage } = query_params;
 
     if (author) {
+        
         query +=  `WHERE author = $${1}`;
         values.push(author);
         index++

@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  api-express:
+    image: api-express-database
+    container_name: api-express
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres_database # Ensure the API container starts after the PostgreSQL container
+  postgres_database:
+    image: postgres
+    container_name: postgres_database
+    environment:
+      POSTGRES_PASSWORD: docker_user
+      POSTGRES_USER: docker_user
+    ports:
+      - "5432:5432"
+    volumes:
+      - /c/Docker/DB:/var/lib/postgresql/data
+    restart: unless-stopped
+
