@@ -1,5 +1,5 @@
 const express = require('express')
-const { getAllPets, addPet, getPetByID, updatePet } = require('../controllers/pets')
+const { getAllPets, addPet, getPetByID, updatePet, deletePet } = require('../controllers/pets')
 const router = express.Router()
 
 router.get('/', async(req, res) => {
@@ -31,6 +31,13 @@ router.put('/:id', async (req, res) => {
 
     res.status(201).json({
         pet: updatedPet
+    })
+})
+
+router.delete('/:id', async (req, res) => {
+    const deletedPet = await deletePet(req)
+    res.status(201).json({
+        pet: deletedPet
     })
 })
 

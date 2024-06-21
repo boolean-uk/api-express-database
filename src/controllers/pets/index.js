@@ -58,9 +58,26 @@ const updatePet = async(req) => {
     }
 }
 
+const deletePet = async (req) => {
+    const id = Number(req.params.id)
+    const db = await dbConnection.connect()
+
+    try {
+        const sqlQuery = `delete from pets where id=$1 returning *`
+        const result = db.query(sqlQuery, [id])
+
+        return result.rows
+    } catch (e) {
+        console.log(e)
+    } finally {
+        db.release()
+    }
+}
+
 module.exports = {
     getAllPets,
     addPet,
     getPetByID,
-    updatePet
+    updatePet,
+    deletePet
 }
