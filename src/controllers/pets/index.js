@@ -43,8 +43,24 @@ const getPetByID = async(req) => {
     }
 }
 
+const updatePet = async(req) => {
+    const id = Number(req.params.id)
+    const db = await dbConnection.connect()
+    try {
+        const sqlQuery = `update pets set name = $1, age = $2, type = $3, breed = $4, has_microchip = $5 where id=${id} returning *`
+        const result = await db.query(sqlQuery, [req.body.name, req.body.age, req.body.type, req.body.breed, req.body.has_microchip])
+
+        return result.rows[0]
+    } catch (e) {
+        console.log(e)
+    } finally {
+        db.release()
+    }
+}
+
 module.exports = {
     getAllPets,
     addPet,
-    getPetByID
+    getPetByID,
+    updatePet
 }
