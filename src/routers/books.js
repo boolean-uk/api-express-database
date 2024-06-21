@@ -5,8 +5,9 @@ const router = express.Router()
 router.get('/', async (req, res) => {
     const type = req.query.type
     const topic = req.query.topic
+    const author = req.query.author
 
-    const books = await getAllBooks(type, topic)
+    const books = await getAllBooks(type, topic, author)
 
     res.json({
         books

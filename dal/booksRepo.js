@@ -1,6 +1,6 @@
 const dbConnection = require('../utils/dbConnection.js')
 
-const getAllBooks = async (type, topic) => {
+const getAllBooks = async (type, topic, author) => {
     const db = await dbConnection.connect()
 
     try {
@@ -14,6 +14,13 @@ const getAllBooks = async (type, topic) => {
         if (topic) {
             const sqlQuery = `select * from books where topic = $1`
             const result = await db.query(sqlQuery, [topic])
+
+            return result.rows
+        }
+
+        if (author) {
+            const sqlQuery = `select * from books where author = $1`
+            const result = await db.query(sqlQuery, [author])
 
             return result.rows
         }
