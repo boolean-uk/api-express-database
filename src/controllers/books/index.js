@@ -1,3 +1,4 @@
+const { findSourceMap } = require('module')
 const dbConnection = require('../../utils/dbConnection.js')
 
 const getAllBooks = async() => {
@@ -60,10 +61,26 @@ const updateBook = async(req) => {
     }
 }
 
+const deleteBook = async(req) => {
+    const id = req.params.id
+    const db = await dbConnection.connect()
+    try {
+        const sqlQuery = 'delete from books where id=$1 returning *'
+        const result = await db.query(sqlQuery, [id])
+
+        return result.rows
+    } catch (e) {
+        console.log(e)
+    } finally {
+        db.release()
+    }
+}
+
 
 module.exports = {
     getAllBooks,
     createBook, 
     getBookByID,
-    updateBook
+    updateBook,
+    deleteBook
 }
