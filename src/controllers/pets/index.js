@@ -1,4 +1,3 @@
-const { findSourceMap } = require('module')
 const dbConnection = require('../../utils/dbConnection.js')
 
 const getAllPets = async () => {
@@ -47,8 +46,8 @@ const updatePet = async(req) => {
     const id = Number(req.params.id)
     const db = await dbConnection.connect()
     try {
-        const sqlQuery = `update pets set name = $1, age = $2, type = $3, breed = $4, has_microchip = $5 where id=${id} returning *`
-        const result = await db.query(sqlQuery, [req.body.name, req.body.age, req.body.type, req.body.breed, req.body.has_microchip])
+        const sqlQuery = `update pets set name = $1, age = $2, type = $3, breed = $4, has_microchip = $5 where id=$6 returning *`
+        const result = await db.query(sqlQuery, [req.body.name, req.body.age, req.body.type, req.body.breed, req.body.has_microchip, id])
 
         return result.rows[0]
     } catch (e) {
@@ -63,10 +62,10 @@ const deletePet = async (req) => {
     const db = await dbConnection.connect()
 
     try {
-        const sqlQuery = `delete from pets where id=$1 returning *`
-        const result = db.query(sqlQuery, [id])
+        const sqlQuery = 'delete from pets where id=$1 returning *'
+        const result = await db.query(sqlQuery, [id])
 
-        return result.rows
+        return result.rows[0]
     } catch (e) {
         console.log(e)
     } finally {

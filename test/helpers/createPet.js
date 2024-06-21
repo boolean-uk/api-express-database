@@ -1,4 +1,4 @@
-const client = require("../../db");
+const client = require('../../src/utils/dbConnection.js');
 
 const createPet = async (values) => {
   const sqlString = `INSERT INTO "pets" (name, age, type, breed, has_microchip) VALUES ($1, $2, $3, $4, $5) RETURNING *;`
