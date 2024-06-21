@@ -1,5 +1,5 @@
 const express = require('express')
-const { getAllPets, createPet, getPetById, updatePet, deletePetById } = require('../../dal/petsRepo.js')
+const { getAllPets, createPet, getPetById, updatePet, deletePetById } = require('../dal/petsRepo.js')
 const router = express.Router()
 
 router.get('/', async (req, res) => {

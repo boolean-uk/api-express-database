@@ -1,4 +1,6 @@
 const dbConnection = require('../utils/dbConnection.js')
+const MissingFieldsError = require('../errors/missingFieldsError.js')
+const { as } = require('pg-promise')
 
 const getAllBooks = async (type, topic, author, pages, perpages) => {
     const db = await dbConnection.connect()
@@ -52,6 +54,10 @@ const getAllBooks = async (type, topic, author, pages, perpages) => {
 
 const createBook = async (book) => {
     const db = await dbConnection.connect()
+
+    if (!verifyFields(book)) {
+        throw new MissingFieldsError('Missing fields in request body')
+    }
 
     try {
         const sqlQuery = `insert into books (title, type, author, topic, publication_date, pages) values ($1, $2, $3, $4, $5, $6) returning *`
@@ -108,6 +114,18 @@ const deleteBookById = async (id) => {
     } finally {
         db.release()
     }
+}
+
+function verifyFields(object) {
+    const neededProperties = ['title', 'type', 'author', 'topic', 'publication_date', 'pages']
+
+    for (const item of neededProperties) {
+        if (object[item] === undefined) {
+            return false
+        }
+    }
+
+    return true
 }
 
 module.exports = {
