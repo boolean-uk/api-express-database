@@ -37,7 +37,22 @@ const createBook = async (book) => {
         const sqlQuery = `insert into books (title, type, author, topic, publication_date, pages) values ($1, $2, $3, $4, $5, $6) returning *`
         const result = await db.query(sqlQuery, [book.title, book.type, book.author, book.topic, book.publication_date, book.pages])
 
-        return result.rows
+        return result.rows[0]
+    } catch (e) {
+        console.log(e)
+    } finally {
+        db.release()
+    }
+}
+
+const getBookById = async (id) => {
+    const db = await dbConnection.connect()
+
+    try {
+        const sqlQuery = `select * from books where id = $1`
+        const result = await db.query(sqlQuery, [id])
+
+        return result.rows[0]
     } catch (e) {
         console.log(e)
     } finally {
@@ -47,5 +62,6 @@ const createBook = async (book) => {
 
 module.exports = {
     getAllBooks,
-    createBook
+    createBook,
+    getBookById
 }
