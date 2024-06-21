@@ -29,7 +29,22 @@ const addPet = async (req) => {
     }
 }
 
+const getPetByID = async(req) => {
+    const id = Number(req.params.id)
+    const db = await dbConnection.connect()
+    try {
+        const sqlQuery = 'select * from pets where id ='+id
+        const result = await db.query(sqlQuery)
+        return result.rows[0]
+    } catch (e) {
+        console.log(e)
+    } finally {
+        db.release()
+    }
+}
+
 module.exports = {
     getAllPets,
-    addPet
+    addPet,
+    getPetByID
 }

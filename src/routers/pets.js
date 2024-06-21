@@ -1,5 +1,5 @@
 const express = require('express')
-const { getAllPets, addPet } = require('../controllers/pets')
+const { getAllPets, addPet, getPetByID } = require('../controllers/pets')
 const router = express.Router()
 
 router.get('/', async(req, res) => {
@@ -15,6 +15,14 @@ router.post('/', async(req, res) => {
 
     res.status(201).json({
         pet: newPet
+    })
+})
+
+router.get('/:id', async(req, res) => {
+    const pet = await getPetByID(req)
+
+    res.status(200).json({
+        pet: pet
     })
 })
 

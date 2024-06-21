@@ -37,7 +37,7 @@ const getBookByID = async(req) => {
         const sqlQuery = 'select * from books where id =' + id
         const result = await db.query(sqlQuery)
 
-        return result.rows
+        return result.rows[0]
     } catch (e) {
         console.log(e)
     } finally {
