@@ -1,11 +1,25 @@
 const dbConnection = require('../utils/dbConnection.js')
 
-const getAllBooks = async (type, topic, author) => {
+const getAllBooks = async (type, topic, author, pages, perpages) => {
     const db = await dbConnection.connect()
-
+    
     try {
+        let page = 1
+        let perpage = 20
+        let offset = 0
+
+        if (pages) {
+            page = pages
+            offset = (page - 1) * perpage
+        }
+
+        if (perpages > 9 && perpages < 51) {
+            perpage = perpages
+            offset = (page - 1) * perpage
+        }
+
         if (type) {
-            const sqlQuery = `select * from books where type = $1`
+            const sqlQuery = `select * from books where type = $1 limit = $2 offset = $3`
             const result = await db.query(sqlQuery, [type])
 
             return result.rows
@@ -25,8 +39,8 @@ const getAllBooks = async (type, topic, author) => {
             return result.rows
         }
 
-        const sqlQuery = 'select * from books'
-        const result = await db.query(sqlQuery)
+        const sqlQuery = `select * from books limit $1 offset $2`
+        const result = await db.query(sqlQuery, [perpage, offset])
 
         return result.rows
     } catch (e) {

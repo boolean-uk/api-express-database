@@ -6,8 +6,10 @@ router.get('/', async (req, res) => {
     const type = req.query.type
     const topic = req.query.topic
     const author = req.query.author
+    const page = req.query.page
+    const perPage = req.query.per_page
 
-    const books = await getAllBooks(type, topic, author)
+    const books = await getAllBooks(type, topic, author, page, perPage)
 
     res.json({
         books
