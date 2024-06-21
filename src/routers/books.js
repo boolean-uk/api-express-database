@@ -1,5 +1,5 @@
 const express = require('express')
-const { getAllBooks, createBook, getBookById, updateBook } = require('../../dal/booksRepo.js')
+const { getAllBooks, createBook, getBookById, updateBook, deleteBookById } = require('../../dal/booksRepo.js')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -41,6 +41,16 @@ router.put('/:id', async (req, res) => {
 
     res.json({
         book: updatedBook
+    })
+})
+
+router.delete('/:id', async (req, res) => {
+    const bookId = Number(req.params.id)
+
+    const deletedBook = await deleteBookById(bookId)
+
+    res.json({
+        book: deletedBook
     })
 })
 
