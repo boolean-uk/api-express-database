@@ -1,4 +1,3 @@
-const { findSourceMap } = require('module')
 const dbConnection = require('../../utils/dbConnection.js')
 
 const getAllBooks = async() => {
