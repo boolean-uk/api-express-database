@@ -10,7 +10,9 @@ app.use(cors());
 app.use(express.json());
 
 const booksRouter = require('./routers/books.js')
+const petsRouter = require('./routers/pets.js')
 
 app.use('/books', booksRouter)
+app.use('/pets', petsRouter)
 
 module.exports = app
