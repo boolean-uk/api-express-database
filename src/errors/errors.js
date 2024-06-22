@@ -1,4 +1,8 @@
 class MissingFieldsError extends Error {
 }
 
-module.exports = { MissingFieldsError }
+class NoDataError extends Error {
+
+}
+
+module.exports = { MissingFieldsError, NoDataError }

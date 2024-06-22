@@ -28,4 +28,19 @@ async function postBook(book) {
 }
 
 
-module.exports = { fetchBooks, postBook }
+async function fetchBookById(id) {
+    const db = await dbConnection.connect()
+    try {
+        const sqlQuery = 'SELECT * FROM books WHERE id = $1'
+        const result = await db.query(sqlQuery, [id])
+        console.log(result)
+        return result.rows
+    } catch (e) {
+        console.log(e)
+    } finally {
+        db.release()
+    }
+}
+
+
+module.exports = { fetchBooks, postBook, fetchBookById }
