@@ -1,11 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const getAllBooks = require('../repos/bookRepository')
 
-router.get('/', async (req, res) => {
+const { addBook, getAllBooks } = require('../controllers/booksControllers')
 
-    const books = await getAllBooks()
-    res.status(200).json({ books })
-})
+router.get('/', getAllBooks)
+
+router.post('/', addBook)
 
 module.exports = router
