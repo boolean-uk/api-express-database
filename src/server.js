@@ -12,12 +12,14 @@ app.use(express.json())
 //TODO: Implement books and pets APIs using Express Modular Routers
 const booksRouter = require("./routers/books.js")
 const petsRouter = require("./routers/pets.js")
+const breedsRouter = require("./routers/breeds.js")
 const MissingFieldError = require("./errors/MissingFieldError.js")
 const NotFoundError = require("./errors/NotFoundError.js")
 const ConflictError = require("./errors/ConflictError.js")
 
 app.use("/books", booksRouter)
 app.use("/pets", petsRouter)
+app.use("/breeds", breedsRouter)
 app.use((error, req, res, next) => {
   if (error instanceof MissingFieldError) {
     return res.status(400).json({
