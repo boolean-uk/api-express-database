@@ -6,12 +6,16 @@ const {
   deleteBookById,
 } = require("../dal/booksRepo.js")
 
-const getBooks = async (req, res) => {
-  const books = await getAllBooks()
+const getBooks = async (req, res, next) => {
+  try {
+    const books = await getAllBooks(req)
 
-  res.json({
-    books,
-  })
+    res.json({
+      books,
+    }) 
+  } catch (error) {
+    next(error)
+  }
 }
 
 const postBook = async (req, res, next) => {
