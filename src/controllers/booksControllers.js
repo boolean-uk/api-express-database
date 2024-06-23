@@ -7,8 +7,8 @@ const {
   deleteBookById
 } = require("../dal/bookRepository");
 
-async function getAllBooksController(req, res, next) {
-  const books = await fetchBooks();
+async function getAllBooksController(req, res) {
+  const books = await fetchBooks(req.query);
   res.status(200).json({ books });
 }
 

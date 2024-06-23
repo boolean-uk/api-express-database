@@ -1,10 +1,26 @@
 const dbConnection = require('../../utils/dbConnection')
 
-async function fetchBooks() {
+async function fetchBooks(reqQuery) {
     const db = await dbConnection.connect()
+    const params = []
+    let sqlQuery = "SELECT * FROM books"
+
+    if (reqQuery.type) {
+        params.push(reqQuery.type)
+        sqlQuery += ` WHERE type = $${params.length}`
+    }
+
+    if (reqQuery.topic) {
+        params.push(reqQuery.topic)
+            if (params.length ===1) {
+                sqlQuery += ` WHERE topic = $${params.length}`
+            } else {
+                sqlQuery += ` AND topic = $${params.length}`
+            }
+    }
+
     try {
-        const sqlQuery = 'SELECT * FROM books;'
-        const result = await db.query(sqlQuery)
+        const result = await db.query(sqlQuery, params)
         return result.rows
     } catch (e) {
         console.log(e)
@@ -17,7 +33,7 @@ async function postBook(book) {
     const db = await dbConnection.connect()
     try {
         const sqlQuery = `INSERT INTO books
-(title, type, author, topic, publication_date, pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`
+(title, type, author, topic, publication_date, pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`
         const result = await db.query(sqlQuery, [book.title, book.type, book.author, book.topic, book.publication_date, book.pages])
         return result.rows
     } catch (e) {
@@ -56,7 +72,7 @@ async function updateBookById(id, newParams) {
 async function deleteBookById(id) {
     const db = await dbConnection.connect()
     try {
-        const sqlQuery = 'DELETE FROM books WHERE id = $1 RETURNING *'
+        const sqlQuery = 'DELETE FROM books WHERE id = $1 RETURNING *;'
         const result = await db.query(sqlQuery, [id])
         return result.rows
     } catch (e) {
