@@ -8,7 +8,7 @@ const {
 
 const getPets = async (req, res, next) => {
   try {
-    const pets = await getAllPets()
+    const pets = await getAllPets(req)
 
     res.json({
       pets,
