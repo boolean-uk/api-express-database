@@ -1,12 +1,14 @@
 const express = require('express')
 const router = express.Router()
 
-const { addBook, getAllBooks, getBookById } = require('../controllers/booksControllers')
+const { addBookController, getAllBooksController, getBookByIdController, putBookByIdController } = require('../controllers/booksControllers')
 
-router.get('/', getAllBooks)
+router.get('/', getAllBooksController)
 
-router.post('/', addBook)
+router.post('/', addBookController)
 
-router.get('/:id', getBookById)
+router.get('/:id', getBookByIdController)
+
+router.put('/:id', putBookByIdController)
 
 module.exports = router

@@ -1,13 +1,13 @@
 const { MissingFieldsError, NoDataError } = require("../errors/errors");
-const { fetchBooks, postBook, fetchBookById } = require('../dal/bookRepository')
+const { fetchBooks, postBook, fetchBookById, updateBookById } = require('../dal/bookRepository')
 
-async function getAllBooks(req, res, next) {
+async function getAllBooksController(req, res, next) {
     const books = await fetchBooks()
     res.status(200).json({ books })
 }
 
 
-async function addBook(req, res, next) {
+async function addBookController(req, res, next) {
   const book = req.body;
   const requiredProperties = [
     "title",
@@ -31,7 +31,7 @@ async function addBook(req, res, next) {
   }
 }
 
-async function getBookById(req, res, next) {
+async function getBookByIdController(req, res, next) {
     targetBookId = Number(req.params.id)
     try {
         const book = await fetchBookById(targetBookId)
@@ -45,4 +45,22 @@ async function getBookById(req, res, next) {
     }
 }
 
-module.exports = { addBook, getAllBooks, getBookById };
+async function putBookByIdController(req, res, next) {
+    const targetBookId = Number(req.params.id)
+    const newParams = req.body
+
+    try {
+        const book = await fetchBookById(targetBookId)
+        if (book.length === 0) {
+            throw new NoDataError('A book with the provided ID does not exist') 
+        }
+        const updatedBook = await updateBookById(targetBookId, newParams)
+        res.status(201).json( {book: updatedBook} )
+    } catch(e) {
+        console.log(e)
+        next(e)
+    }
+
+}
+
+module.exports = { addBookController, getAllBooksController, getBookByIdController, putBookByIdController };

@@ -3,7 +3,7 @@ const dbConnection = require('../../utils/dbConnection')
 async function fetchBooks() {
     const db = await dbConnection.connect()
     try {
-        const sqlQuery = 'SELECT * FROM books'
+        const sqlQuery = 'SELECT * FROM books;'
         const result = await db.query(sqlQuery)
         return result.rows
     } catch (e) {
@@ -27,13 +27,24 @@ async function postBook(book) {
     }
 }
 
-
 async function fetchBookById(id) {
     const db = await dbConnection.connect()
     try {
-        const sqlQuery = 'SELECT * FROM books WHERE id = $1'
+        const sqlQuery = 'SELECT * FROM books WHERE id = $1;'
         const result = await db.query(sqlQuery, [id])
-        console.log(result)
+        return result.rows
+    } catch (e) {
+        console.log(e)
+    } finally {
+        db.release()
+    }
+}
+
+async function updateBookById(id, newParams) {
+    const db = await dbConnection.connect()
+    try {
+        const sqlQuery = 'UPDATE books SET title = $2, type = $3, author = $4, topic = $5, publication_date = $6, pages = $7 WHERE id = $1 RETURNING *;'
+        const result = await db.query(sqlQuery, [id, newParams.title, newParams.type, newParams.author, newParams.topic, newParams.publication_date, newParams.pages])
         return result.rows
     } catch (e) {
         console.log(e)
@@ -43,4 +54,4 @@ async function fetchBookById(id) {
 }
 
 
-module.exports = { fetchBooks, postBook, fetchBookById }
+module.exports = { fetchBooks, postBook, fetchBookById, updateBookById }
