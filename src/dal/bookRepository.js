@@ -53,5 +53,18 @@ async function updateBookById(id, newParams) {
     }
 }
 
+async function deleteBookById(id) {
+    const db = await dbConnection.connect()
+    try {
+        const sqlQuery = 'DELETE FROM books WHERE id = $1 RETURNING *'
+        const result = await db.query(sqlQuery, [id])
+        return result.rows
+    } catch (e) {
+        console.log(e)
+    } finally {
+        db.release()
+    }
+}
 
-module.exports = { fetchBooks, postBook, fetchBookById, updateBookById }
+
+module.exports = { fetchBooks, postBook, fetchBookById, updateBookById, deleteBookById }
