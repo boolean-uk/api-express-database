@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 
-const { addBookController, getAllBooksController, getBookByIdController, putBookByIdController, deleteBookByIdController } = require('../controllers/booksControllers')
+const { addBookController, getBooksController, getBookByIdController, putBookByIdController, deleteBookByIdController } = require('../controllers/booksControllers')
 
-router.get('/', getAllBooksController)
+router.get('/', getBooksController)
 
 router.post('/', addBookController)
 

@@ -1,25 +1,32 @@
 const db = require('../../db/index.js')
 
 async function fetchBooks(reqQuery) {
-    const params = []
     let sqlQuery = "SELECT * FROM books"
+    const params = []
+    // if (reqQuery.type) {
+    //     params.push(reqQuery.type)
+    //     sqlQuery += ` WHERE type = $${params.length}`
+    // }
 
-    if (reqQuery.type) {
-        params.push(reqQuery.type)
-        sqlQuery += ` WHERE type = $${params.length}`
-    }
+    // if (reqQuery.topic) {
+    //     params.push(reqQuery.topic)
+    //         if (params.length ===1) {
+    //             sqlQuery += ` WHERE topic = $${params.length}`
+    //         } else {
+    //             sqlQuery += ` AND topic = $${params.length}`
+    //         }
+    // }
 
-    if (reqQuery.topic) {
-        params.push(reqQuery.topic)
-            if (params.length ===1) {
-                sqlQuery += ` WHERE topic = $${params.length}`
-            } else {
-                sqlQuery += ` AND topic = $${params.length}`
-            }
+    if(reqQuery.author) {
+        params.push(reqQuery.author)
+        sqlQuery += ` WHERE author = $${params.length}`
     }
 
     try {
         const result = await db.query(sqlQuery, params)
+        if (result.rows.length === 1) {
+            return result.rows[0]
+        }
         return result.rows
     } catch (e) {
         console.log(e)

@@ -7,7 +7,7 @@ const {
   deleteBookById,
 } = require("../dal/bookRepository");
 
-async function getAllBooksController(req, res) {
+async function getBooksController(req, res) {
   const books = await fetchBooks(req.query);
   res.status(200).json({ books });
 }
@@ -70,7 +70,7 @@ async function deleteBookByIdController(req, res, next) {
 
 module.exports = {
   addBookController,
-  getAllBooksController,
+  getBooksController,
   getBookByIdController,
   putBookByIdController,
   deleteBookByIdController,
