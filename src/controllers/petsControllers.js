@@ -5,65 +5,49 @@ const {
   updatePetById,
   deletePetById,
 } = require("../dal/petsRepo.js")
+const getPaginationParams = require("../utils/pagination.js")
 
-const getPets = async (req, res, next) => {
-  try {
-    const pets = await getAllPets(req)
+const getPets = async (req, res) => {
+  const { page, per_page } = getPaginationParams(req)
+  const pets = await getAllPets(req)
 
-    res.json({
-      pets,
-    })
-  } catch (error) {
-    next(error)
-  }
+  res.json({
+    pets,
+    per_page,
+    page
+  })
 }
 
-const postPet = async (req, res, next) => {
-  try {
-    const pet = await postNewPet(req)
+const postPet = async (req, res) => {
+  const pet = await postNewPet(req)
 
-    res.status(201).json({
-      pet,
-    })
-  } catch (error) {
-    next(error)
-  }
+  res.status(201).json({
+    pet,
+  })
 }
 
-const getPet = async (req, res, next) => {
-  try {
-    const pet = await getPetById(req)
+const getPet = async (req, res) => {
+  const pet = await getPetById(req)
 
-    res.json({
-      pet,
-    })
-  } catch (error) {
-    next(error)
-  }
+  res.json({
+    pet,
+  })
 }
 
-const updatePet = async (req, res, next) => {
-  try {
-    const pet = await updatePetById(req)
+const updatePet = async (req, res) => {
+  const pet = await updatePetById(req)
 
-    res.status(201).json({
-      pet,
-    })
-  } catch (error) {
-    next(error)
-  }
+  res.status(201).json({
+    pet,
+  })
 }
 
-const deletePet = async (req, res, next) => {
-  try {
-    const pet = await deletePetById(req)
+const deletePet = async (req, res) => {
+  const pet = await deletePetById(req)
 
-    res.status(201).json({
-      pet,
-    })
-  } catch (error) {
-    next(error)
-  }
+  res.status(201).json({
+    pet,
+  })
 }
 
 module.exports = {
