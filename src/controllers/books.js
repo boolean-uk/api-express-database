@@ -40,8 +40,6 @@ const getBookById = async (req, res) => {
 }
 
 const updateBookById = async (req, res) => {
-    const db = await pool.connect()
-
     const { title, type, author, topic, publication_date, pages } = req.body
 
     if (
@@ -52,7 +50,7 @@ const updateBookById = async (req, res) => {
         !publication_date ||
         !Number.isInteger(pages)
     ) {
-        res.status(400).json({
+        return res.status(400).json({
             error: 'All fields are required and pages must be an integer.',
         })
     }
