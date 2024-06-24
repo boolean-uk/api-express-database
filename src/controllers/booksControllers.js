@@ -1,15 +1,27 @@
 const { MissingFieldsError, NoDataError } = require("../errors/errors");
 const {
-  fetchBooks,
+  fetchAllBooks,
   postBook,
   fetchBookById,
   updateBookById,
   deleteBookById,
+  fetchBookByQuery
 } = require("../dal/bookRepository");
 
 async function getBooksController(req, res) {
-  const books = await fetchBooks(req.query);
-  res.status(200).json({ books });
+  let books;
+  const query = req.query
+
+  if (query) {
+    books = await fetchBookByQuery(query)
+  } else {
+    books = await fetchAllBooks();
+  }
+  
+  res.status(200).json({ books,
+    page: Number(query.page),
+    per_page: Number(query.perPage)
+   });
 }
 
 async function addBookController(req, res) {
@@ -34,11 +46,11 @@ async function addBookController(req, res) {
   res.status(201).json({ book });
 }
 
-async function getBookByIdController(req, res, next) {
+async function getBookByIdController(req, res) {
   targetBookId = Number(req.params.id);
 
   const book = await fetchBookById(targetBookId);
-  if (book.length === 0) {
+  if (!book) {
     throw new NoDataError(`no book with id: ${targetBookId}`);
   }
   res.status(200).json({ book });

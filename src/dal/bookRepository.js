@@ -1,36 +1,40 @@
 const db = require('../../db/index.js')
 
-async function fetchBooks(reqQuery) {
-    let sqlQuery = "SELECT * FROM books"
-    const params = []
-    // if (reqQuery.type) {
-    //     params.push(reqQuery.type)
-    //     sqlQuery += ` WHERE type = $${params.length}`
-    // }
-
-    // if (reqQuery.topic) {
-    //     params.push(reqQuery.topic)
-    //         if (params.length ===1) {
-    //             sqlQuery += ` WHERE topic = $${params.length}`
-    //         } else {
-    //             sqlQuery += ` AND topic = $${params.length}`
-    //         }
-    // }
-
-    if(reqQuery.author) {
-        params.push(reqQuery.author)
-        sqlQuery += ` WHERE author = $${params.length}`
-    }
-
+async function fetchAllBooks() {
     try {
-        const result = await db.query(sqlQuery, params)
-        if (result.rows.length === 1) {
-            return result.rows[0]
-        }
+        const result = await db.query("SELECT * FROM books")
         return result.rows
     } catch (e) {
         console.log(e)
     } 
+}
+
+async function fetchBookByQuery(query) {
+    let sqlQuery = "SELECT * FROM books"
+    const params = []
+
+    if(query.author) {
+        params.push(query.author)
+        sqlQuery += ` WHERE author = $${params.length}`
+    }
+
+    if(query.perPage) {
+        params.push(query.perPage)
+        sqlQuery += ` LIMIT $${params.length}`
+    }
+
+    if(query.page) {
+        params.push((query.page - 1) * query.perPage)
+        sqlQuery += ` OFFSET $${params.length}`
+    }
+    
+    
+    try {
+    const result = await db.query(sqlQuery, params)
+    return result.rows
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 async function postBook(book) {
@@ -48,7 +52,7 @@ async function fetchBookById(id) {
     try {
         const sqlQuery = 'SELECT * FROM books WHERE id = $1;'
         const result = await db.query(sqlQuery, [id])
-        return result.rows
+        return result.rows[0]
     } catch (e) {
         console.log(e)
     } 
@@ -75,4 +79,4 @@ async function deleteBookById(id) {
 }
 
 
-module.exports = { fetchBooks, postBook, fetchBookById, updateBookById, deleteBookById }
+module.exports = { fetchAllBooks, postBook, fetchBookById, updateBookById, deleteBookById, fetchBookByQuery }
