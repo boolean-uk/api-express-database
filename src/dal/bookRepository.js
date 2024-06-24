@@ -37,8 +37,7 @@ async function fetchBookByQuery(query) {
 
 async function postBook(book) {
   try {
-    const sqlQuery = `INSERT INTO books
-(title, type, author, topic, publication_date, pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`;
+    const sqlQuery = `INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`;
     const result = await db.query(sqlQuery, [
       book.title,
       book.type,
