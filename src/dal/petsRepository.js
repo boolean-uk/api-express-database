@@ -22,5 +22,16 @@ async function fetchPetById(id) {
     }
 }
 
-module.exports = { fetchAllPets, fetchPetById }
+async function updatePetById(id, updatedParams) {
+    const sqlQuery = 'UPDATE pets SET name = $1, age = $2, type = $3, breed = $4, has_microchip = $5 RETURNING *;'
+
+    try {
+        const result = await db.query(sqlQuery, [updatedParams.name, updatedParams.age, updatedParams.type, updatedParams.breed, updatedParams.has_microchip])
+        return result.rows[0]
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+module.exports = { fetchAllPets, fetchPetById, updatePetById }
 

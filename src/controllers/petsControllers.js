@@ -1,4 +1,4 @@
-const { fetchAllPets, fetchPetById } = require("../dal/petsRepository");
+const { fetchAllPets, fetchPetById, updatePetById } = require("../dal/petsRepository");
 
 async function getPetsController(req, res) {
   const pets = await fetchAllPets();
@@ -11,4 +11,12 @@ async function getPetsByIdController(req, res) {
   res.status(200).json({ pet });
 }
 
-module.exports = { getPetsController, getPetsByIdController };
+async function updatePetByIdController(req, res) {
+    console.log('in')
+    const id = Number(req.params.id);
+    const updatedParams = req.body
+    const pet = await updatePetById(id, updatedParams);
+    res.status(201).json({ pet })
+}
+
+module.exports = { getPetsController, getPetsByIdController, updatePetByIdController };
