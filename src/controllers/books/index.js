@@ -1,10 +1,23 @@
 const dbConnection = require('../../utils/dbConnection.js')
 
-const getAllBooks = async() => {
+const getAllBooks = async(req, page, perPage) => {
     const db = await dbConnection.connect()
+
+    const author = req.body.author
+    let offset
+
+    if(page > 1) {
+        offset = perPage-1
+    }
+    
     try {
-        const sqlQuery = 'select * from books'
-        const result = await db.query(sqlQuery)
+        if(author === undefined) {
+            const sqlQuery = `select * from books limit $1 offset $2`
+            const result = await db.query(sqlQuery, [perPage, offset])
+            return result.rows
+        }
+        const sqlQuery = `select * from books where author = $1 limit $2 offset $3 order by author`
+        const result = await db.query(sqlQuery, [author, perPage, offset])
 
         return result.rows
     } catch (e) {

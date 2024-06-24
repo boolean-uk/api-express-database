@@ -25,7 +25,7 @@ describe("Books Endpoint", () => {
       await createBook(Object.values(book2))
     })
 
-    it("will return books by author", async () => {
+    fit("will return books by author", async () => {
       const response = await supertest(app).get(`/books?author=${book1.author}`)
 
       expect(response.status).toEqual(200)
@@ -43,7 +43,7 @@ describe("Books Endpoint", () => {
       await insertBooks()
     })
 
-    it("response has pagination properties", async () => {
+    fit("response has pagination properties", async () => {
       const response = await supertest(app).get(`/books?page=2&perPage=30`)
 
       expect(response.status).toEqual(200)
@@ -52,7 +52,7 @@ describe("Books Endpoint", () => {
       expect(response.body.per_page).toEqual(30)
     })
 
-    it("will return page 2 only of 30 books", async () => {
+    fit("will return page 2 only of 30 books", async () => {
       const response = await supertest(app).get(`/books?page=2&perPage=30`)
 
       expect(response.status).toEqual(200)
@@ -62,21 +62,21 @@ describe("Books Endpoint", () => {
       expect(response.body.books[response.body.books.length-1].id).toEqual(60)
     })
 
-    it("will return 400 if pagination parameters are invalid", async () => {
+    fit("will return 400 if pagination parameters are invalid", async () => {
       const response = await supertest(app).get(`/books?page=1&perPage=9`)
 
       expect(response.status).toEqual(400)
       expect(response.body.error).toEqual(`parameter invalid perPage: 9 not valid. Accepted range is 10 - 50`)
     })
 
-    it("will return 400 if pagination parameters are invalid", async () => {
+    fit("will return 400 if pagination parameters are invalid", async () => {
       const response = await supertest(app).get(`/books?page=1&perPage=51`)
 
       expect(response.status).toEqual(400)
       expect(response.body.error).toEqual(`parameter invalid perPage: 51 not valid. Accepted range is 10 - 50`)
     })
 
-    it("pagination parameters are optional, have default values", async () => {
+    fit("pagination parameters are optional, have default values", async () => {
       const response = await supertest(app).get(`/books`)
 
       expect(response.status).toEqual(200)
@@ -86,7 +86,7 @@ describe("Books Endpoint", () => {
       expect(response.body.books[response.body.books.length-1].id).toEqual(20)
     })
 
-    it("pagination parameters can be used with author parameter", async () => {
+    fit("pagination parameters can be used with author parameter", async () => {
       const response = await supertest(app).get(`/books?author=Nick%20Labadie&page=1&perPage=30`)
 
       expect(response.status).toEqual(200)
