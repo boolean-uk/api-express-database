@@ -12,11 +12,14 @@ app.use(express.json());
 
 const booksRouter = require('./routers/books.js')
 const petsRouter = require('./routers/pets.js')
+const breedsRouter = require('./routers/breeds.js')
 const MissingFieldsError =  require('./errors/missingFieldsError.js')
 const NotFoundError = require('./errors/notFoundError.js')
+const NotUniqueError = require('./errors/notUniqueError.js')
 
 app.use('/books', booksRouter)
 app.use('/pets', petsRouter)
+app.use('/breeds', breedsRouter)
 
 app.use((error, req, res, next) => {
     if (error instanceof MissingFieldsError) {
@@ -27,6 +30,12 @@ app.use((error, req, res, next) => {
 
     if (error instanceof NotFoundError) {
         return res.status(404).json({
+            error: error.message
+        })
+    }
+
+    if (error instanceof NotUniqueError) {
+        return res.status(409).json({
             error: error.message
         })
     }

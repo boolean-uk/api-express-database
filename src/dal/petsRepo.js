@@ -78,6 +78,17 @@ const deletePetById = async (id) => {
     return result.rows[0]
 }
 
+const getAllBreeds = async (type) => {
+    if (!type) {
+        throw new MissingFieldsError('Animal type is required')
+    }
+
+    const sqlQuery = `select distinct breed from pets where type = $1`
+    const result = await dbConnection.query(sqlQuery, [type])
+
+    return result.rows
+}
+
 function verifyFields(object) {
     const neededProperties = ['name', 'age', 'type', 'breed', 'has_microchip']
 
@@ -95,5 +106,6 @@ module.exports = {
     createPet,
     getPetById,
     updatePet,
-    deletePetById
+    deletePetById,
+    getAllBreeds
 }

@@ -1,6 +1,7 @@
 const dbConnection = require('../utils/dbConnection.js')
 const MissingFieldsError = require('../errors/missingFieldsError.js')
 const NotFoundError = require('../errors/notFoundError.js')
+const NotUniqueError = require('../errors/notUniqueError.js')
 
 const getAllBooks = async (type, topic, author, pages, perpages) => {
     let page = 1
