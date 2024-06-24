@@ -39,7 +39,7 @@ async function getBookByIdController(req, res, next) {
 
   const book = await fetchBookById(targetBookId);
   if (book.length === 0) {
-    throw new NoDataError("A book with the provided ID does not exist");
+    throw new NoDataError(`no book with id: ${targetBookId}`);
   }
   res.status(200).json({ book });
 }
@@ -52,7 +52,6 @@ async function putBookByIdController(req, res, next) {
     if (book.length === 0) {
       throw new NoDataError("A book with the provided ID does not exist");
     }
-
     const updatedBook = await updateBookById(targetBookId, newParams);
     res.status(201).json({ book: updatedBook });
 }

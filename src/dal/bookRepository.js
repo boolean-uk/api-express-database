@@ -38,11 +38,10 @@ async function postBook(book) {
 }
 
 async function fetchBookById(id) {
-
     try {
         const sqlQuery = 'SELECT * FROM books WHERE id = $1;'
         const result = await db.query(sqlQuery, [id])
-        return result.rows[0]
+        return result.rows
     } catch (e) {
         console.log(e)
     } 
