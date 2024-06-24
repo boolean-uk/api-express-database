@@ -15,7 +15,7 @@ const booksRouter = require('./routers/books.js')
 app.use('/books', booksRouter)
 
 //Error handling
-const { MissingFieldsError, NoDataError, InvalidParameterError } = require('./errors/errors.js')
+const { MissingFieldsError, NoDataError, InvalidParameterError, DataAlreadyExistsError } = require('./errors/errors.js')
 
 app.use((error, req, res, next) => {
     if (error instanceof MissingFieldsError) {
@@ -27,6 +27,10 @@ app.use((error, req, res, next) => {
 
     if (error instanceof InvalidParameterError) {
         return res.status(400).json({error: error.message})
+    }
+
+    if (error instanceof DataAlreadyExistsError) {
+        return res.status(409).json({error: error.message})
     }
 
     res.status(500).json({

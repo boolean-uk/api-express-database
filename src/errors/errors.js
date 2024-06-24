@@ -9,4 +9,8 @@ class InvalidParameterError extends Error {
 
 }
 
-module.exports = { MissingFieldsError, NoDataError, InvalidParameterError }
+class DataAlreadyExistsError extends Error {
+
+}
+
+module.exports = { MissingFieldsError, NoDataError, InvalidParameterError, DataAlreadyExistsError }
