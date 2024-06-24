@@ -1,4 +1,4 @@
-const { MissingFieldsError, NoDataError } = require("../errors/errors");
+const { MissingFieldsError, NoDataError, InvalidParameterError } = require("../errors/errors");
 const {
   fetchAllBooks,
   postBook,
@@ -13,6 +13,9 @@ async function getBooksController(req, res) {
   const query = req.query
 
   if (query) {
+    if (query.perPage < 10 || query.perPage > 50) {
+        throw new InvalidParameterError(`parameter invalid perPage: ${query.perPage} not valid. Accepted range is 10 - 50`)
+    }
     books = await fetchBookByQuery(query)
   } else {
     books = await fetchAllBooks();

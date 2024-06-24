@@ -5,4 +5,8 @@ class NoDataError extends Error {
 
 }
 
-module.exports = { MissingFieldsError, NoDataError }
+class InvalidParameterError extends Error {
+
+}
+
+module.exports = { MissingFieldsError, NoDataError, InvalidParameterError }
