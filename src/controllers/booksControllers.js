@@ -12,7 +12,6 @@ const {
   deleteBookById,
   fetchBookByQuery,
 } = require("../dal/bookRepository");
-const { book1 } = require("../../test/fixtures/bookData");
 
 async function getBooksController(req, res) {
   let books;
