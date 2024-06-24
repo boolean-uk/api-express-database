@@ -1,10 +1,29 @@
 const pool = require('../../db')
 
+const types = new Map([['Fiction', "type = 'Fiction'"], ['Non-Fiction', "type = 'Non-Fiction'"]])
+
 const getBooks = async (req, res) => {
     const db = await pool.connect()
+    const {type, topic } = req.query
 
-    const sqlQuery = 'select * from books'
-    const result = await db.query(sqlQuery)
+    const queryContents = []
+
+    let sqlQuery = "select * from books where 1 = 1"
+
+
+    if(types.has(type)) {
+        queryContents.push(type)
+        sqlQuery += ` and type = $${queryContents.length}`
+        console.log(sqlQuery)
+    }
+
+    if(topic) {
+        queryContents.push(topic)
+        sqlQuery += ` and topic = $${queryContents.length}`
+        console.log(sqlQuery)
+    }
+
+    const result = await db.query(sqlQuery, queryContents)
 
     db.release()
 
