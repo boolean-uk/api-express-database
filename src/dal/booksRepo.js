@@ -18,22 +18,22 @@ const getAllBooks = async (type, topic, author, pages, perpages) => {
     }
 
     if (type) {
-        const sqlQuery = `select * from books where type = $1 limit = $2 offset = $3`
-        const result = await dbConnection.query(sqlQuery, [type])
+        const sqlQuery = `select * from books where type = $1 limit $2 offset $3`
+        const result = await dbConnection.query(sqlQuery, [type, perpage, offset])
 
         return result.rows
     }
 
     if (topic) {
-        const sqlQuery = `select * from books where topic = $1`
-        const result = await dbConnection.query(sqlQuery, [topic])
+        const sqlQuery = `select * from books where topic = $1 limit $2 offset $3`
+        const result = await dbConnection.query(sqlQuery, [topic, perpage, offset])
 
         return result.rows
     }
 
     if (author) {
-        const sqlQuery = `select * from books where author = $1`
-        const result = await dbConnection.query(sqlQuery, [author])
+        const sqlQuery = `select * from books where author = $1 limit $2 offset $3`
+        const result = await dbConnection.query(sqlQuery, [author, perpage, offset])
 
         return result.rows
     }

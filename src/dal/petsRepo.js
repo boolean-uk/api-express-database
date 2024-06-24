@@ -1,25 +1,31 @@
 const dbConnection = require('../utils/dbConnection.js')
 
-const getAllPets = async (type) => {
-    const db = await dbConnection.connect()
+const getAllPets = async (type, pages, perpages) => {
+    let page = 1
+    let perpage = 20
+    let offset = 0
 
-    try {
-        if (type) {
-            const sqlQuery = `select * from pets where type = $1`
-            const result = await db.query(sqlQuery, [type])
+    if (pages) {
+        page = pages
+        offset = (page - 1) * perpage
+    }
 
-            return result.rows
-        }
+    if (perpages > 9 && perpages < 51) {
+        perpage = perpages
+        offset = (page - 1) * perpage
+    }
 
-        const sqlQuery = 'select * from pets'
-        const result = await db.query(sqlQuery)
+    if (type) {
+        const sqlQuery = `select * from pets where type = $1 limit $2 offset $3`
+        const result = await dbConnection.query(sqlQuery, [type, perpage, offset])
 
         return result.rows
-    } catch (e) {
-        console.log(e)
-    } finally {
-        db.release()
     }
+
+    const sqlQuery = 'select * from pets limit $1 offset $2'
+    const result = await dbConnection.query(sqlQuery, [perpage, offset])
+
+    return result.rows
 }
 
 const createPet = async (pet) => {

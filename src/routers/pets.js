@@ -4,8 +4,10 @@ const router = express.Router()
 
 router.get('/', async (req, res) => {
     const type = req.query.type
+    const page = req.query.page
+    const perPage = req.query.per_page
 
-    const pets = await getAllPets(type)
+    const pets = await getAllPets(type, page, perPage)
 
     res.json({
         pets
