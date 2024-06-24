@@ -16,9 +16,15 @@ const getAllPets = async () => {
 
 const addPet = async (req) => {
     const db = await dbConnection.connect()
+
+    const name = req.body.name
+    const age = Number(req.body.age)
+    const type = req.body.type
+    const breed = req.body.breed
+    const mchip = Boolean(req.body.has_microchip)
     try {
         const sqlQuery = 'insert into pets (name, age, type, breed, has_microchip) values($1, $2, $3, $4, $5) returning *'
-        const result = await db.query(sqlQuery, [req.body.name, Number(req.body.age), req.body.type, req.body.breed, Boolean(req.body.has_microchip)])
+        const result = await db.query(sqlQuery, [name, age, type, breed, mchip])
 
         return result.rows[0]
     } catch (e) {
@@ -43,11 +49,17 @@ const getPetByID = async(req) => {
 }
 
 const updatePet = async(req) => {
-    const id = Number(req.params.id)
     const db = await dbConnection.connect()
+
+    const id = Number(req.params.id)
+    const name = req.body.name
+    const age = Number(req.body.age)
+    const type = req.body.type
+    const breed = req.body.breed
+    const mchip = Boolean(req.body.has_microchip)
     try {
         const sqlQuery = `update pets set name = $1, age = $2, type = $3, breed = $4, has_microchip = $5 where id=$6 returning *`
-        const result = await db.query(sqlQuery, [req.body.name, req.body.age, req.body.type, req.body.breed, req.body.has_microchip, id])
+        const result = await db.query(sqlQuery, [name, age, type, breed, mchip, id])
 
         return result.rows[0]
     } catch (e) {

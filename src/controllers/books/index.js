@@ -17,10 +17,16 @@ const getAllBooks = async() => {
 const createBook = async(req) => {
     const db = await dbConnection.connect()
 
+    const title = req.body.title
+    const type = req.body.type
+    const author = req.body.author
+    const topic = req.body.topic
+    const pub_date = req.body.publication_date
+    const pages = Number(req.body.pages)
     try {
         const sqlQuery = `insert into books (title, type, author, topic, publication_date, pages)
         values($1, $2, $3, $4, $5, $6) returning *`
-        const result = await db.query(sqlQuery, [req.body.title, req.body.type, req.body.author, req.body.topic, req.body.publication_date, Number(req.body.pages)])
+        const result = await db.query(sqlQuery, [title, type, author, topic, pub_date, pages])
 
         return result.rows[0]
     } catch (e) {
@@ -46,11 +52,17 @@ const getBookByID = async(req) => {
 }
 
 const updateBook = async(req) => {
-    const id = req.params.id
     const db = await dbConnection.connect()
+    const id = req.params.id
+    const title = req.body.title
+    const type = req.body.type
+    const author = req.body.author
+    const topic = req.body.topic
+    const pub_date = req.body.publication_date
+    const pages = Number(req.body.pages)
     try {
         const sqlQuery = `update books set title = $1, type = $2, author = $3, topic = $4, publication_date = $5, pages = $6 where id=${id} returning *`
-        const result = await db.query(sqlQuery, [req.body.title, req.body.type, req.body.author, req.body.topic, req.body.publication_date, Number(req.body.pages)])
+        const result = await db.query(sqlQuery, [title, type, author, topic, pub_date, pages])
 
         return result.rows[0]
     } catch (e) {
