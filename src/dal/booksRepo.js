@@ -67,8 +67,16 @@ const getBookById = async (id) => {
 }
 
 const updateBook = async (id, bookInfo) => {
+    if (!verifyFields(bookInfo)) {
+        throw new MissingFieldsError('Missing fields in request body')
+    }
+
     const sqlQuery = `update books set title = $1, type = $2, author = $3, topic = $4, publication_date = $5, pages = $6 where id = $7 returning *`
     const result = await dbConnection.query(sqlQuery, [bookInfo.title, bookInfo.type, bookInfo.author, bookInfo.topic, bookInfo.publication_date, bookInfo.pages, id])
+
+    if(result.rows.length === 0) {
+        throw new NotFoundError('A book with the provided ID does not exist')
+    }
 
     return result.rows[0]
 }
