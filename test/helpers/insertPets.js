@@ -1,11 +1,11 @@
-const fs = require('fs/promises')
-const client = require("../../db");
+const fs = require("fs/promises");
+const dbConnection = require("../../db/index");
 
 const insertPets = async () => {
-  const sqlDataForPets = await fs.readFile('./sql/insert-pets.sql')
-  const sqlStringForPets = sqlDataForPets.toString()
+  const sqlDataForPets = await fs.readFile("./sql/insert-pets.sql");
+  const sqlStringForPets = sqlDataForPets.toString();
 
-  await client.query(sqlStringForPets)
-}
+  await dbConnection.query(sqlStringForPets);
+};
 
-module.exports = insertPets
+module.exports = insertPets;
