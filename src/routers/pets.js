@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
 
     const newPet = await createPet(pet)
 
-    res.json({
+    res.status(201).json({
         pet: newPet
     })
 })
