@@ -1,5 +1,5 @@
 const fs = require('fs/promises')
-const client = require("../../db");
+const client = require("../../src/utils/dbConnection.js");
 
 global.beforeEach(async() => {
   const sqlDataForBooks = await fs.readFile('./sql/create-books.sql')
