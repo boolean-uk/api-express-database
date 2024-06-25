@@ -1,45 +1,46 @@
 const express = require('express')
 const router = express.Router()
-const { getAllBooks, createBook, getBookById, updateBook, deleteBook } = require('../dal/booksRepo.js')
+const { getAllPets, createPet
+ , getPetById, updatePet, deletePet} = require('../dal/petsRepo.js')
 
 router.get('/', async (req, res) => {
-  const books = await getAllBooks()
+  const pets = await getAllPets()
   res.status(200).json({
-    books
+    pets
   })
 })
 
 router.post('/', async (req, res) => {
-  const book = await createBook(req.body)
+  const pet = await createPet(req.body)
   res.status(201).json({
-    book
+    pet
   })
 })
 
 router.get('/:id', async (req, res) => {
   const id = Number(req.params.id)
-  const book = await getBookById(id)
+  const pet = await getPetById(id)
   res.status(200).json({
-    book
+    pet
   })
 })
 
 router.put('/:id', async (req, res) => {
   const id = Number(req.params.id)
-  const newBookInfo = req.body
+  const newPetInfo = req.body
 
-  const updatedBook = await updateBook(id, newBookInfo)
+  const updatedPet = await updatePet(id, newPetInfo)
 
   res.status(201).json({
-    book : updatedBook
+    pet : updatedPet
   })
 })
 
 router.delete('/:id', async (req, res) => {
   const id = Number(req.params.id)
-  const deletedBook = await deleteBook(id)
+  const deletedPet = await deletePet(id)
   res.status(201).json({
-    book : deletedBook
+    pet : deletedPet
   })
 })
 
