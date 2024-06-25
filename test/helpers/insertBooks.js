@@ -1,5 +1,5 @@
 const fs = require('fs/promises')
-const client = require("../../db");
+const client = require("../../db/dbConnection.js");
 
 const insertBooks = async () => {
   const sqlDataForBooks = await fs.readFile('./sql/insert-books.sql')

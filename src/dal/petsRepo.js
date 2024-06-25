@@ -1,50 +1,49 @@
-// const dbConnection = require('../../db/dbConnection.js')
+const dbConnection = require('../../db/dbConnection.js')
 
-// const getAllBooks = async () => {
-//   const sqlQuery = 'select * from books'
-//   const result = await dbConnection.query(sqlQuery)
-//   return result.rows
-// }
+const getAllPets = async () => {
+  const sqlQuery = 'select * from pets'
+  const result = await dbConnection.query(sqlQuery)
+  return result.rows
+}
 
-// const createBook = async (book) => {
-//   const {title, type, author, topic, publication_date, pages } = book
+const createPet = async (pet) => {
+  const {name, age, type, breed, has_microchip } = pet
 
-//   const sqlQuery = `INSERT INTO books(title, type, author, topic, publication_date, pages) values ($1, $2, $3, $4, $5, $6) returning *`
+  const sqlQuery = `INSERT INTO pets (name, age, type, breed, has_microchip) values ($1, $2, $3, $4, $5) returning *`
 
-//   const values = [title, type, author, topic, publication_date, pages]
+  const values = [name, age, type, breed, has_microchip]
 
-//   const result = await dbConnection.query(sqlQuery, values)
-//   return result.rows[0]
-// }
+  const result = await dbConnection.query(sqlQuery, values)
+  return result.rows[0]
+}
 
-// const getBookById = async (id) => {
-//   const sqlQuery = `select * from books where id = $1`
-//   const result = await dbConnection.query(sqlQuery, [id])
-//   return result.rows[0]
-// }
+const getPetById = async (id) => {
+  const sqlQuery = `select * from pets where id = $1`
+  const result = await dbConnection.query(sqlQuery, [id])
+  return result.rows[0]
+}
 
-// const updateBook = async (id, book) => {
-//   const {title, type, author, topic, publication_date, pages } = book
+const updatePet = async (id, pet) => {
+  const {name, age, type, breed, has_microchip } = pet
 
-//   const sqlQuery = `UPDATE books
-//   SET title = $1, type = $2, author = $3, topic = $4, publication_date = $5, pages = $6
-//   WHERE id = $7
-//   RETURNING *`
+  const sqlQuery = `UPDATE pets
+  SET name = $1, age = $2, type = $3, breed = $4, has_microchip = $5 WHERE id = $6
+  RETURNING *`
 
 
-//   const values = [title, type, author, topic, publication_date, pages, id]
-//   const result = await dbConnection.query(sqlQuery, values)
-//   return result.rows[0]
-// }
+  const values = [name, age, type, breed, has_microchip, id]
+  const result = await dbConnection.query(sqlQuery, values)
+  return result.rows[0]
+}
 
-// const deleteBook = async (id) => {
-// const getBook = `select * from books where id = $1`
-//   const deletedBook = await dbConnection.query(getBook, [id])
+const deletePet = async (id) => {
+const getPet = `select * from pets where id = $1`
+  const deletedPet = await dbConnection.query(getPet, [id])
 
-//   const sqlQuery = 'delete from books where id = $1'
-//   const result = await dbConnection.query(sqlQuery, [id])
+  const sqlQuery = 'delete from pets where id = $1'
+  const result = await dbConnection.query(sqlQuery, [id])
 
-//   return deletedBook.rows[0]
-// }
+  return deletedPet.rows[0]
+}
 
-// module.exports = { getAllBooks, createBook, getBookById, updateBook, deleteBook }
+module.exports = { getAllPets, createPet,getPetById, updatePet, deletePet }
