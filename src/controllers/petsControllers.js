@@ -37,7 +37,7 @@ async function getPetsByIdController(req, res) {
   if (!pet) {
     throw new NoDataError(`no pet with id: ${id}`);
   }
-  res.status(200).json({ pets });
+  res.status(200).json({ pet });
 }
 
 async function updatePetByIdController(req, res) {
@@ -48,7 +48,7 @@ async function updatePetByIdController(req, res) {
   if (!found) {
       throw new NoDataError(`no pet with id: ${id}`);
   }
-  
+
   const pet = await updatePetById(id, updatedParams);
   res.status(201).json({ pet });
 }
