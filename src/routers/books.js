@@ -17,6 +17,7 @@ router.post("/", async (req, res) => {
   const newBook = req.body;
   if (!newBook.title || !newBook.author || !newBook.type) {
     res.status(400).send({ error: `Missing fields in request body` });
+    return;
   }
 
   const book = await db.create(newBook);
@@ -29,17 +30,17 @@ router.put("/:id", async (req, res) => {
 
   if (!updates.title || !updates.author || !updates.type) {
     res.status(400).send({ error: `Missing fields in request body` });
+    return;
   }
 
-  const index = books.indexOf(found);
-  const updated = { ...found, ...updates };
-  res.status(200).json({ book: updated });
+  const updated = db.update(updates);
+  res.status(201).json({ book: updated });
 });
 
 router.delete("/:id", async (req, res) => {
   const id = Number(req.params.id);
   const result = await db.remove(id);
-  res.status(200).json({ book: found });
+  res.status(201).json({ book: result });
 });
 
 module.exports = router;

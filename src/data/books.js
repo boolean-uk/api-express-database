@@ -12,7 +12,7 @@ const getById = async (id) => {
 };
 
 const create = async (book) => {
-  const result = await db.execute(
+  const result = await db.query(
     "INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
     [
       book.title,
@@ -27,10 +27,10 @@ const create = async (book) => {
 };
 
 const update = async (id, updates) => {
-  const result = await db.execute(
+  const result = await db.query(
     "UPDATE books SET title = $1, type = $2, author = $3, topic = $4, publication_date = $5, pages = $6 where id = $7 RETURNING *",
     [
-      updates.title,
+      updates.name,
       updates.type,
       updates.author,
       updates.topic,
@@ -43,7 +43,7 @@ const update = async (id, updates) => {
 };
 
 const remove = async (id) => {
-  const result = await db.execute(
+  const result = await db.query(
     "DELETE FROM books WHERE id = $1 RETURNING *",
     [id]
   );
