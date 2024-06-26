@@ -63,7 +63,6 @@ async function fetchBookById(id) {
 }
 
 async function updateBookById(id, newParams) {
-    console.log(id, newParams)
   try {
     const sqlQuery =
       "UPDATE books SET title = $2, type = $3, author = $4, topic = $5, publication_date = $6, pages = $7 WHERE id = $1 RETURNING *;";
