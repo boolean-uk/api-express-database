@@ -11,7 +11,7 @@ const client = {
     // on the contents of our env file
     // Create a new connection to the database using the Client
     // object provided by the postgres node module
-    const dbClient = new Client(process.env.PGURL)
+    const dbClient = new Client(process.env.DATABASE_URL)
     // connect a connection
     await dbClient.connect()
     // execute the query
