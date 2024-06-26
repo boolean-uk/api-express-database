@@ -1,4 +1,4 @@
-const { MissingFieldsError } = require("../errors/errors");
+const { MissingFieldsError, NoDataError } = require("../errors/errors");
 
 const {
   fetchAllPets,
@@ -6,9 +6,14 @@ const {
   updatePetById,
   addPet,
   deletePet,
+  fetchPetsWithQuery
 } = require("../dal/petsRepository");
 
 async function getPetsController(req, res) {
+  if (req.query) {
+    fetchPetsWithQuery()
+  }
+
   const pets = await fetchAllPets();
   res.status(200).json({ pets });
 }
@@ -16,6 +21,11 @@ async function getPetsController(req, res) {
 async function getPetsByIdController(req, res) {
   const id = Number(req.params.id);
   const pet = await fetchPetById(id);
+
+  if(!pet) {
+    throw new NoDataError(`no pet with id: ${id}`)
+  }
+
   res.status(200).json({ pet });
 }
 
@@ -31,13 +41,11 @@ async function addPetController(req, res) {
 
   const requiredFields = ['name', 'age', 'type', 'breed', 'has_microchip']
   const missingFields = []
-  
   requiredFields.forEach((field) => {
     if (!newPet[field]) {
       missingFields.push(field)
     }
   })
-
   if (missingFields.length > 0) {
     throw new MissingFieldsError(`missing fields: ${missingFields.toString().replaceAll(',', ', ')}`);
   }

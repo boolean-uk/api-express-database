@@ -11,6 +11,10 @@ async function fetchAllPets() {
   }
 }
 
+async function fetchPetsWithQuery(query) {
+console.log(query)
+}
+
 async function fetchPetById(id) {
   const sqlQuery = "SELECT * FROM pets WHERE id = $1";
 
@@ -69,4 +73,4 @@ async function deletePet(petId) {
     }
 }
 
-module.exports = { fetchAllPets, fetchPetById, updatePetById, addPet, deletePet };
+module.exports = { fetchAllPets, fetchPetById, updatePetById, addPet, deletePet, fetchPetsWithQuery };
