@@ -10,7 +10,8 @@
     "test-books": "npx jest -i test/api/routes/books.spec.js --forceExit",
     "test-books-extensions": "npx jest -i test/api/extensions/books.spec.js --forceExit",
     "test-pets": "npx jest -i test/api/routes/pets.spec.js --forceExit",
-    "test-pets-extensions": "npx jest -i test/api/extensions/pets.spec.js --forceExit"
+    "test-pets-extensions": "npx jest -i test/api/extensions/pets.spec.js --forceExit",
+    "test-breeds-extensions": "npx jest -i test/api/extensions/breeds.spec.js --forceExit"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
