@@ -1,5 +1,6 @@
 const db = require("./db.js");
 
+
 const all = async () => {
   const result = await db.query("SELECT * FROM books");
   return result.rows;
