@@ -1,7 +1,7 @@
 const db = require("../../db/index.js");
 
 async function fetchAllPets() {
-  const sqlQuery = "SELECT * FROM pets";
+  const sqlQuery = "SELECT * FROM pets LIMIT 20";
 
   try {
     const pets = await db.query(sqlQuery);
@@ -12,7 +12,24 @@ async function fetchAllPets() {
 }
 
 async function fetchPetsWithQuery(query) {
-console.log(query)
+  let sqlQuery = `SELECT * FROM pets`;
+  const params = [];
+  const perPage = query.perPage || 20;
+
+  params.push(perPage);
+  sqlQuery += ` LIMIT $${params.length}`;
+
+  if (query.page) {
+    params.push((query.page - 1) * query.perPage);
+    sqlQuery += ` OFFSET $${params.length}`;
+  }
+
+  try {
+    const result = await db.query(sqlQuery, params);
+    return result.rows;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 async function fetchPetById(id) {
@@ -56,21 +73,28 @@ async function addPet(newPet) {
       newPet.breed,
       newPet.has_microchip,
     ]);
-    return result.rows[0]
+    return result.rows[0];
   } catch (e) {
     console.log(e);
   }
 }
 
 async function deletePet(petId) {
-    const sqlQuery = 'DELETE FROM pets WHERE id = $1 RETURNING *'
+  const sqlQuery = "DELETE FROM pets WHERE id = $1 RETURNING *";
 
-    try {
-        const result = await db.query(sqlQuery, [petId])
-        return result.rows[0]
-    } catch (e) {
-        console.log(e)
-    }
+  try {
+    const result = await db.query(sqlQuery, [petId]);
+    return result.rows[0];
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-module.exports = { fetchAllPets, fetchPetById, updatePetById, addPet, deletePet, fetchPetsWithQuery };
+module.exports = {
+  fetchAllPets,
+  fetchPetById,
+  updatePetById,
+  addPet,
+  deletePet,
+  fetchPetsWithQuery,
+};
