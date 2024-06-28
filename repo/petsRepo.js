@@ -20,7 +20,7 @@ async function createNewPet(req) {
   try {
     const sqlQuery = `
       INSERT INTO pets (name, age, type, breed, has_microchip)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
     const values = [name, age, type, breed, has_microchip];
@@ -36,7 +36,7 @@ async function listPet(req) {
   const { id } = req.params;
 
   try {
-    const sqlQuery = `SELECT * FROM books WHERE id = $1;`;
+    const sqlQuery = `SELECT * FROM pets WHERE id = $1;`;
     const result = await db.query(sqlQuery, [id]);
     return result;
   } finally {
@@ -55,7 +55,7 @@ const updatePet = async (id, petData) => {
           age = $2,
           type = $3,
           breed = $4,
-          has_microchip = $5,
+          has_microchip = $5
       WHERE id = $6
       RETURNING *;
     `;

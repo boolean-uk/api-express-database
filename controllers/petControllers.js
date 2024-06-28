@@ -23,7 +23,7 @@ const updatePet = async (req, res) => {
   const petData = req.body;
   const updatedPet = await petsRepo.updatePet(id, petData);
 
-  res.status(201).send({ pet: updatedPet });
+  res.status(201).json({ pet: updatedPet });
 };
 
 const deletePet = async (req, res) => {
