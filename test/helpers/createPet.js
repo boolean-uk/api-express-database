@@ -1,11 +1,11 @@
-const client = require("../../db");
+const client = require("../../db/dbConnection");
 
 const createPet = async (values) => {
-  const sqlString = `INSERT INTO "pets" (name, age, type, breed, has_microchip) VALUES ($1, $2, $3, $4, $5) RETURNING *;`
+  const sqlString = `INSERT INTO "pets" (name, age, type, breed, has_microchip) VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
 
-  const result = await client.query(sqlString, values)
+  const result = await client.query(sqlString, values);
 
-  return result.rows[0]
-}
+  return result.rows[0];
+};
 
-module.exports = createPet
+module.exports = createPet;

@@ -1,9 +1,18 @@
-const express = require('express')
-const router = express.Router()
-const db = require("../../db");
+const express = require("express");
+const router = express.Router();
 
-router.get('/', async (req, res) => {
+const {
+  getAllBooks,
+  createNewBook,
+  listBook,
+  updateBook,
+  deleteBook,
+} = require("../../controllers/bookControllers.js");
 
-})
+router.get("/", getAllBooks);
+router.get("/:id", listBook);
+router.post("/", createNewBook);
+router.put("/:id", updateBook);
+router.delete("/:id", deleteBook);
 
-module.exports = router
+module.exports = router;
