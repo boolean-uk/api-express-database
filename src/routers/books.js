@@ -85,11 +85,7 @@ router.delete('/:id', async (req, res) => {
         RETURNING *
     `
 
-    const values = [
-        id
-    ]
-
-    const result = await dbClient.query(sqlQuery, values)
+    const result = await dbClient.query(sqlQuery, [id])
 
     res.status(201).json({
         book: result.rows[0]
