@@ -18,21 +18,37 @@ router.post('/', async (req, res) => {
         pet1.has_microchip
     ]
 
-    const result = await dbClient.query(sqlQuery, values)
+    try {
+        const result = await dbClient.query(sqlQuery, values)
 
-    res.status(201).json({
-        pet: result.rows[0]
-    })
+        res.status(201).json({
+            pet: result.rows[0]
+        })
+    } catch(err) {
+        console.log('Error inserting book:', err)
+        res.status(500).json({
+            error: 'Internal Server Error'
+        })
+    }
+
 })
 
 router.get('/', async (req, res) => {
     const sqlQuery = 'select * from pets'
 
-    const result = await dbClient.query(sqlQuery)
+    try {
+        const result = await dbClient.query(sqlQuery)
 
-    res.status(200).json({
-        pets: result.rows
-    })
+        res.status(200).json({
+            pets: result.rows
+        })
+    } catch(err) {
+        console.log('Error fetching books:', err)
+        res.status(500).json({
+            error: 'Internal Server Error'
+        }) 
+    }
+
 })
 
 module.exports = router
@@ -41,11 +57,26 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params
     const sqlQuery = `select * from pets where id = $1`
 
-    const result = await dbClient.query(sqlQuery, [id])
+    try {
+        const result = await dbClient.query(sqlQuery, [id])
 
-    res.status(200).json({
-        pet: result.rows[0]
-    })
+        if (result.rows.length === 0) {
+            res.status(404).json({
+                error: 'book not found'
+            })
+        } else {
+            res.status(200).json({
+                pet: result.rows[0]
+            })
+        }
+
+    } catch(err) {
+        console.log('Error fetching book:', err)
+        res.status(500).json({
+            error: 'Internal Server Error'
+        })
+    }
+
 })
 
 router.put('/:id', async (req, res) => {
@@ -67,11 +98,25 @@ router.put('/:id', async (req, res) => {
         id
     ]
 
-    const result = await dbClient.query(sqlQuery, values)
+    try {
+        const result = await dbClient.query(sqlQuery, values)
 
-    res.status(201).json({
-        pet: result.rows[0]
-    })
+        if (result.rows.length === 0) {
+            res.status(404).json({
+                error: 'book not found'
+            })
+        } else {
+            res.status(201).json({
+                pet: result.rows[0]
+            })
+        }
+    } catch(err) {
+        console.log('Error updating book:', err)
+        res.status(500).json({
+            error: 'Internal Server Error'
+        })
+    }
+
 })
 
 router.delete('/:id', async (req, res) => {
@@ -86,11 +131,25 @@ router.delete('/:id', async (req, res) => {
         id
     ]
 
-    const result = await dbClient.query(sqlQuery, values)
+    try {
+        const result = await dbClient.query(sqlQuery, values)
 
-    res.status(201).json({
-        pet: result.rows[0]
-    })
+        if (result.rows.length === 0) {
+            res.status(404).json({
+                error: 'book not found'
+            })
+        } else {
+            res.status(201).json({
+                pet: result.rows[0]
+            })
+        }
+    } catch(err) {
+        console.log('Error deleting book:', err)
+        res.status(500).json({
+            error: 'Internal Server Error'
+        })
+    }
+
 })
 
 module.exports = router
