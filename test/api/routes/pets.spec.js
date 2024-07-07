@@ -31,6 +31,7 @@ describe("Pets Endpoint", () => {
 
       expect(response.status).toEqual(200)
       expect(response.body.pets).not.toEqual(undefined)
+      console.log("response", response.body)
       expect(response.body.pets.length).toEqual(2)
     })
 
