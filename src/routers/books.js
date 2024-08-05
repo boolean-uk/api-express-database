@@ -1,9 +1,31 @@
-const express = require('express')
-const router = express.Router()
-const db = require("../../db");
+const express = require("express");
+const router = express.Router();
 
-router.get('/', async (req, res) => {
+const { getAllBooks, postBookById, getABookById, updateBookById, deleteBookById } = require("../controllers/books");
+
+router.get("/", async (req, res) => {
+  const books = await getAllBooks();
+  console.log('Books:', books);
+  res.status(200).json({ books: books });
+});
+router.post('/', async (req, res) => {
+  // [POST] localhost:3030/movies
+  const book = await postBookById(req.body);
+  res.status(201).json({ book: book })
+})
+router.get("/:id", async (req, res) => {
+  const bookId = req.params.id;
+  const book = await getABookById(bookId);
+  res.status(200).json({ book: book })
 
 })
-
-module.exports = router
+router.put('/:id', async (req, res) => {
+  const updatedBook = await updateBookById(req.params.id, req.body);
+  res.status(201).json({ book: updatedBook })
+})
+router.delete('/:id', async (req, res)=> {
+  const bookId = req.params.id;
+  const deletedbook = await deleteBookById(bookId);
+  res.status(201).json({book: deletedbook})
+})
+module.exports = router;
