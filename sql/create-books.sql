@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS books (
   type              VARCHAR(255)   NOT NULL,
   author            VARCHAR(255)   NOT NULL,
   topic             VARCHAR(255)   NOT NULL,
-  publication_date DATE           NOT NULL,
+  publication_date  DATE           NOT NULL,
   pages             INTEGER        NOT NULL
 );
