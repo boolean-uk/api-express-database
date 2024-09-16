@@ -5,7 +5,6 @@ INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES (
 INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ('excepturi sed nam recusandae ut sed', 'Fiction', 'Colt Dibbert', 'fantasy', '2017-11-13T12:39:13.886+00:00', 400);
 INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ('voluptatem voluptas ut occaecati', 'Fiction', 'Colt Dibbert', 'fantasy', '2021-09-18T12:40:54.153+01:00', 400);
 INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ('ea provident quisquam aut inventore', 'Fiction', 'Karli Kiehn', 'historical', '2016-02-09T16:22:06.082+00:00', 400);
-INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ('ea et', 'Fiction', 'Kim Hand', 'thriller', '2020-01-30T11:51:58.233+00:00', 400);
 INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ('aliquam totam est quasi', 'Fiction', 'Kim Hand', 'thriller', '2011-06-03T16:34:20.912+01:00', 400);
 INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ('facere dolor velit eaque', 'Fiction', 'Kim Hand', 'thriller', '2007-03-03T06:10:13.134+00:00', 400);
 INSERT INTO books (title, type, author, topic, publication_date, pages) VALUES ('non vel', 'Fiction', 'Hildegard Lesch', 'thriller', '2017-01-02T22:19:37.659+00:00', 400);
