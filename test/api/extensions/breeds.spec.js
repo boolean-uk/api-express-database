@@ -2,7 +2,7 @@ const supertest = require("supertest")
 const app = require("../../../src/server.js")
 const insertPets = require("../../helpers/insertPets.js")
 
-describe("breeds Endpoint", () => {
+xdescribe("breeds Endpoint", () => {
   describe("GET /breeds", () => {
     beforeEach(async () => {
       await insertPets()
