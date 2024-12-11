@@ -27,7 +27,7 @@ For this exercise we will also need to configure our database:
 
 7. Copy the URL of your instance
 
-8. Create a file `.env` in the __root directory__ of your project. It should be right next to the `.env.example` file. It should contain a single line, which contains the *environment variable* used to specify the url from the instance created above. See the example file for reference.
+8. Create a file `.env` in the __root directory__ of your project. It should be right next to the `.env.example` file. It should contain a single line, which contains the *envi onment variable* used to specify the url from the instance created above. See the example file for reference.
 
 7. Type `npm start`, which starts a development server that will reload whenever you make any changes to source files.
 
